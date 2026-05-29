@@ -21,9 +21,9 @@ namespace CarFitProject.Areas.Admin.Controllers
     public class AdminController : Controller
     {
         private readonly CarFitDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdminController(CarFitDbContext context, UserManager<IdentityUser> userManager)
+        public AdminController(CarFitDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;

@@ -27,7 +27,7 @@ builder.Services.AddDbContext<CarFitDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
@@ -40,7 +40,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Swap Identity's default PBKDF2 hasher for BCrypt cost 12.
-builder.Services.AddScoped<IPasswordHasher<IdentityUser>, BCryptPasswordHasher<IdentityUser>>();
+builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, BCryptPasswordHasher<ApplicationUser>>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -95,7 +95,7 @@ static async Task SeedIdentityAsync(WebApplication app)
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var config = services.GetRequiredService<IConfiguration>();
     var env = services.GetRequiredService<IHostEnvironment>();
 
@@ -147,11 +147,13 @@ static async Task SeedIdentityAsync(WebApplication app)
         return;
     }
 
-    var newAdmin = new IdentityUser
+    var newAdmin = new ApplicationUser
     {
         UserName = adminEmail,
         Email = adminEmail,
-        EmailConfirmed = true
+        EmailConfirmed = true,
+        FullName = "CarFit Admin",
+        IsActive = true
     };
 
     var createResult = await userManager.CreateAsync(newAdmin, adminPassword);
