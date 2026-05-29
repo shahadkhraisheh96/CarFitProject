@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarFitProject.Areas.Seller.Controllers
 {
     [Area("Seller")]
-    [Authorize(Roles = "Seller")]
+    [Authorize(Roles = "Dealer")]
     public class DashboardController : Controller
     {
        

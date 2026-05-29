@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CarFitProject.Models;
 using CarFitProject.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CarFitProject.Controllers
 {
+    [Authorize(Roles = "Buyer")]
     public class AdvisorController : Controller
     {
         private readonly CarFitDbContext _context;
@@ -21,9 +24,11 @@ namespace CarFitProject.Controllers
         // GET: /Advisor/Match
         public async Task<IActionResult> Match()
         {
-            // Fetch the first active preference profile
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId)) return Challenge();
+
             var userProfile = await _context.UserProfiles
-                .FirstOrDefaultAsync(p => p.IsActive == true);
+                .FirstOrDefaultAsync(p => p.UserId == userId && p.IsActive == true);
 
             if (userProfile == null)
             {

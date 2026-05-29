@@ -7,7 +7,7 @@ using CarFitProject.Models;
 namespace CarFitProject.Areas.Seller.Controllers
 {
     [Area("Seller")]
-    [Authorize(Roles = "Seller")]
+    [Authorize(Roles = "Dealer")]
     public class InventoryController : Controller
     {
         private readonly CarFitDbContext _context;

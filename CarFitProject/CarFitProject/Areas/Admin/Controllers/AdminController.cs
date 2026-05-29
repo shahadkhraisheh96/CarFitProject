@@ -1,5 +1,7 @@
 using CarFitProject.Areas.Admin.Models;
 using CarFitProject.Models;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,7 +81,7 @@ namespace CarFitProject.Areas.Admin.Controllers
             return View(new BulkImportViewModel());
         }
 
-        // POST: Parse CSV Buffer Stream and Save Entities to SQL Server Database (FR-7.2)
+        // POST: Parse CSV with CsvHelper and import per-row; valid rows commit, invalid rows are reported (FR-7.2).
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> BulkLoader(IFormFile csvFile)
@@ -87,93 +90,77 @@ namespace CarFitProject.Areas.Admin.Controllers
 
             if (csvFile == null || csvFile.Length == 0)
             {
-                viewModel.ErrorMessages.Add("Missing structural file handle. Please upload a valid CSV file stream.");
+                viewModel.ErrorMessages.Add("Please upload a non-empty CSV file.");
                 return View(viewModel);
             }
 
+            var listingsToInsert = new List<CarListing>();
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                TrimOptions = TrimOptions.Trim,
+                MissingFieldFound = null,
+                HeaderValidated = null,
+                BadDataFound = null
+            };
+
             try
             {
-                var listingsToInsert = new List<CarListing>();
+                using var stream = csvFile.OpenReadStream();
+                using var reader = new StreamReader(stream);
+                using var csv = new CsvReader(reader, csvConfig);
 
-                using (var reader = new StreamReader(csvFile.OpenReadStream()))
+                await csv.ReadAsync();
+                csv.ReadHeader();
+
+                int rowNumber = 1;
+                while (await csv.ReadAsync())
                 {
-                    int lineIndex = 0;
-                    while (!reader.EndOfStream)
+                    rowNumber++;
+                    try
                     {
-                        var line = await reader.ReadLineAsync();
-                        lineIndex++;
+                        var row = csv.GetRecord<CarListingCsvRow>();
 
-                        // Bypass the spreadsheet header matrix configuration array line
-                        if (lineIndex == 1) continue;
-
-                        if (string.IsNullOrWhiteSpace(line)) continue;
-
-                        // Parse out line text records by target commas split matrix
-                        var values = line.Split(',');
-
-                        // Validation: Expected Format: Make,Model,Year,Trim,Price
-                        if (values.Length < 5)
+                        if (string.IsNullOrWhiteSpace(row?.Make) || string.IsNullOrWhiteSpace(row?.Model))
                         {
-                            viewModel.ErrorMessages.Add($"Line {lineIndex}: Missing parameters. Row contains less than 5 required columns.");
+                            viewModel.SkippedCount++;
+                            viewModel.ErrorMessages.Add($"Row {rowNumber}: Make and Model are required.");
                             continue;
                         }
 
-                        // Extract parameters securely out of data index tokens
-                        string make = values[0]?.Trim();
-                        string model = values[1]?.Trim();
-
-                        if (!int.TryParse(values[2]?.Trim(), out int year))
-                        {
-                            viewModel.ErrorMessages.Add($"Line {lineIndex}: Invalid numerical configuration format for production 'Year'.");
-                            continue;
-                        }
-
-                        string trim = values[3]?.Trim();
-
-                        if (!decimal.TryParse(values[4]?.Trim(), out decimal price))
-                        {
-                            viewModel.ErrorMessages.Add($"Line {lineIndex}: Invalid decimal financial formatting for 'ListingPrice'.");
-                            continue;
-                        }
-
-                        // Assemble structural model relationship nodes
-                        var newListing = new CarListing
+                        listingsToInsert.Add(new CarListing
                         {
                             Available = true,
-                            ListingPrice = price,
-                            // Building inner relational Car database entity parameters
+                            ListingPrice = row.ListingPrice,
                             Car = new Car
                             {
-                                Make = make,
-                                Model = model,
-                                Year = year,
-                                Trim = string.IsNullOrWhiteSpace(trim) ? "Base" : trim
+                                Make = row.Make.Trim(),
+                                Model = row.Model.Trim(),
+                                Year = row.Year,
+                                Trim = string.IsNullOrWhiteSpace(row.Trim) ? "Base" : row.Trim.Trim()
                             }
-                        };
-
-                        listingsToInsert.Add(newListing);
-                        viewModel.InsertedCount++;
+                        });
+                    }
+                    catch (CsvHelperException ex)
+                    {
+                        viewModel.SkippedCount++;
+                        viewModel.ErrorMessages.Add($"Row {rowNumber}: {ex.Message.Split('\n')[0]}");
                     }
                 }
 
-                // Database Transaction Criteria: Only save if the data sheets are 100% clean
-                if (listingsToInsert.Count > 0 && viewModel.ErrorMessages.Count == 0)
+                if (listingsToInsert.Count > 0)
                 {
                     await _context.CarListings.AddRangeAsync(listingsToInsert);
                     await _context.SaveChangesAsync();
-                    viewModel.IsSuccess = true;
+                    viewModel.InsertedCount = listingsToInsert.Count;
                 }
-                else if (viewModel.ErrorMessages.Count > 0)
-                {
-                    // Roll back insertion numbers if error anomalies are detected anywhere
-                    viewModel.IsSuccess = false;
-                    viewModel.InsertedCount = 0;
-                }
+
+                viewModel.IsSuccess = viewModel.InsertedCount > 0;
             }
             catch (Exception ex)
             {
                 viewModel.IsSuccess = false;
-                viewModel.ErrorMessages.Add($"Critical execution breakout error exception: {ex.Message}");
+                viewModel.ErrorMessages.Add($"Failed to read CSV: {ex.Message}");
             }
 
             return View(viewModel);

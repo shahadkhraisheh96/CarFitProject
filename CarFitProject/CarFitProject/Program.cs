@@ -1,91 +1,64 @@
-﻿using CarFitProject.Data;
+using CarFitProject.Data;
+using CarFitProject.Models;
+using CarFitProject.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CarFitProject.Models; // <-- Added to reference CarFitDbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// 🔥 FOOLPROOF FIX: Automatically append TrustServerCertificate=True to the connection string
-// This guarantees that BOTH Identity login and CarFit queries will bypass the SSL chain block.
-if (!connectionString.Contains("TrustServerCertificate=", StringComparison.OrdinalIgnoreCase))
+// Trust the dev SQL Server self-signed cert in Development only.
+if (builder.Environment.IsDevelopment()
+    && !connectionString.Contains("TrustServerCertificate=", StringComparison.OrdinalIgnoreCase))
 {
     if (!connectionString.EndsWith(";")) connectionString += ";";
     connectionString += "TrustServerCertificate=True;";
 }
 
-// 1. Configure the Identity Security Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// 2. Configure the CarFit Application Core Context (Fixes the upcoming Controller DI crash)
 builder.Services.AddDbContext<CarFitDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Configure Identity options to support custom roles explicitly
-builder.Services.AddDefaultIdentity<IdentityUser>(options => {
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
     options.SignIn.RequireConfirmedAccount = false;
-    options.Password.RequireDigit = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 10;
+    options.Password.RequiredUniqueChars = 4;
 })
-.AddRoles<IdentityRole>() // Enables RoleManager support
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Swap Identity's default PBKDF2 hasher for BCrypt cost 12.
+builder.Services.AddScoped<IPasswordHasher<IdentityUser>, BCryptPasswordHasher<IdentityUser>>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Add custom Seeding to create roles AND a default Admin account instantly on launch
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+await SeedIdentityAsync(app);
 
-    // 1. Seed Roles securely
-    string[] roleNames = { "Admin", "Seller", "Buyer" };
-    foreach (var roleName in roleNames)
-    {
-        if (!roleManager.RoleExistsAsync(roleName).Result)
-        {
-            roleManager.CreateAsync(new IdentityRole(roleName)).Wait();
-        }
-    }
-
-    // 2. Define the Default Administrator credentials
-    string adminEmail = "admin@carfit.com";
-    string adminPassword = "AdminPassword123!"; // Must pass Identity standard validations
-
-    // Check if the admin user already exists
-    var adminUser = userManager.FindByEmailAsync(adminEmail).Result;
-    if (adminUser == null)
-    {
-        var newAdmin = new IdentityUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            EmailConfirmed = true // Bypasses email validation rules
-        };
-
-        // Create the user container with a hashed password parameter
-        IdentityResult createAdminResult = userManager.CreateAsync(newAdmin, adminPassword).Result;
-
-        if (createAdminResult.Succeeded)
-        {
-            // Assign to the Admin area traffic matrix role
-            userManager.AddToRoleAsync(newAdmin, "Admin").Wait();
-        }
-    }
-}
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -104,7 +77,6 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-// Add the default routing maps to support custom Areas and fallback home page
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -117,3 +89,58 @@ app.MapRazorPages()
    .WithStaticAssets();
 
 app.Run();
+
+static async Task SeedIdentityAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+    var config = services.GetRequiredService<IConfiguration>();
+    var env = services.GetRequiredService<IHostEnvironment>();
+
+    string[] roleNames = { "Admin", "Dealer", "Buyer" };
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+
+    var adminEmail = config["AdminSeed:Email"];
+    var adminPassword = config["AdminSeed:Password"];
+
+    if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+    {
+        if (!env.IsDevelopment())
+        {
+            throw new InvalidOperationException(
+                "AdminSeed:Email and AdminSeed:Password must be configured (user secrets or environment variables) in non-Development environments.");
+        }
+        return;
+    }
+
+    if (await userManager.FindByEmailAsync(adminEmail) != null)
+    {
+        return;
+    }
+
+    var newAdmin = new IdentityUser
+    {
+        UserName = adminEmail,
+        Email = adminEmail,
+        EmailConfirmed = true
+    };
+
+    var createResult = await userManager.CreateAsync(newAdmin, adminPassword);
+    if (createResult.Succeeded)
+    {
+        await userManager.AddToRoleAsync(newAdmin, "Admin");
+    }
+    else
+    {
+        var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
+        throw new InvalidOperationException($"Failed to seed admin user: {errors}");
+    }
+}

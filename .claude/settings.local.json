@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout *)",
+      "Bash(dotnet *)",
+      "Bash(~/.dotnet/tools/dotnet-ef --version)",
+      "Bash(~/.dotnet/tools/dotnet-ef migrations *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}

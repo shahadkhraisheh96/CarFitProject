@@ -125,7 +125,7 @@ namespace CarFitProject.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     
                     // Defaults safely to Buyer profile type unless specified as a dealership manager
-                    string assignedRole = Input.SelectedRole == "Seller" ? "Seller" : "Buyer";
+                    string assignedRole = Input.SelectedRole == "Dealer" ? "Dealer" : "Buyer";
                     await _userManager.AddToRoleAsync(user, assignedRole);
 
                     var userId = await _userManager.GetUserIdAsync(user);
