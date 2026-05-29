@@ -69,6 +69,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 
 builder.Services.AddControllersWithViews();
 

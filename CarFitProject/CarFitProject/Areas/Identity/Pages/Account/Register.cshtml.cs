@@ -155,6 +155,10 @@ namespace CarFitProject.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (assignedRole == "Dealer")
+                        {
+                            return RedirectToAction("Index", "Onboarding", new { area = "Seller" });
+                        }
                         return LocalRedirect(returnUrl);
                     }
                 }

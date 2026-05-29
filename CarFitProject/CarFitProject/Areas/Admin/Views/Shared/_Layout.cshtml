@@ -62,6 +62,11 @@
                         <i class="fa fa-users-cog me-2"></i> User Management
                     </a>
 
+                    <a asp-area="Admin" asp-controller="Dealers" asp-action="Pending"
+                           class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dealers" ? "active" : "")">
+                        <i class="fa fa-user-tie me-2"></i> Dealer Approvals
+                    </a>
+
                     <a asp-area="Admin" asp-controller="Admin" asp-action="GlossaryManager"
                            class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "GlossaryManager" ? "active" : "")">
                         <i class="fa fa-book me-2"></i> Glossary Manager

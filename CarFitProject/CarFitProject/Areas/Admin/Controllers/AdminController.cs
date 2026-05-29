@@ -1,5 +1,6 @@
 using CarFitProject.Areas.Admin.Models;
 using CarFitProject.Models;
+using CarFitProject.Services;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +23,16 @@ namespace CarFitProject.Areas.Admin.Controllers
     {
         private readonly CarFitDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserAdminService _userAdmin;
 
-        public AdminController(CarFitDbContext context, UserManager<ApplicationUser> userManager)
+        public AdminController(
+            CarFitDbContext context,
+            UserManager<ApplicationUser> userManager,
+            IUserAdminService userAdmin)
         {
             _context = context;
             _userManager = userManager;
+            _userAdmin = userAdmin;
         }
 
         // FR-7.5: Analytics & Overview Dashboard Base Redirect to Dashboard Area
@@ -40,6 +46,65 @@ namespace CarFitProject.Areas.Admin.Controllers
         {
             var userAccounts = await _userManager.Users.OrderByDescending(u => u.Id).ToListAsync();
             return View(userAccounts);
+        }
+
+        // FR-7.1: deactivate by setting LockoutEnd to a far-future date so Identity refuses sign-in.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeactivateUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(UsersList));
+            }
+
+            user.IsActive = false;
+            user.LockoutEnabled = true;
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+            await _userManager.UpdateAsync(user);
+
+            TempData["SuccessMessage"] = $"Deactivated {user.Email}.";
+            return RedirectToAction(nameof(UsersList));
+        }
+
+        // FR-7.1: reactivate.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ActivateUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found.";
+                return RedirectToAction(nameof(UsersList));
+            }
+
+            user.IsActive = true;
+            await _userManager.SetLockoutEndDateAsync(user, null);
+            await _userManager.UpdateAsync(user);
+
+            TempData["SuccessMessage"] = $"Activated {user.Email}.";
+            return RedirectToAction(nameof(UsersList));
+        }
+
+        // FR-7.1: delete. Refuses to delete the seeded admin; refuses to delete a
+        // dealer who has listings (deactivate instead).
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var result = await _userAdmin.DeleteUserAsync(id);
+            if (result.Ok)
+            {
+                TempData["SuccessMessage"] = result.Message;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.Message;
+            }
+            return RedirectToAction(nameof(UsersList));
         }
 
         // FR-7.4: Inspection Glossary Management Data View
