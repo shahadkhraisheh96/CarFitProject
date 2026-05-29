@@ -6,7 +6,17 @@
       "Bash(~/.dotnet/tools/dotnet-ef --version)",
       "Bash(~/.dotnet/tools/dotnet-ef migrations *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(sqllocaldb info *)",
+      "Bash(echo \"---LOCALDB EXIT $?---\")",
+      "Bash(sc query *)",
+      "Bash(sqlcmd -S \".\\\\SQLEXPRESS\" -E -C -Q \"SELECT @@SERVERNAME AS server_name, SERVERPROPERTY\\('ProductVersion'\\) AS version, SERVERPROPERTY\\('Edition'\\) AS edition\")",
+      "Read(//c/Program Files/Microsoft SQL Server/Client SDK/ODBC/**)",
+      "Read(//c/Windows/System32/**)",
+      "Bash(reg query *)",
+      "Bash(~/.dotnet/tools/dotnet-ef database *)",
+      "Bash(\"/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/180/Tools/Binn/sqlcmd.exe\" -S \".\\\\SQLEXPRESS\" -E -d CarFit -C -Q \"SELECT Name FROM AspNetRoles ORDER BY Name; SELECT u.Email, r.Name FROM AspNetUsers u JOIN AspNetUserRoles ur ON ur.UserId=u.Id JOIN AspNetRoles r ON r.Id=ur.RoleId; SELECT COUNT\\(*\\) AS tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'; SELECT COUNT\\(*\\) AS view_exists FROM sys.views WHERE name='vw_AvailableCarDetails';\")",
+      "Bash(powershell -Command ' *)"
     ]
   }
 }
