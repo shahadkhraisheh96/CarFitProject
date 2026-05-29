@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Contact Us";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 p-0" style="background-image: url('/img/carousel-bg-1.jpg');">
+    <div class="container-fluid page-header-inner py-5">
+        <div class="container text-center">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">Contact Us</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- Contact Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">COMMUNICATION NODE</span>
+            <h1 class="fw-bold text-dark">Contact For Report Verification Queries</h1>
+            <p class="text-muted">Reach out to our vehicle valuation coordinators for live assistance.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="h-100 rounded-4 overflow-hidden shadow-sm hover-lift">
+                    <iframe class="w-100 h-100"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108215.44111328904!2d35.83471460591242!3d31.951569421833192!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151b14e995b0541b%3A0xc4eb090bda332463!2sAmman!5e0!3m2!1sen!2sjo!4v1716000000000!5m2!1sen!2sjo"
+                            frameborder="0" style="min-height: 400px; border:0;" allowfullscreen="" aria-hidden="false"
+                            tabindex="0"></iframe>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="glass-card shadow-sm border-0 bg-white rounded-4 p-5 h-100">
+                    <p class="text-muted mb-4">Have questions regarding a recent vehicle inspection report, or need help adjusting your matching filter constraints? Send our technical automotive evaluation desk a direct message.</p>
+                    <form method="post" action="#">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-2" id="name" placeholder="Your Name">
+                                    <label for="name" class="fw-bold text-secondary">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control border-2" id="email" placeholder="Your Email">
+                                    <label for="email" class="fw-bold text-secondary">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-2" id="subject" placeholder="Subject">
+                                    <label for="subject" class="fw-bold text-secondary">Subject</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control border-2" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
+                                    <label for="message" class="fw-bold text-secondary">Message</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary w-100 py-3 fw-bold" type="submit"><i class="fa-solid fa-paper-plane me-2"></i>Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->

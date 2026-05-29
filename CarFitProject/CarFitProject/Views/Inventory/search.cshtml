@@ -1,0 +1,126 @@
+﻿@model List<CarFitProject.Models.CarListing>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Explore Marketplace Inventory";
+}
+
+<style>
+    /* Fluid widescreen content grid context constraints */
+    .widescreen-wrapper {
+        width: 100% !important;
+        padding: 2rem !important;
+        margin: 0 !important;
+    }
+
+    .market-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-dim);
+        border-radius: 12px;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+        .market-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+    .price-tag {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Interactive glossary element interaction states */
+    .glossary-trigger {
+        cursor: help;
+        border-bottom: 1px dashed var(--primary);
+        transition: color 0.2s ease;
+    }
+
+        .glossary-trigger:hover {
+            color: var(--primary-light) !important;
+        }
+</style>
+
+<div class="widescreen-wrapper">
+    <div class="p-4 mb-4 style-filter-panel market-card">
+        <div class="row g-3">
+            <div class="col-12 col-md-5">
+                <label class="form-label small fw-bold text-muted">Keyword Search</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-0 text-muted"><i class="fa fa-search"></i></span>
+                    <input type="text" id="keywordSearch" class="form-control bg-dark text-white border-0" placeholder="Search Make, Model, Trim...">
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-md-3">
+                <label class="form-label small fw-bold text-muted">Vehicle Brand</label>
+                <select id="brandSelect" class="form-select bg-dark text-white border-0">
+                    <option value="">All Makes</option>
+                </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md-4">
+                <label class="form-label small fw-bold text-muted">Maximum Price Cap (JOD)</label>
+                <div class="input-group">
+                    <input type="number" id="priceCeiling" class="form-control bg-dark text-white border-0" placeholder="Enter ceiling limit...">
+                    <span class="input-group-text bg-dark border-0 text-muted">JOD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="listingsGridStage">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="col-12 text-center py-5 text-muted">
+                <i class="fa fa-car-side fs-1 mb-3 opacity-25"></i>
+                <p>No listings are currently active in the marketplace showroom logs.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-12 col-md-6 col-xl-4 listing-node"
+                     data-make="@item.Car?.Make?.ToLower()"
+                     data-model="@item.Car?.Model?.ToLower()"
+                     data-trim="@item.Car?.Trim?.ToLower()"
+                     data-price="@item.ListingPrice">
+                     
+                    <div class="market-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-dark border border-secondary text-muted px-2 py-1">@item.Car?.Year</span>
+                                <span class="badge badge-low text-uppercase">Available</span>
+                            </div>
+                            <h3 class="h5 text-white fw-bold text-uppercase mb-1">@item.Car?.Make</h3>
+                            <p class="text-muted small text-capitalize mb-3">@item.Car?.Model &mdash; @(item.Car?.Trim ?? "Base")</p>
+                            
+                            <div class="bg-dark bg-opacity-40 rounded p-2.5 mb-2 border border-dim">
+                                <span class="text-muted d-block font-monospace mb-1" style="font-size: 0.65rem; uppercase; tracking-wider: 0.5px;">Inspection Remarks:</span>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="glossary-trigger text-white small fw-medium" data-term="جيد">
+                                        <i class="fa-solid fa-circle-info text-primary me-1 small"></i>جيد (Sound Chassis)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-3 mt-2 border-top border-dim d-flex justify-content-between align-items-center">
+                            <span class="small text-muted font-monospace">Showroom Value</span>
+                            <span class="price-tag">
+                                @(item.ListingPrice.HasValue ? item.ListingPrice.Value.ToString("N0") : "0")
+                                <span class="small text-muted font-sans-serif fs-6" style="font-weight: 400;">JOD</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/market-search.js" asp-append-version="true"></script>
+}

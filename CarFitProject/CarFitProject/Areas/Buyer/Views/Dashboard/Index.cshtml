@@ -1,0 +1,139 @@
+@model IEnumerable<CarFitProject.ViewModel.RecommendedCarViewModel>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "My Fit Recommendations";
+    
+    // Grab the multi-profile data collection we stored in the controller's ViewBag
+    var profiles = ViewBag.AllUserProfiles as IEnumerable<CarFitProject.Models.UserProfile> ?? new List<CarFitProject.Models.UserProfile>();
+    var currentProfileId = ViewBag.CurrentProfileId as int?;
+    var currentProfileName = ViewBag.CurrentProfileName as string ?? "Active Profile";
+}
+
+<div class="container py-4">
+    <div class="row align-items-center mb-5 g-3 border-bottom pb-4">
+        <div class="col-md-7 text-start">
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">FR-5 MATCHMAKING PIPELINE</span>
+            <h1 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-check me-2 text-primary"></i>Your Tailored Match Portfolio</h1>
+            <p class="text-muted mb-0">Cross-referencing your custom lifestyle habits against live vehicle listings.</p>
+        </div>
+        
+        <div class="col-md-5 text-md-end">
+            <div class="d-inline-block text-start" style="min-width: 280px;">
+                <label class="form-label small fw-bold text-secondary mb-1">Switch Active Persona:</label>
+                <div class="dropdown">
+                    <button class="btn btn-white border-2 border-dark dropdown-toggle w-100 d-flex justify-content-between align-items-center fw-bold text-dark py-2.5 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius:12px;">
+                        <span>🎯 @currentProfileName</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end w-100 shadow rounded-3 border-0 mt-2">
+                        @foreach (var profile in profiles)
+                        {
+                            <li>
+                                <a class="dropdown-item py-2.5 d-flex justify-content-between align-items-center @(profile.ProfileId == currentProfileId ? "active bg-primary text-white" : "")" 
+                                   asp-action="Index" asp-route-activeProfileId="@profile.ProfileId">
+                                    <span>@profile.ProfileName</span>
+                                    @if(profile.ProfileId == currentProfileId) {
+                                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-30 px-2 py-0.5 small">Selected</span>
+                                    }
+                                </a>
+                            </li>
+                        }
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item py-2.5 text-success fw-bold d-flex align-items-center gap-2" asp-action="CreateProfile">
+                                <i class="fa-solid fa-plus-circle"></i> Build New Persona...
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="glass-card text-center py-5 bg-white border-0">
+            <div class="fs-1 mb-3">🔍</div>
+            <h3 class="fw-bold text-dark">No direct matches found...</h3>
+            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
+                We couldn't find vehicles matching this specific profile ruleset right now. Try loosening your budget slider caps or altering your vehicle size choices!
+            </p>
+            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-action="CreateProfile">Modify Questionnaire Parameters</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var car in Model.OrderByDescending(c => c.DynamicMatchScore))
+            {
+                <div class="col-xl-4 col-md-6">
+                    <div class="glass-card h-100 p-0 border-0 overflow-hidden hover-lift bg-white position-relative shadow-sm d-flex flex-column justify-content-between">
+                        
+                        <div class="position-absolute top-0 end-0 m-3 z-index-2">
+                            <span class="badge badge-match">
+                                <i class="fa-solid fa-bolt me-1"></i> @car.DynamicMatchScore% Match
+                            </span>
+                        </div>
+
+                        <div>
+                            <div class="bg-dark text-white p-4 pt-5" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);">
+                                <span class="text-white-50 text-uppercase tracking-wider small fw-bold"><i class="fa-solid fa-location-dot me-1"></i> @car.Year @car.City</span>
+                                <h3 class="fw-bold mb-0 text-white text-truncate mt-1">@car.Make @car.Model</h3>
+                            </div>
+
+                            <div class="p-4">
+                                <div class="d-flex justify-content-between align-items-baseline mb-4 border-bottom pb-3">
+                                    <div>
+                                        <span class="text-muted d-block small">Market Value</span>
+                                        <span class="fs-3 fw-bold text-dark text-nowrap">@car.ListingPrice.ToString("N0") <span class="fs-6 fw-normal text-secondary">JD</span></span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="text-muted d-block small">Trust Rating</span>
+                                        <span class="badge bg-info bg-opacity-10 text-info border border-info px-2 py-1 fw-bold"><i class="fa-solid fa-star me-1 text-info"></i>@car.TrustScore.ToString("F1") / 5.0</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-screwdriver-wrench me-1"></i>Stated Structural Metrics:</div>
+                                    <p class="text-dark bg-light p-2.5 rounded-3 border-start border-3 border-primary text-truncate mb-0 small">
+                                        📋 @(string.IsNullOrEmpty(car.BodyCondition) ? "Standard wear" : car.BodyCondition)
+                                    </p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-file-invoice me-1"></i>ورقة الفحص Summary:</div>
+                                    <p class="text-danger bg-danger bg-opacity-10 p-2.5 rounded-3 border-start border-3 border-danger mb-0 fw-bold text-end small" dir="rtl">
+                                        🛠️ @(string.IsNullOrEmpty(car.DescriptionScore) ? "فحص كامل" : car.DescriptionScore)
+                                    </p>
+                                </div>
+
+                                <div class="mb-2 border-top pt-3">
+                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-circle-question me-1"></i>Glossary Interpreter:</div>
+                                    <div class="text-end mt-1">
+                                        @await Component.InvokeAsync("GlossaryTooltip", new { rawInspectionText = car.DescriptionScore })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 border-top pt-3 mt-auto">
+                            <button class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded w-100" type="button" onclick="Swal.fire({title:'Appraisal Sheet',text:'Full appraised inspection sheets will be sent dynamically via API integration.',icon:'info'});">
+                                View Full Appraised Sheet <i class="fa-solid fa-arrow-right-long ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+}

@@ -1,0 +1,276 @@
+/********** CarFit Premium Design System – Red Edition **********/
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --primary:           #D81324;
+    --primary-dark:      #a30e1a;
+    --primary-light:     #f53d4e;
+    --primary-gradient:  linear-gradient(135deg, #D81324 0%, #991b1b 100%);
+    --secondary:         #1a1a2e;
+    --secondary-light:   #2d2d44;
+    --light:             #f8fafc;
+    --dark:              #0d0d16;
+    --card-bg:           rgba(255, 255, 255, 0.75);
+    --border-color:      rgba(216, 19, 36, 0.15);
+    --success:           #10b981;
+    --warning:           #f59e0b;
+    --danger:            #ef4444;
+    --info:              #06b6d4;
+    --font-sans:         'Outfit', sans-serif;
+    --shadow-sm:         0 2px 8px rgba(13, 13, 22, 0.06);
+    --shadow-md:         0 8px 30px rgba(13, 13, 22, 0.10);
+    --shadow-lg:         0 15px 40px rgba(13, 13, 22, 0.14);
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--light);
+    color: var(--secondary);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+#spinner {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    z-index: 99999;
+}
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    color: var(--secondary);
+}
+
+.text-primary-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    text-transform: none;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(216, 19, 36, 0.35);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(216, 19, 36, 0.50);
+    color: #FFFFFF;
+    background: linear-gradient(135deg, #f53d4e 0%, #D81324 100%);
+}
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--secondary);
+    border: 1px solid var(--secondary-light);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(26, 26, 46, 0.2);
+}
+.btn-secondary:hover {
+    background: var(--secondary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 26, 46, 0.30);
+    color: #FFFFFF;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+.btn-outline-primary:hover {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+.navbar {
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid rgba(216, 19, 36, 0.10);
+}
+
+.navbar-brand h2 {
+    font-weight: 800;
+    font-size: 1.8rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--secondary);
+    font-weight: 600;
+    padding: 20px 15px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link.active {
+    color: var(--primary);
+}
+.navbar-light .navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: 15px;
+    left: 15px;
+    background: var(--primary-gradient);
+    transition: width 0.3s ease;
+    border-radius: 10px;
+}
+.navbar-light .navbar-nav .nav-link:hover::after,
+.navbar-light .navbar-nav .nav-link.active::after {
+    width: calc(100% - 30px);
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ── Forms ───────────────────────────────────────────────── */
+.form-control, .form-select {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: 0.85rem 1.25rem;
+    border-radius: 14px;
+    border: 2px solid rgba(26, 26, 46, 0.10);
+    background-color: rgba(255, 255, 255, 0.80);
+    transition: all 0.3s ease;
+    color: var(--secondary);
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(216, 19, 36, 0.12);
+    background-color: #FFFFFF;
+}
+
+/* ── Page Headers ────────────────────────────────────────── */
+.page-header {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 5rem 0;
+}
+.page-header-inner {
+    position: relative;
+    z-index: 2;
+}
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 80%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(216, 19, 36, 0.20) 0%, rgba(0,0,0,0) 70%);
+    z-index: 1;
+}
+
+/* ── Glossary Tooltip ────────────────────────────────────── */
+.glossary-tooltip-trigger {
+    border-bottom: 2px dashed var(--primary);
+    cursor: help;
+    color: var(--primary);
+    font-weight: 700;
+    transition: color 0.3s;
+}
+.glossary-tooltip-trigger:hover {
+    color: var(--primary-dark);
+}
+
+/* ── Badges ──────────────────────────────────────────────── */
+.badge-match {
+    background: var(--primary-gradient);
+    color: #FFFFFF;
+    font-weight: 800;
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 10px rgba(216, 19, 36, 0.25);
+}
+
+/* ── Facts Banner ────────────────────────────────────────── */
+.fact {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%) !important;
+    border-radius: 30px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(216, 19, 36, 0.15);
+}
+
+/* ── Back to Top ─────────────────────────────────────────── */
+.back-to-top {
+    position: fixed;
+    display: none;
+    right: 30px;
+    bottom: 30px;
+    z-index: 99;
+    background: var(--primary-gradient);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(216, 19, 36, 0.35);
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.animated-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Bootstrap Primary Override ──────────────────────────── */
+.text-primary { color: var(--primary) !important; }
+.bg-primary   { background: var(--primary-gradient) !important; }
+a { color: var(--primary); transition: color 0.2s; }
+a:hover { color: var(--primary-dark); }

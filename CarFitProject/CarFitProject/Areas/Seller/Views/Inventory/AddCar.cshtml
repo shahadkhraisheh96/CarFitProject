@@ -1,0 +1,67 @@
+@model CarFitProject.Models.Car
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Add New Inventory";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card shadow border-0 bg-white rounded-4 overflow-hidden p-0">
+                <div class="text-white text-center py-4 px-5" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%); border-bottom: 2px solid rgba(139, 92, 246, 0.2);">
+                    <h3 class="mb-1 fw-bold text-white"><i class="fa-solid fa-file-circle-plus me-2 text-primary-gradient"></i>Register Lot Vehicle Records</h3>
+                    <p class="mb-0 text-white-50 small">Appends automobile characteristics across database catalog buffers.</p>
+                </div>
+                
+                <div class="p-5">
+                    <form asp-action="AddCar" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <h5 class="text-primary fw-bold mb-4 border-bottom pb-2 text-start"><i class="fa-solid fa-gears me-2"></i>1. Mechanical Specifications</h5>
+                        <div class="row g-3 mb-4 text-start">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Manufacturer (Make)</label>
+                                <input asp-for="Make" class="form-control border-2" placeholder="e.g., Hyundai, Kia, Toyota" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Model Line</label>
+                                <input asp-for="Model" class="form-control border-2" placeholder="e.g., Elantra, Sportage, Camry" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Production Year</label>
+                                <input asp-for="Year" type="number" value="2022" class="form-control border-2" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Transmission Layout</label>
+                                <select asp-for="Transmission" class="form-select border-2">
+                                    <option value="Automatic">Automatic</option>
+                                    <option value="Manual">Manual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h5 class="text-primary fw-bold mb-4 border-bottom pb-2 text-start"><i class="fa-solid fa-hand-holding-dollar me-2"></i>2. Commercial Lot Metadata</h5>
+                        <div class="row g-3 mb-5 text-start">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Retail Listing Valuation (JD)</label>
+                                <input name="listingPrice" type="number" value="12500" class="form-control border-2" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-dark">Allowed Payment Channels</label>
+                                <select name="paymentMethodAllowed" class="form-select border-2">
+                                    <option value="Cash">Cash Basis Only</option>
+                                    <option value="Cash/Installments">Cash and Installment Contracts</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between pt-3 border-top">
+                            <a class="btn btn-outline-secondary px-4 fw-bold" asp-action="Index"><i class="fa-solid fa-arrow-left-long me-2"></i> Cancel</a>
+                            <button type="submit" class="btn btn-success px-5 fw-bold shadow-sm"><i class="fa-solid fa-circle-check me-2"></i>Save to Active Lot</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

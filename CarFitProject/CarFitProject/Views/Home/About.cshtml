@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "About Our Advisor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Header Start -->
+<div class="container-fluid page-header mb-5 p-0" style="background-image: url('/img/carousel-bg-1.jpg');">
+    <div class="container-fluid page-header-inner py-5">
+        <div class="container text-center">
+            <h1 class="display-3 text-white mb-3 animated slideInDown">About Our Advisor</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">About</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<!-- About Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" style="min-height: 400px;">
+                <div class="position-relative h-100 rounded-4 overflow-hidden shadow-lg hover-lift">
+                    <img class="img-fluid w-100 h-100" src="/img/about.jpg" style="object-fit: cover;" alt="CarFit About">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">CARFIT TECHNOLOGY</span>
+                <h1 class="fw-bold text-dark mb-4">Smart Way to Evaluate Pre-Owned Vehicles</h1>
+                <p class="text-muted mb-4">We bridge backend technical analytical inspection data with clean, user-focused diagnostic metrics. Our mission is to take the guesswork out of purchasing used vehicles through rigorous verification parameters and AI-driven matching profiles.</p>
+                
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-center bg-white p-3 rounded-3 shadow-sm">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 me-3">
+                            <i class="fa-solid fa-chart-line fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1 text-dark">Data-Driven Vehicle Compatibility</h5>
+                            <p class="mb-0 text-muted small">Match vehicles to exact lifestyle profiles using multi-point scoring variables.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center bg-white p-3 rounded-3 shadow-sm">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 me-3">
+                            <i class="fa-solid fa-shield-halved fs-4"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1 text-dark">Uncompromising Verification</h5>
+                            <p class="mb-0 text-muted small">Every report is backed by real-time field engine scanners and diagnostic logs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+<!-- Facts Counter Strip Start -->
+<div class="container-fluid fact py-5 my-5 text-white">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-6 col-lg-3">
+                <i class="fa-solid fa-circle-check fs-1 mb-3 text-primary-gradient"></i>
+                <h2 class="text-white mb-2 fw-bold">150+</h2>
+                <p class="text-white-50 mb-0 small">Inspection Checkpoints</p>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <i class="fa-solid fa-car fs-1 mb-3 text-primary-gradient"></i>
+                <h2 class="text-white mb-2 fw-bold">1,240+</h2>
+                <p class="text-white-50 mb-0 small">Vehicles Evaluated</p>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <i class="fa-solid fa-user-tie fs-1 mb-3 text-primary-gradient"></i>
+                <h2 class="text-white mb-2 fw-bold">35+</h2>
+                <p class="text-white-50 mb-0 small">Expert Specialists</p>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <i class="fa-solid fa-face-smile fs-1 mb-3 text-primary-gradient"></i>
+                <h2 class="text-white mb-2 fw-bold">98%</h2>
+                <p class="text-white-50 mb-0 small">Success Match Rate</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Facts Counter Strip End -->

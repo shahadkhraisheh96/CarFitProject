@@ -1,0 +1,197 @@
+@model List<CarFitProject.Models.CarListing>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "System Control Dashboard";
+}
+
+<style>
+    .widescreen-wrapper {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .kpi-number {
+        font-size: 2.25rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .meta-year-badge {
+        background-color: #0b0f19;
+        color: var(--text-muted);
+        border: 1px solid var(--border-dim);
+    }
+
+    .custom-wide-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05rem;
+        background-color: var(--bg-sidebar) !important;
+        border-bottom: 1px solid var(--border-dim) !important;
+        padding: 14px 12px !important;
+    }
+
+    .custom-wide-table td {
+        border-bottom: 1px solid var(--border-dim) !important;
+        padding: 1rem 0.75rem !important;
+    }
+</style>
+
+<div class="widescreen-wrapper">
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="admin-card">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 border-bottom border-secondary pb-3" style="border-color: var(--border-dim) !important;">
+                    <div>
+                        <span class="badge badge-critical mb-2 text-uppercase tracking-wider">FR-7 Administrative Root</span>
+                        <h1 class="fw-bold text-white mb-0">
+                            <i class="fa-solid fa-server me-2 text-primary"></i>CarFit Central Control Engine
+                        </h1>
+                    </div>
+                    <div class="text-md-end mt-3 mt-md-0 d-flex flex-column align-items-md-end gap-2">
+                        <a asp-area="Admin" asp-controller="Admin" asp-action="BulkLoader" class="btn btn-outline-dark text-start p-2 hover-lift text-decoration-none" style="border-color: var(--border-color) !important; max-width: 280px; background: rgba(255,255,255,0.02); border-radius: 10px;">
+                            <div class="fw-bold text-white small mb-0"><i class="fa-solid fa-file-csv me-2 text-primary"></i>Bulk CSV Loader Matrix</div>
+                        </a>
+                    </div>
+                </div>
+                <p class="fs-5 text-muted leading-relaxed mb-0 w-100">Welcome to the administrative master workspace.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="admin-card d-flex align-items-center justify-content-between p-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: rgba(216, 19, 36, 0.10); border: 1px solid var(--border-color);">
+                    <i class="fa fa-users fa-2x text-primary"></i>
+                </div>
+                <div class="text-end">
+                    <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Platform Users</p>
+                    <h2 class="mb-0 kpi-number">@(ViewBag.TotalUsers ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="admin-card d-flex align-items-center justify-content-between p-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.10); border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <i class="fa fa-car-side fa-2x text-success"></i>
+                </div>
+                <div class="text-end">
+                    <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Active Listings</p>
+                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@(ViewBag.TotalListings ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="admin-card d-flex align-items-center justify-content-between p-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: rgba(245, 158, 11, 0.10); border: 1px solid rgba(245, 158, 11, 0.2);">
+                    <i class="fa fa-book-atlas fa-2x text-warning"></i>
+                </div>
+                <div class="text-end">
+                    <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Glossary Dictionary</p>
+                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@(ViewBag.TotalGlossaryTerms ?? 0)</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="admin-card p-4">
+                <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-chart-area me-2 text-primary"></i>Platform Inventory Growth Trend</h5>
+                <div style="height: 300px; width: 100%;">
+                    <canvas id="inventoryGrowthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="admin-card p-0 overflow-hidden shadow-sm">
+                <div class="py-3 px-4 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(0,0,0,0.15); border-color: var(--border-dim) !important;">
+                    <h5 class="mb-0 text-white fw-bold"><i class="fa fa-clock me-2 text-primary"></i>Recent Inventory Additions</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0 table-hover align-middle w-100 custom-wide-table">
+                        <thead>
+                            <tr class="text-white">
+                                <th class="ps-4">Listing ID</th>
+                                <th>Vehicle Specification Meta</th>
+                                <th>Listing Price</th>
+                                <th>Creation Date</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var listing in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-4 text-muted font-monospace fw-bold">#@listing.Id</td>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="text-white fw-bold text-uppercase">@(listing.Car?.Make)</span>
+                                                <span class="text-muted">@(listing.Car?.Model)</span>
+                                                <span class="badge meta-year-badge">@(listing.Car?.Year)</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-primary fw-bold font-monospace">@(listing.ListingPrice?.ToString("N0")) JOD</td>
+                                        <td class="text-muted small">@DateTime.Now.ToShortDateString()</td>
+                                        <td class="text-center">
+                                            <span class="badge badge-low">Available</span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const labelsArray = @Html.Raw(ViewBag.ChartLabels ?? "[]");
+            const dataArray = @Html.Raw(ViewBag.ChartData ?? "[]");
+            const ctx = document.getElementById('inventoryGrowthChart').getContext('2d');
+            
+            let gradientFill = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientFill.addColorStop(0, 'rgba(216, 19, 36, 0.6)');
+            gradientFill.addColorStop(1, 'rgba(216, 19, 36, 0.01)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labelsArray,
+                    datasets: [{
+                        data: dataArray,
+                        backgroundColor: gradientFill,
+                        borderColor: '#D81324',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' }, beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+}
