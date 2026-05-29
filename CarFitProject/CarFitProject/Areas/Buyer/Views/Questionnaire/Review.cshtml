@@ -1,0 +1,80 @@
+@model CarFitProject.ViewModel.ProfileDraftViewModel
+@{
+    ViewData["Title"] = "Profile — Review";
+    ViewData["WizardStep"] = 6;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="bg-white shadow-sm rounded-4 p-5">
+                <partial name="_WizardProgress" />
+
+                <h2 class="fw-bold text-dark mb-1">Review &amp; submit</h2>
+                <p class="text-muted mb-4">Check your answers — you can go back to any step to make changes.</p>
+
+                <dl class="row mb-4">
+                    <dt class="col-sm-5 fw-semibold text-secondary">Profile name</dt>
+                    <dd class="col-sm-7">@Model.ProfileName</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Age</dt>
+                    <dd class="col-sm-7">@Model.Age</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Marital status</dt>
+                    <dd class="col-sm-7">@Model.MaritalStatus</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Has kids</dt>
+                    <dd class="col-sm-7">
+                        @if (Model.HasKids == true)
+                        {
+                            <span>Yes — @Model.KidsCount</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Primary purpose</dt>
+                    <dd class="col-sm-7">@Model.Purpose</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Trip type</dt>
+                    <dd class="col-sm-7">@Model.TripType</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Budget</dt>
+                    <dd class="col-sm-7">@Model.BudgetMin – @Model.BudgetMax JD</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Payment method</dt>
+                    <dd class="col-sm-7">
+                        @Model.PaymentMethod
+                        @if (Model.PaymentMethod == "Installments" && Model.InstallmentMonths.HasValue)
+                        {
+                            <span> · @Model.InstallmentMonths months</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Condition</dt>
+                    <dd class="col-sm-7">@(Model.ConditionPref == "Any" ? "No preference" : Model.ConditionPref)</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Transmission</dt>
+                    <dd class="col-sm-7">@Model.TransmissionPref</dd>
+
+                    <dt class="col-sm-5 fw-semibold text-secondary">Size</dt>
+                    <dd class="col-sm-7">@Model.SizePref</dd>
+                </dl>
+
+                <form method="post" asp-action="Submit">
+                    @Html.AntiForgeryToken()
+                    <div class="d-flex justify-content-between gap-2">
+                        <a asp-action="Step5" class="btn btn-outline-secondary fw-bold">
+                            <i class="fa fa-arrow-left me-2"></i>Back
+                        </a>
+                        <button type="submit" class="btn btn-primary fw-bold">
+                            <i class="fa fa-check me-2"></i>@(Model.ExistingProfileId.HasValue ? "Save changes" : "Save profile")
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

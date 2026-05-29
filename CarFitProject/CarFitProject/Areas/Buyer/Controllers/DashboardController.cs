@@ -31,7 +31,7 @@ namespace CarFitProject.Areas.Buyer.Controllers
 
             if (!profiles.Any())
             {
-                return RedirectToAction("CreateProfile");
+                return RedirectToAction("Start", "Questionnaire");
             }
 
             var selectedProfile = activeProfileId.HasValue
@@ -46,33 +46,6 @@ namespace CarFitProject.Areas.Buyer.Controllers
 
             var matches = await _recommendations.GetMatchesAsync(selectedProfile);
             return View(matches);
-        }
-
-        [HttpGet]
-        public IActionResult CreateProfile()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProfile(UserProfile model)
-        {
-            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId)) return Challenge();
-
-            model.UserId = userId;
-            model.IsActive = true;
-
-            if (string.IsNullOrEmpty(model.ProfileName)) model.ProfileName = "My Lifestyle Fit";
-            if (string.IsNullOrEmpty(model.TransmissionPref)) model.TransmissionPref = "Automatic";
-            if (string.IsNullOrEmpty(model.SizePref)) model.SizePref = "Sedan";
-            if (string.IsNullOrEmpty(model.Purpose)) model.Purpose = "Commuting";
-
-            _context.UserProfiles.Add(model);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index", new { activeProfileId = model.ProfileId });
         }
     }
 }

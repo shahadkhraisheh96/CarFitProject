@@ -39,7 +39,12 @@
                         }
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <a class="dropdown-item py-2.5 text-success fw-bold d-flex align-items-center gap-2" asp-action="CreateProfile">
+                            <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Profiles" asp-action="Index">
+                                <i class="fa-solid fa-list-check"></i> Manage profiles
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2.5 text-success fw-bold d-flex align-items-center gap-2" asp-controller="Questionnaire" asp-action="Start">
                                 <i class="fa-solid fa-plus-circle"></i> Build New Persona...
                             </a>
                         </li>
@@ -57,7 +62,7 @@
             <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
                 We couldn't find vehicles matching this specific profile ruleset right now. Try loosening your budget slider caps or altering your vehicle size choices!
             </p>
-            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-action="CreateProfile">Modify Questionnaire Parameters</a>
+            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-controller="Questionnaire" asp-action="Start" asp-route-profileId="@currentProfileId">Modify Questionnaire Parameters</a>
         </div>
     }
     else

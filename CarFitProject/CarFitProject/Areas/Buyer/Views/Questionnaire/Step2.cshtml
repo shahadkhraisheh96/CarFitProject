@@ -1,0 +1,67 @@
+@model CarFitProject.ViewModel.QuestionnaireStep2ViewModel
+@{
+    ViewData["Title"] = "Profile — Family";
+    ViewData["WizardStep"] = 2;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="bg-white shadow-sm rounded-4 p-5">
+                <partial name="_WizardProgress" />
+
+                <h2 class="fw-bold text-dark mb-1">Family</h2>
+                <p class="text-muted mb-4">This helps us match seat count and safety features.</p>
+
+                <form method="post" asp-action="Step2" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold text-secondary d-block mb-2">Do you have kids?</label>
+                        <div class="btn-group" role="group" aria-label="Has kids">
+                            <input asp-for="HasKids" type="radio" class="btn-check" id="kids-no" value="false" autocomplete="off" />
+                            <label for="kids-no" class="btn btn-outline-primary">No</label>
+                            <input asp-for="HasKids" type="radio" class="btn-check" id="kids-yes" value="true" autocomplete="off" />
+                            <label for="kids-yes" class="btn btn-outline-primary">Yes</label>
+                        </div>
+                        <span asp-validation-for="HasKids" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="form-floating mb-4" id="kidsCountWrapper">
+                        <input asp-for="KidsCount" type="number" min="1" max="20" class="form-control border-2" placeholder="Kids count" />
+                        <label asp-for="KidsCount" class="fw-bold text-secondary"></label>
+                        <span asp-validation-for="KidsCount" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between gap-2">
+                        <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
+                            <i class="fa fa-arrow-left me-2"></i>Back
+                        </button>
+                        <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
+                            Next<i class="fa fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            var wrapper = document.getElementById('kidsCountWrapper');
+            function syncVisibility() {
+                var yes = document.getElementById('kids-yes');
+                wrapper.style.display = (yes && yes.checked) ? '' : 'none';
+            }
+            ['kids-no','kids-yes'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) el.addEventListener('change', syncVisibility);
+            });
+            syncVisibility();
+        })();
+    </script>
+}

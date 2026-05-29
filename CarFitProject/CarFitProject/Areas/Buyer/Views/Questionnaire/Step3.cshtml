@@ -1,0 +1,59 @@
+@model CarFitProject.ViewModel.QuestionnaireStep3ViewModel
+@{
+    ViewData["Title"] = "Profile — Purpose & Trip";
+    ViewData["WizardStep"] = 3;
+    var purposes = new[] { "Work", "University", "Family use", "Travel" };
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="bg-white shadow-sm rounded-4 p-5">
+                <partial name="_WizardProgress" />
+
+                <h2 class="fw-bold text-dark mb-1">How will you use it?</h2>
+                <p class="text-muted mb-4">Purpose and trip type shape the body type and engine recommendations.</p>
+
+                <form method="post" asp-action="Step3" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold text-secondary d-block mb-2" asp-for="Purpose"></label>
+                        <select asp-for="Purpose" class="form-select border-2">
+                            @foreach (var purpose in purposes)
+                            {
+                                <option value="@purpose">@purpose</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Purpose" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="fw-bold text-secondary d-block mb-2">Trip type</label>
+                        <div class="btn-group" role="group" aria-label="Trip type">
+                            <input asp-for="TripType" type="radio" class="btn-check" id="trip-short" value="Short" autocomplete="off" />
+                            <label for="trip-short" class="btn btn-outline-primary">Short (city)</label>
+                            <input asp-for="TripType" type="radio" class="btn-check" id="trip-long" value="Long" autocomplete="off" />
+                            <label for="trip-long" class="btn btn-outline-primary">Long (highway)</label>
+                        </div>
+                        <span asp-validation-for="TripType" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between gap-2">
+                        <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
+                            <i class="fa fa-arrow-left me-2"></i>Back
+                        </button>
+                        <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
+                            Next<i class="fa fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
