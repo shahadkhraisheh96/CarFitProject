@@ -108,6 +108,27 @@ static async Task SeedIdentityAsync(WebApplication app)
         }
     }
 
+    // Migrate any users still on the legacy "Seller" role across to "Dealer",
+    // then drop the empty role. Idempotent — does nothing once "Seller" is gone.
+    if (await roleManager.RoleExistsAsync("Seller"))
+    {
+        var legacySellerUsers = await userManager.GetUsersInRoleAsync("Seller");
+        foreach (var legacyUser in legacySellerUsers)
+        {
+            if (!await userManager.IsInRoleAsync(legacyUser, "Dealer"))
+            {
+                await userManager.AddToRoleAsync(legacyUser, "Dealer");
+            }
+            await userManager.RemoveFromRoleAsync(legacyUser, "Seller");
+        }
+
+        var sellerRole = await roleManager.FindByNameAsync("Seller");
+        if (sellerRole != null)
+        {
+            await roleManager.DeleteAsync(sellerRole);
+        }
+    }
+
     var adminEmail = config["AdminSeed:Email"];
     var adminPassword = config["AdminSeed:Password"];
 

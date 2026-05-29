@@ -30,8 +30,6 @@ public partial class CarFitDbContext : DbContext
 
     public virtual DbSet<Seller> Sellers { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
     public virtual DbSet<VwAvailableCarDetail> VwAvailableCarDetails { get; set; }
@@ -207,6 +205,8 @@ public partial class CarFitDbContext : DbContext
 
             entity.ToTable("RecommendationLog");
 
+            entity.HasIndex(e => e.UserId, "IX_RecommendationLog_user_id");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -216,18 +216,18 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.Score)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("score");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.RecommendationLogs)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Recommend__user___5441852A");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
         });
 
         modelBuilder.Entity<SavedResult>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.CarId }).HasName("PK__SavedRes__9D7797D4910E870F");
 
-            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
             entity.Property(e => e.CarId).HasColumnName("car_id");
             entity.Property(e => e.SavedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -238,21 +238,27 @@ public partial class CarFitDbContext : DbContext
                 .HasForeignKey(d => d.CarId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SavedResu__car_i__5070F446");
-
-            entity.HasOne(d => d.User).WithMany(p => p.SavedResults)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SavedResu__user___4F7CD00D");
         });
 
         modelBuilder.Entity<Seller>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Sellers__3213E83F4F76A86D");
 
+            entity.HasIndex(e => e.IdentityUserId, "IX_Sellers_IdentityUserId");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.City)
                 .HasMaxLength(100)
                 .HasColumnName("city");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.IdentityUserId)
+                .HasMaxLength(450)
+                .HasColumnName("identity_user_id");
+            entity.Property(e => e.IsApproved)
+                .HasDefaultValue(false)
+                .HasColumnName("is_approved");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
@@ -262,33 +268,12 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
+            entity.Property(e => e.Tier)
+                .HasMaxLength(20)
+                .HasColumnName("tier");
             entity.Property(e => e.Type)
                 .HasMaxLength(20)
                 .HasColumnName("type");
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F2A7BC1EE");
-
-            entity.HasIndex(e => e.Email, "IX_Users_Email");
-
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61642DA1681D").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .HasColumnName("email");
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .HasColumnName("name");
-            entity.Property(e => e.Password)
-                .HasMaxLength(255)
-                .HasColumnName("password");
         });
 
         modelBuilder.Entity<UserProfile>(entity =>

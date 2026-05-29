@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace CarFitProject.Models;
@@ -16,6 +16,14 @@ public partial class Seller
     public string? City { get; set; }
 
     public string? Neighborhood { get; set; }
+
+    public string? IdentityUserId { get; set; }
+
+    public string? Email { get; set; }
+
+    public bool IsApproved { get; set; }
+
+    public string? Tier { get; set; }
 
     public virtual ICollection<CarListing> CarListings { get; set; } = new List<CarListing>();
 }
