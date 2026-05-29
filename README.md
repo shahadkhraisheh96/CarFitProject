@@ -22,6 +22,27 @@ The Identity roles seeded by the host are `Admin`, `Dealer`, and `Buyer` — mat
 
 The application overrides Identity's default PBKDF2 password hasher with BCrypt (`BCrypt.Net-Next`) at work factor 12 — see `Services/BCryptPasswordHasher.cs`. Password policy: minimum 10 characters with at least one digit, one uppercase letter, one non-alphanumeric character, and at least 4 unique characters.
 
+## Email (password reset / confirmation)
+
+Password-reset and email-confirmation tokens expire after 30 minutes.
+
+In **Development** an `IEmailSender` is registered that writes the email body — including the reset link — to the logger, so resets are clickable without a live SMTP server. Look in the console output for `[Dev email]`.
+
+In any **non-Development** environment the SMTP sender is registered instead. Configure the `EmailSettings` section (in `appsettings.{Environment}.json`, user secrets, or environment variables — never commit real credentials):
+
+```json
+"EmailSettings": {
+  "Host": "smtp.example.com",
+  "Port": 587,
+  "User": "no-reply@example.com",
+  "Password": "<smtp-password>",
+  "From": "no-reply@example.com",
+  "EnableSsl": true
+}
+```
+
+`appsettings.json` ships with a blank placeholder block.
+
 ## Status
 
-Phase 0a of the implementation plan has landed. Phases 0b and onward are still in progress — see `docs/IMPLEMENTATION_PLAN.md`.
+Phase 0a, 0b, and 1a of the implementation plan have landed. Phase 1b (account features — FullName on register, Manage page, password reset email) follows. See `docs/IMPLEMENTATION_PLAN.md`.

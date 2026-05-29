@@ -4,6 +4,7 @@ using CarFitProject.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,22 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 
 // Swap Identity's default PBKDF2 hasher for BCrypt cost 12.
 builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, BCryptPasswordHasher<ApplicationUser>>();
+
+// Email: SMTP for non-Development; in Development write to the logger so the
+// password-reset / email-confirmation links are clickable without an SMTP server.
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddTransient<IEmailSender, LoggingEmailSender>();
+}
+else
+{
+    builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+}
+
+// Password-reset / email-confirmation token lifespan: 30 minutes (FR-1.3).
+builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
+    o.TokenLifespan = TimeSpan.FromMinutes(30));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

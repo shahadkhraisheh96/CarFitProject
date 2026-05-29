@@ -73,6 +73,12 @@ namespace CarFitProject.Areas.Identity.Pages.Account
         {
             [Required]
             public string SelectedRole { get; set; }
+
+            [Required(ErrorMessage = "Please enter your full name.")]
+            [StringLength(100, MinimumLength = 2, ErrorMessage = "Full name must be between 2 and 100 characters.")]
+            [Display(Name = "Full name")]
+            public string FullName { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -116,6 +122,7 @@ namespace CarFitProject.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                user.FullName = Input.FullName;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
