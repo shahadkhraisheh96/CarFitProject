@@ -38,8 +38,6 @@ public partial class CarFitDbContext : DbContext
     public virtual DbSet<RecommendedCarViewModel> RecommendedCarMatches { get; set; }
     public virtual DbSet<InspectionBooking> InspectionBookings { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-     => optionsBuilder.UseSqlServer("Server=shahadkh96;Database=CarFit;Trusted_Connection=True;TrustServerCertificate=True;");
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Car>(entity =>

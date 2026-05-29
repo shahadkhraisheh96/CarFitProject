@@ -19,7 +19,7 @@ namespace CarFitProject.Controllers
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
-            else if (User.IsInRole("Seller"))
+            else if (User.IsInRole("Dealer"))
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Seller" });
             }

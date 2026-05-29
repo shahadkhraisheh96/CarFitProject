@@ -6,7 +6,8 @@ using System.Security.Claims;
 
 namespace CarFitProject.Areas.Seller.Controllers
 {
-    [Authorize(Roles = "Seller,Dealer")] // Restricts to secondary market managers
+    [Area("Seller")]
+    [Authorize(Roles = "Dealer")]
     public class SellerController : Controller
     {
         private readonly CarFitDbContext _context;
