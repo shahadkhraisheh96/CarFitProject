@@ -31,5 +31,11 @@ public partial class UserProfile
 
     public string SizePref { get; set; } = null!;
 
+    public string? TripType { get; set; }
+
+    public string? ConditionPref { get; set; }
+
+    public int? InstallmentMonths { get; set; }
+
     public bool? IsActive { get; set; }
 }

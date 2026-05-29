@@ -317,9 +317,23 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.TransmissionPref)
                 .HasMaxLength(20)
                 .HasColumnName("transmission_pref");
+            entity.Property(e => e.TripType)
+                .HasMaxLength(20)
+                .HasColumnName("trip_type");
+            entity.Property(e => e.ConditionPref)
+                .HasMaxLength(20)
+                .HasColumnName("condition_pref");
+            entity.Property(e => e.InstallmentMonths)
+                .HasColumnName("installment_months");
             entity.Property(e => e.UserId)
                 .HasMaxLength(450)
                 .HasColumnName("user_id");
+        });
+
+        modelBuilder.Entity<RecommendedCarViewModel>(entity =>
+        {
+            entity.Property(e => e.ListingPrice).HasPrecision(18, 2);
+            entity.Property(e => e.TrustScore).HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<VwAvailableCarDetail>(entity =>
