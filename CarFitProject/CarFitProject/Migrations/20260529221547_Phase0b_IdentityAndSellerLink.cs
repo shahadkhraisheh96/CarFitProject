@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -50,6 +50,12 @@ namespace CarFitProject.Migrations
                 maxLength: 20,
                 nullable: true);
 
+            // user_id is part of the composite PK; SQL Server won't ALTER COLUMN
+            // while the constraint references it. Drop the PK, alter, re-add.
+            migrationBuilder.DropPrimaryKey(
+                name: "PK__SavedRes__9D7797D4910E870F",
+                table: "SavedResults");
+
             migrationBuilder.AlterColumn<string>(
                 name: "user_id",
                 table: "SavedResults",
@@ -58,6 +64,17 @@ namespace CarFitProject.Migrations
                 nullable: false,
                 oldClrType: typeof(int),
                 oldType: "int");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK__SavedRes__9D7797D4910E870F",
+                table: "SavedResults",
+                columns: new[] { "user_id", "car_id" });
+
+            // IX_RecommendationLog_user_id sits on the column we're altering;
+            // drop it first, change the column type, then recreate the index.
+            migrationBuilder.DropIndex(
+                name: "IX_RecommendationLog_user_id",
+                table: "RecommendationLog");
 
             migrationBuilder.AlterColumn<string>(
                 name: "user_id",
@@ -68,6 +85,11 @@ namespace CarFitProject.Migrations
                 oldClrType: typeof(int),
                 oldType: "int",
                 oldNullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecommendationLog_user_id",
+                table: "RecommendationLog",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sellers_IdentityUserId",
@@ -98,6 +120,11 @@ namespace CarFitProject.Migrations
                 name: "tier",
                 table: "Sellers");
 
+            // Reverse the SavedResults PK rebuild around the column alter.
+            migrationBuilder.DropPrimaryKey(
+                name: "PK__SavedRes__9D7797D4910E870F",
+                table: "SavedResults");
+
             migrationBuilder.AlterColumn<int>(
                 name: "user_id",
                 table: "SavedResults",
@@ -106,6 +133,16 @@ namespace CarFitProject.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(450)",
                 oldMaxLength: 450);
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK__SavedRes__9D7797D4910E870F",
+                table: "SavedResults",
+                columns: new[] { "user_id", "car_id" });
+
+            // Reverse the RecommendationLog index drop/recreate around the column alter.
+            migrationBuilder.DropIndex(
+                name: "IX_RecommendationLog_user_id",
+                table: "RecommendationLog");
 
             migrationBuilder.AlterColumn<int>(
                 name: "user_id",
@@ -116,6 +153,11 @@ namespace CarFitProject.Migrations
                 oldType: "nvarchar(450)",
                 oldMaxLength: 450,
                 oldNullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecommendationLog_user_id",
+                table: "RecommendationLog",
+                column: "user_id");
 
             migrationBuilder.CreateTable(
                 name: "Users",
