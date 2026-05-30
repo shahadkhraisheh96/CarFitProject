@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.ViewModel
@@ -24,11 +24,9 @@ namespace CarFitProject.ViewModel
         [Column("city")]
         public string? City { get; set; }
 
-        // FIX: Binds PascalCase C# parameter directly to lowercase snake_case database outputs
         [Column("body_condition")]
         public string? BodyCondition { get; set; }
 
-        // FIX: Direct mapping for raw technical assessment notes column notes
         [Column("description_score")]
         public string? DescriptionScore { get; set; }
 
@@ -37,5 +35,21 @@ namespace CarFitProject.ViewModel
 
         [Column("DynamicMatchScore")]
         public int DynamicMatchScore { get; set; }
+
+        // ---- In-memory only ----
+        [NotMapped]
+        public int? ListingId { get; set; }
+
+        [NotMapped]
+        public bool IsRisky { get; set; }
+
+        [NotMapped]
+        public string? PrimaryImageUrl { get; set; }
+
+        [NotMapped]
+        public bool CarseerAttached { get; set; }
+
+        [NotMapped]
+        public List<string> MatchReasons { get; set; } = new();
     }
 }

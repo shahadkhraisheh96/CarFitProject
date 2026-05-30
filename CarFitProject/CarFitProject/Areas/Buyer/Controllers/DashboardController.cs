@@ -44,8 +44,10 @@ namespace CarFitProject.Areas.Buyer.Controllers
             ViewBag.CurrentProfileId = selectedProfile.ProfileId;
             ViewBag.CurrentProfileName = selectedProfile.ProfileName;
 
-            var matches = await _recommendations.GetMatchesAsync(selectedProfile);
-            return View(matches);
+            var result = await _recommendations.GetMatchesAsync(selectedProfile, userId);
+            ViewBag.BudgetRelaxed = result.BudgetRelaxed;
+            ViewBag.RelaxationMessage = result.RelaxationMessage;
+            return View(result.Cars);
         }
     }
 }

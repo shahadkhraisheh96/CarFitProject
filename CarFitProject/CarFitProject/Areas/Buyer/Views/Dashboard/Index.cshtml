@@ -54,6 +54,14 @@
         </div>
     </div>
 
+    @if (ViewBag.BudgetRelaxed == true)
+    {
+        <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+            <i class="fa fa-circle-info fs-5"></i>
+            <div>@(ViewBag.RelaxationMessage as string)</div>
+        </div>
+    }
+
     @if (Model == null || !Model.Any())
     {
         <div class="glass-card text-center py-5 bg-white border-0">
@@ -72,58 +80,76 @@
             {
                 <div class="col-xl-4 col-md-6">
                     <div class="glass-card h-100 p-0 border-0 overflow-hidden hover-lift bg-white position-relative shadow-sm d-flex flex-column justify-content-between">
-                        
-                        <div class="position-absolute top-0 end-0 m-3 z-index-2">
+
+                        <div class="position-absolute top-0 end-0 m-3" style="z-index: 2;">
                             <span class="badge badge-match">
                                 <i class="fa-solid fa-bolt me-1"></i> @car.DynamicMatchScore% Match
                             </span>
                         </div>
+                        @if (car.CarseerAttached)
+                        {
+                            <div class="position-absolute top-0 start-0 m-3" style="z-index: 2;">
+                                <span class="badge bg-info text-white px-2 py-1 fw-bold"><i class="fa-solid fa-shield-halved me-1"></i>CarSeer</span>
+                            </div>
+                        }
 
                         <div>
-                            <div class="bg-dark text-white p-4 pt-5" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);">
-                                <span class="text-white-50 text-uppercase tracking-wider small fw-bold"><i class="fa-solid fa-location-dot me-1"></i> @car.Year @car.City</span>
-                                <h3 class="fw-bold mb-0 text-white text-truncate mt-1">@car.Make @car.Model</h3>
-                            </div>
+                            @if (!string.IsNullOrEmpty(car.PrimaryImageUrl))
+                            {
+                                <img src="@car.PrimaryImageUrl" alt="@car.Make @car.Model" class="w-100" style="height: 180px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="bg-dark text-white p-4 pt-5" style="background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);">
+                                    <span class="text-white-50 text-uppercase tracking-wider small fw-bold"><i class="fa-solid fa-location-dot me-1"></i> @car.Year @car.City</span>
+                                    <h3 class="fw-bold mb-0 text-white text-truncate mt-1">@car.Make @car.Model</h3>
+                                </div>
+                            }
 
                             <div class="p-4">
-                                <div class="d-flex justify-content-between align-items-baseline mb-4 border-bottom pb-3">
+                                <div class="mb-2">
+                                    <h4 class="fw-bold mb-0">@car.Make @car.Model</h4>
+                                    <div class="text-muted small">@car.Year @(string.IsNullOrEmpty(car.City) ? "" : "· " + car.City)</div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-baseline mb-3 border-bottom pb-3">
                                     <div>
-                                        <span class="text-muted d-block small">Market Value</span>
+                                        <span class="text-muted d-block small">Listing</span>
                                         <span class="fs-3 fw-bold text-dark text-nowrap">@car.ListingPrice.ToString("N0") <span class="fs-6 fw-normal text-secondary">JD</span></span>
                                     </div>
                                     <div class="text-end">
-                                        <span class="text-muted d-block small">Trust Rating</span>
-                                        <span class="badge bg-info bg-opacity-10 text-info border border-info px-2 py-1 fw-bold"><i class="fa-solid fa-star me-1 text-info"></i>@car.TrustScore.ToString("F1") / 5.0</span>
+                                        <span class="text-muted d-block small">Trust</span>
+                                        <span class="badge bg-info bg-opacity-10 text-info border border-info px-2 py-1 fw-bold"><i class="fa-solid fa-star me-1 text-info"></i>@car.TrustScore.ToString("F1") / 5</span>
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-screwdriver-wrench me-1"></i>Stated Structural Metrics:</div>
-                                    <p class="text-dark bg-light p-2.5 rounded-3 border-start border-3 border-primary text-truncate mb-0 small">
-                                        📋 @(string.IsNullOrEmpty(car.BodyCondition) ? "Standard wear" : car.BodyCondition)
-                                    </p>
-                                </div>
-
-                                <div class="mb-3">
-                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-file-invoice me-1"></i>ورقة الفحص Summary:</div>
-                                    <p class="text-danger bg-danger bg-opacity-10 p-2.5 rounded-3 border-start border-3 border-danger mb-0 fw-bold text-end small" dir="rtl">
-                                        🛠️ @(string.IsNullOrEmpty(car.DescriptionScore) ? "فحص كامل" : car.DescriptionScore)
-                                    </p>
-                                </div>
-
-                                <div class="mb-2 border-top pt-3">
-                                    <div class="small fw-bold text-secondary text-start mb-1"><i class="fa-solid fa-circle-question me-1"></i>Glossary Interpreter:</div>
-                                    <div class="text-end mt-1">
-                                        @await Component.InvokeAsync("GlossaryTooltip", new { rawInspectionText = car.DescriptionScore })
+                                @if (car.IsRisky)
+                                {
+                                    <div class="alert alert-danger small d-flex align-items-center gap-2 mb-3 py-2" role="alert">
+                                        <i class="fa fa-triangle-exclamation"></i>
+                                        <span><strong>Flagged risky</strong> — official inspection recommended.</span>
                                     </div>
-                                </div>
+                                }
+
+                                @if (car.MatchReasons.Any())
+                                {
+                                    <div class="mb-3">
+                                        <div class="small fw-bold text-secondary text-start mb-2"><i class="fa-solid fa-list-check me-1"></i>Why this match:</div>
+                                        <ul class="list-unstyled mb-0 small">
+                                            @foreach (var reason in car.MatchReasons)
+                                            {
+                                                <li class="mb-1"><i class="fa fa-check text-success me-1"></i>@reason</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
                             </div>
                         </div>
 
                         <div class="p-4 border-top pt-3 mt-auto">
-                            <button class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded w-100" type="button" onclick="Swal.fire({title:'Appraisal Sheet',text:'Full appraised inspection sheets will be sent dynamically via API integration.',icon:'info'});">
-                                View Full Appraised Sheet <i class="fa-solid fa-arrow-right-long ms-2"></i>
-                            </button>
+                            <a asp-controller="Inventory" asp-action="Detail" asp-area="" asp-route-id="@car.ListingId" class="btn btn-primary w-100 fw-bold">
+                                View listing <i class="fa-solid fa-arrow-right-long ms-2"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
