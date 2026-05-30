@@ -32,6 +32,8 @@ public partial class CarFitDbContext : DbContext
 
     public virtual DbSet<SavedResult> SavedResults { get; set; }
 
+    public virtual DbSet<SearchLog> SearchLogs { get; set; }
+
     public virtual DbSet<Seller> Sellers { get; set; }
 
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
@@ -498,6 +500,26 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
+        });
+
+        modelBuilder.Entity<SearchLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("SearchLog");
+
+            entity.HasIndex(e => e.CreatedAt, "IX_SearchLog_created_at");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Term)
+                .HasMaxLength(255)
+                .HasColumnName("term");
+            entity.Property(e => e.FiltersJson).HasColumnName("filters_json");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("getutcdate()")
+                .HasColumnName("created_at");
         });
 
         OnModelCreatingPartial(modelBuilder);
