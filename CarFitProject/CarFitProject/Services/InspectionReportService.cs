@@ -4,9 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Loads and persists inspection reports keyed by Car id (FR-4.1, FR-7.3).
+    /// Save applies <see cref="IInspectionScoringService"/> before
+    /// SaveChangesAsync so OverallScore + CalculatedTrustScore are always
+    /// derived from the latest chassis/body/paint inputs.
+    /// </summary>
     public interface IInspectionReportService
     {
+        /// <summary>Returns a form view-model hydrated from the existing report (if any) and the Car header.</summary>
         Task<InspectionReportFormViewModel?> LoadAsync(int carId);
+
+        /// <summary>Upserts the report, re-applies scoring, and writes back OverallScore + CalculatedTrustScore.</summary>
         Task<bool> SaveAsync(int carId, InspectionReportFormViewModel vm);
     }
 

@@ -1,3 +1,4 @@
+using CarFitProject.Helpers;
 using CarFitProject.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,11 +6,26 @@ namespace CarFitProject.Services
 {
     public sealed record SaveToggleResult(bool Ok, bool IsSaved, string Message);
 
+    /// <summary>
+    /// Save / unsave bookmarks plus the queries that back the buyer Saved Cars
+    /// page (FR-6.1). Free-tier capacity gating is delegated to
+    /// <see cref="ISubscriptionService"/> on every toggle.
+    /// </summary>
     public interface ISavedCarsService
     {
+        /// <summary>Toggle: removes the row if it already exists; otherwise inserts one after checking the Free-plan limit.</summary>
         Task<SaveToggleResult> ToggleAsync(string userId, int carId);
+
+        /// <summary>Saved CarIds for badge state on listing cards.</summary>
         Task<HashSet<int>> GetSavedCarIdsAsync(string userId);
+
+        /// <summary>All saved active listings — used when paging isn't needed (e.g. backwards-compatible callers).</summary>
         Task<List<CarListing>> GetSavedListingsAsync(string userId);
+
+        /// <summary>Paged saved-listings query (12/page default — NFR-Sc1).</summary>
+        Task<PaginatedList<CarListing>> GetSavedListingsPagedAsync(string userId, int page, int pageSize = 12);
+
+        /// <summary>Total saved-cars count for the badge in the buyer nav.</summary>
         Task<int> CountAsync(string userId);
     }
 
@@ -83,6 +99,28 @@ namespace CarFitProject.Services
                 .Include(l => l.Seller)
                 .Where(l => ids.Contains(l.CarId!.Value) && l.Status == "Active")
                 .ToListAsync();
+        }
+
+        public async Task<PaginatedList<CarListing>> GetSavedListingsPagedAsync(string userId, int page, int pageSize = 12)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return new PaginatedList<CarListing>(new List<CarListing>(), 0, page, pageSize);
+
+            var query = _context.SavedResults
+                .AsNoTracking()
+                .Where(s => s.UserId == userId)
+                .Join(_context.CarListings.Include(l => l.Car)
+                        .ThenInclude(c => c!.CarImages)
+                      .Include(l => l.Car)
+                        .ThenInclude(c => c!.InspectionReport)
+                      .Include(l => l.Seller)
+                        .Where(l => l.Status == "Active"),
+                      s => s.CarId,
+                      l => l.CarId!.Value,
+                      (s, l) => l)
+                .OrderByDescending(l => l.Id);
+
+            return await PaginatedList<CarListing>.CreateAsync(query, page, pageSize);
         }
 
         public Task<int> CountAsync(string userId)

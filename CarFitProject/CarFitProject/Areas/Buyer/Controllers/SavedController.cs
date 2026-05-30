@@ -5,10 +5,18 @@ using System.Security.Claims;
 
 namespace CarFitProject.Areas.Buyer.Controllers
 {
+    /// <summary>
+    /// Buyer's "Saved cars" bookmarks (FR-6.1). Index renders the paged set;
+    /// Toggle is the single mutation endpoint (Save when missing / Unsave when
+    /// present) and honours an optional local returnUrl so the buyer lands back
+    /// on the page they came from (Dashboard, Search, Detail, etc.).
+    /// </summary>
     [Area("Buyer")]
     [Authorize(Roles = "Buyer")]
     public class SavedController : Controller
     {
+        private const int PageSize = 12;
+
         private readonly ISavedCarsService _saved;
         private readonly ISubscriptionService _subscriptions;
 
@@ -20,14 +28,15 @@ namespace CarFitProject.Areas.Buyer.Controllers
 
         private string? UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        public async Task<IActionResult> Index()
+        /// <summary>Paged Saved Cars view (12/page — NFR-Sc1).</summary>
+        public async Task<IActionResult> Index(int page = 1)
         {
             if (string.IsNullOrEmpty(UserId)) return Challenge();
 
-            var listings = await _saved.GetSavedListingsAsync(UserId);
+            var listings = await _saved.GetSavedListingsPagedAsync(UserId, page, PageSize);
             ViewBag.IsPremium = await _subscriptions.IsPremiumAsync(UserId);
             ViewBag.FreeLimit = _subscriptions.FreeSaveLimit;
-            ViewBag.SavedCount = listings.Count;
+            ViewBag.SavedCount = await _saved.CountAsync(UserId);
             return View(listings);
         }
 

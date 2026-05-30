@@ -1,4 +1,4 @@
-@model List<CarFitProject.Models.CarListing>
+@model CarFitProject.Helpers.PaginatedList<CarFitProject.Models.CarListing>
 @inject IViewLocalizer L
 @{
     ViewData["Title"] = L["Save.Page.Title"].Value;
@@ -79,6 +79,7 @@
                 </div>
             }
         </div>
+        <partial name="_Pager" model="@(new CarFitProject.ViewModel.PagerViewModel { Page = Model.PageIndex, TotalPages = Model.TotalPages, Action = "Index", Controller = "Saved" })" />
     }
 </div>
 

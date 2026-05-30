@@ -6,12 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Backing service for the multi-step buyer questionnaire (FR-2.1). The
+    /// draft accumulates across step posts in Session as JSON; it is only
+    /// promoted to a real UserProfile row on Review submission, so an
+    /// abandoned wizard never pollutes the active-profiles list.
+    /// </summary>
     public interface IUserProfileService
     {
+        /// <summary>Reads the in-progress draft from Session (returns a default if absent).</summary>
         ProfileDraftViewModel GetDraft(HttpContext httpContext);
+
+        /// <summary>Persists a draft back to Session.</summary>
         void SaveDraft(HttpContext httpContext, ProfileDraftViewModel draft);
+
+        /// <summary>Clears any in-progress draft from Session.</summary>
         void ClearDraft(HttpContext httpContext);
+
+        /// <summary>Hydrates the draft from an existing UserProfile row (for the wizard Edit flow).</summary>
         Task<ProfileDraftViewModel> StartFromProfileAsync(HttpContext httpContext, string userId, int profileId);
+
+        /// <summary>Commits the draft as a real UserProfile (creates or updates, sets IsActive=true).</summary>
         Task<UserProfile?> CompleteAsync(string userId, ProfileDraftViewModel draft);
     }
 

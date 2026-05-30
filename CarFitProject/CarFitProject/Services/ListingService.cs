@@ -5,19 +5,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Services
 {
+    /// <summary>Result of a listing mutation. Carries the saved listing when relevant so the caller can chain follow-ups (e.g. image upload).</summary>
     public record ListingMutationResult(bool Ok, string Message, CarListing? Listing = null);
 
+    /// <summary>
+    /// Listing CRUD + ownership enforcement (FR-3.1/3.3/3.5, FR-7.2). All
+    /// mutating methods that accept a <c>requiredSellerId</c> enforce dealer
+    /// ownership when non-null; passing null is the admin path.
+    /// </summary>
     public interface IListingService
     {
+        /// <summary>Returns the Seller row keyed by the current user when it's approved; null otherwise.</summary>
         Task<Models.Seller?> GetApprovedSellerAsync(string userId);
+
+        /// <summary>Creates a Car + a CarListing in one go. Dealers create "Pending"; admin can create "Active".</summary>
         Task<ListingMutationResult> CreateAsync(CarListingFormViewModel vm, int sellerId, string status);
+
+        /// <summary>Updates the Car + CarListing. <paramref name="requiredSellerId"/> null = admin (no ownership check).</summary>
         Task<ListingMutationResult> UpdateAsync(int listingId, CarListingFormViewModel vm, int? requiredSellerId);
+
+        /// <summary>Marks the listing Sold (FR-3.5). Ownership-checked when sellerId is non-null.</summary>
         Task<ListingMutationResult> DeactivateAsync(int listingId, int? requiredSellerId);
+
+        /// <summary>Hard-deletes the listing, the orphan Car (if no other listings hold it), and any SavedResults rows.</summary>
         Task<ListingMutationResult> DeleteAsync(int listingId, int? requiredSellerId);
+
+        /// <summary>Admin approval (FR-7.2): flips Status Pending -&gt; Active.</summary>
         Task<ListingMutationResult> ApproveAsync(int listingId);
 
+        /// <summary>Paged listings for a single seller (dealer Inventory page).</summary>
         Task<PaginatedList<CarListing>> ListForSellerAsync(int sellerId, int page, int pageSize);
+
+        /// <summary>Paged listings across all sellers with an optional status filter (admin Listings page).</summary>
         Task<PaginatedList<CarListing>> ListAllAsync(int page, int pageSize, string? statusFilter = null);
+
+        /// <summary>Loads a listing with Car + CarImages for the edit form; null check enforces ownership when requested.</summary>
         Task<CarListing?> GetForFormAsync(int listingId, int? requiredSellerId);
     }
 

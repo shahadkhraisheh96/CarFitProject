@@ -4,8 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Admin-side user lifecycle operations (FR-7.1). Encapsulates the rules
+    /// that protect the seeded admin and dealers with listing history.
+    /// </summary>
     public interface IUserAdminService
     {
+        /// <summary>
+        /// Removes a user. Refuses the seeded admin (AdminSeed:Email) and any
+        /// dealer who still has at least one listing — caller is told to
+        /// deactivate that account instead. Drops the Seller row when safe.
+        /// </summary>
         Task<DeleteUserResult> DeleteUserAsync(string userId);
     }
 
