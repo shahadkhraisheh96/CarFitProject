@@ -1,0 +1,118 @@
+@model CarFitProject.Models.CarListing
+@{
+    ViewData["Title"] = $"{Model.Car?.Make} {Model.Car?.Model}";
+    var photos = Model.Car?.CarImages?.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.SortOrder).ToList() ?? new List<CarFitProject.Models.CarImage>();
+    var primary = photos.FirstOrDefault();
+}
+
+<div class="container py-5">
+    <a asp-action="Search" class="text-decoration-none text-primary small fw-bold">
+        <i class="fa fa-arrow-left me-1"></i>Back to search
+    </a>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-8">
+            <div class="bg-white shadow-sm rounded-4 overflow-hidden mb-4">
+                <div style="height: 360px; background:#222;">
+                    @if (primary != null)
+                    {
+                        <img id="mainPhoto" src="@primary.Url" alt="@Model.Car?.Make @Model.Car?.Model" class="w-100 h-100" style="object-fit: contain;" />
+                    }
+                </div>
+                @if (photos.Count > 1)
+                {
+                    <div class="d-flex flex-wrap gap-2 p-2">
+                        @foreach (var p in photos)
+                        {
+                            <img src="@p.Url" alt="thumb" class="border rounded" style="height: 64px; width: 96px; object-fit: cover; cursor: pointer;"
+                                 onclick="document.getElementById('mainPhoto').src='@p.Url'" />
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="bg-white shadow-sm rounded-4 p-4">
+                <h2 class="fw-bold mb-1">@Model.Car?.Make @Model.Car?.Model</h2>
+                <div class="text-muted mb-3">@Model.Car?.Year · @Model.Car?.Trim · @Model.Car?.Type</div>
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">Transmission</dt><dd class="col-sm-8">@Model.Car?.Transmission</dd>
+                    <dt class="col-sm-4 text-muted">Body type</dt><dd class="col-sm-8">@(Model.Car?.BodyType ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Fuel</dt><dd class="col-sm-8">@(Model.Car?.FuelType ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Engine</dt><dd class="col-sm-8">@(Model.Car?.EngineSize ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Seats</dt><dd class="col-sm-8">@(Model.Car?.Seats?.ToString() ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Mileage</dt><dd class="col-sm-8">@(Model.Car?.Kilometers ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Exterior color</dt><dd class="col-sm-8">@(Model.Car?.ExteriorColor ?? "—")</dd>
+                    <dt class="col-sm-4 text-muted">Interior color</dt><dd class="col-sm-8">@(Model.Car?.InteriorColor ?? "—")</dd>
+                </dl>
+
+                @if (!string.IsNullOrWhiteSpace(Model.Car?.InteriorOptions) || !string.IsNullOrWhiteSpace(Model.Car?.ExteriorOptions) || !string.IsNullOrWhiteSpace(Model.Car?.TechnologyOptions))
+                {
+                    <hr />
+                    <h6 class="fw-bold mb-2">Options</h6>
+                    @if (!string.IsNullOrWhiteSpace(Model.Car?.ExteriorOptions))
+                    {
+                        <p class="mb-2"><strong class="text-muted">Exterior:</strong> @Model.Car?.ExteriorOptions</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Car?.InteriorOptions))
+                    {
+                        <p class="mb-2"><strong class="text-muted">Interior:</strong> @Model.Car?.InteriorOptions</p>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.Car?.TechnologyOptions))
+                    {
+                        <p class="mb-2"><strong class="text-muted">Technology:</strong> @Model.Car?.TechnologyOptions</p>
+                    }
+                }
+            </div>
+
+            <div class="bg-white shadow-sm rounded-4 p-4 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>Inspection report (ورقة الفحص)</h5>
+                </div>
+                @if (Model.Car?.InspectionReport == null)
+                {
+                    <p class="text-muted mb-0">No inspection report has been attached to this listing yet. The full Jordanian-standard scoring view will be rendered here once the inspection-entry tools land in the next phase.</p>
+                }
+                else
+                {
+                    <p class="text-muted mb-2">Inspection summary will be rendered in Phase 4 with bilingual glossary tooltips and the official Jordanian chassis-status legend.</p>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Center</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.CenterName ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Date</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.InspectionDate?.ToString("yyyy-MM-dd") ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Body condition</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.BodyCondition ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Paint</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.PaintStatus ?? "—")</dd>
+                    </dl>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
+                <div class="text-muted small fw-bold text-uppercase mb-1">Listing price</div>
+                <div class="fw-bold text-primary fs-2">@(Model.ListingPrice?.ToString("N0")) <span class="fs-6 text-muted">JD</span></div>
+                @if (!string.IsNullOrEmpty(Model.PaymentMethodAllowed))
+                {
+                    <div class="text-muted small mt-2">Payment: @Model.PaymentMethodAllowed</div>
+                }
+            </div>
+
+            @if (Model.Seller != null)
+            {
+                <div class="bg-white shadow-sm rounded-4 p-4">
+                    <div class="text-muted small fw-bold text-uppercase mb-2">Dealer</div>
+                    <h5 class="fw-bold mb-1">@Model.Seller.Name</h5>
+                    @if (!string.IsNullOrEmpty(Model.Seller.City))
+                    {
+                        <div class="text-muted small mb-2">@Model.Seller.City@(string.IsNullOrEmpty(Model.Seller.Neighborhood) ? "" : " · " + Model.Seller.Neighborhood)</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Seller.Phone))
+                    {
+                        <a href="tel:@Model.Seller.Phone" class="btn btn-outline-primary w-100 fw-bold mt-2">
+                            <i class="fa fa-phone me-2"></i>@Model.Seller.Phone
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

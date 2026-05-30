@@ -71,6 +71,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IRecommendationService, RecommendationService>();
 builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IListingService, ListingService>();
+builder.Services.AddScoped<IImageStorageService, ImageStorageService>();
 
 // Session is used by the Buyer questionnaire wizard to persist partial state
 // across step transitions without writing an unfinished UserProfile row to SQL.

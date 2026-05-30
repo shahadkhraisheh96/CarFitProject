@@ -67,6 +67,11 @@
                         <i class="fa fa-user-tie me-2"></i> Dealer Approvals
                     </a>
 
+                    <a asp-area="Admin" asp-controller="Listings" asp-action="Index"
+                           class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" ? "active" : "")">
+                        <i class="fa fa-clipboard-list me-2"></i> Listings
+                    </a>
+
                     <a asp-area="Admin" asp-controller="Admin" asp-action="GlossaryManager"
                            class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "GlossaryManager" ? "active" : "")">
                         <i class="fa fa-book me-2"></i> Glossary Manager
