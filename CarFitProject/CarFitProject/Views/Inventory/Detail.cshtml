@@ -68,19 +68,99 @@
             <div class="bg-white shadow-sm rounded-4 p-4 mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold mb-0"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>Inspection report (ورقة الفحص)</h5>
+                    @if (Model.Car?.InspectionReport?.CarseerAttached == true)
+                    {
+                        <span class="badge bg-info text-white px-3 py-2"><i class="fa-solid fa-shield-halved me-1"></i>CarSeer attached</span>
+                    }
                 </div>
+
                 @if (Model.Car?.InspectionReport == null)
                 {
-                    <p class="text-muted mb-0">No inspection report has been attached to this listing yet. The full Jordanian-standard scoring view will be rendered here once the inspection-entry tools land in the next phase.</p>
+                    <p class="text-muted mb-0">No inspection report has been attached to this listing yet.</p>
                 }
                 else
                 {
-                    <p class="text-muted mb-2">Inspection summary will be rendered in Phase 4 with bilingual glossary tooltips and the official Jordanian chassis-status legend.</p>
+                    var report = Model.Car.InspectionReport;
+                    var signals = ViewBag.InspectionSignals as CarFitProject.Services.InspectionDerivedSignals;
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <div class="border rounded-3 p-3 h-100 text-center">
+                                <div class="text-muted small fw-bold text-uppercase">Overall score</div>
+                                <div class="fs-3 fw-bold text-primary">جيد @(signals?.OverallScore.ToString("0.0") ?? report.OverallScore?.ToString("0.0") ?? "—")</div>
+                                <div class="text-muted small">Trust @(signals?.CalculatedTrustScore.ToString("0.00") ?? report.CalculatedTrustScore?.ToString("0.00") ?? "—") / 5</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded-3 p-3 h-100">
+                                <div class="text-muted small fw-bold text-uppercase mb-1">Engine</div>
+                                @{
+                                    var engine = signals?.Engine ?? CarFitProject.Services.EngineStatus.Unknown;
+                                    var engineCls = engine switch
+                                    {
+                                        CarFitProject.Services.EngineStatus.Good => "bg-success text-white",
+                                        CarFitProject.Services.EngineStatus.Weak => "bg-warning text-dark",
+                                        CarFitProject.Services.EngineStatus.Unsafe => "bg-danger text-white",
+                                        _ => "bg-light text-dark border"
+                                    };
+                                }
+                                <span class="badge @engineCls px-3 py-2">@engine</span>
+                                <div class="text-muted small mt-2">Health: @(report.EngineHealthPercent?.ToString() ?? "—")%</div>
+                                @if (report.EngineSmoke == true)
+                                {
+                                    <div class="mt-2"><vc:glossary-tooltip raw-inspection-text="دخان أزرق/أبيض" /></div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border rounded-3 p-3 h-100">
+                                <div class="text-muted small fw-bold text-uppercase mb-1">Gearbox</div>
+                                @{
+                                    var gearbox = signals?.Gearbox ?? CarFitProject.Services.GearboxStatus.Unknown;
+                                    var gearboxCls = gearbox switch
+                                    {
+                                        CarFitProject.Services.GearboxStatus.Good => "bg-success text-white",
+                                        CarFitProject.Services.GearboxStatus.Knocking => "bg-warning text-dark",
+                                        _ => "bg-light text-dark border"
+                                    };
+                                }
+                                <span class="badge @gearboxCls px-3 py-2">@gearbox</span>
+                                @if (gearbox == CarFitProject.Services.GearboxStatus.Knocking)
+                                {
+                                    <div class="mt-2"><vc:glossary-tooltip raw-inspection-text="طقطقة أكس" /></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (signals?.IsRisky == true)
+                    {
+                        <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert">
+                            <i class="fa fa-triangle-exclamation fs-4"></i>
+                            <div>
+                                <strong>Flagged as Risky.</strong> One or more chassis points have been cut, replaced, or written off. We recommend an official technical inspection before purchase.
+                            </div>
+                        </div>
+                    }
+
+                    <h6 class="fw-bold mt-3 mb-2">Chassis points</h6>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3"><div class="text-muted small mb-1">Chassis 1</div><vc:glossary-tooltip raw-inspection-text="@(report.Chassis1Status ?? "")" /></div>
+                        <div class="col-6 col-md-3"><div class="text-muted small mb-1">Chassis 2</div><vc:glossary-tooltip raw-inspection-text="@(report.Chassis2Status ?? "")" /></div>
+                        <div class="col-6 col-md-3"><div class="text-muted small mb-1">Chassis 3</div><vc:glossary-tooltip raw-inspection-text="@(report.Chassis3Status ?? "")" /></div>
+                        <div class="col-6 col-md-3"><div class="text-muted small mb-1">Chassis 4</div><vc:glossary-tooltip raw-inspection-text="@(report.Chassis4Status ?? "")" /></div>
+                    </div>
+
                     <dl class="row mb-0">
-                        <dt class="col-sm-4 text-muted">Center</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.CenterName ?? "—")</dd>
-                        <dt class="col-sm-4 text-muted">Date</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.InspectionDate?.ToString("yyyy-MM-dd") ?? "—")</dd>
-                        <dt class="col-sm-4 text-muted">Body condition</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.BodyCondition ?? "—")</dd>
-                        <dt class="col-sm-4 text-muted">Paint</dt><dd class="col-sm-8">@(Model.Car.InspectionReport.PaintStatus ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Center</dt><dd class="col-sm-8">@(report.CenterName ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Date</dt><dd class="col-sm-8">@(report.InspectionDate?.ToString("yyyy-MM-dd") ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Body condition</dt><dd class="col-sm-8">@(report.BodyCondition ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Roof</dt><dd class="col-sm-8">@(report.RoofCondition ?? "—")</dd>
+                        <dt class="col-sm-4 text-muted">Paint</dt><dd class="col-sm-8">@(report.PaintStatus ?? "—")</dd>
+                        @if (!string.IsNullOrEmpty(report.DescriptionScore))
+                        {
+                            <dt class="col-sm-4 text-muted">Notes</dt><dd class="col-sm-8">@report.DescriptionScore</dd>
+                        }
                     </dl>
                 }
             </div>

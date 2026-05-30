@@ -73,6 +73,8 @@ builder.Services.AddScoped<IUserAdminService, UserAdminService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IImageStorageService, ImageStorageService>();
+builder.Services.AddSingleton<IInspectionScoringService, InspectionScoringService>();
+builder.Services.AddScoped<IInspectionReportService, InspectionReportService>();
 
 // Session is used by the Buyer questionnaire wizard to persist partial state
 // across step transitions without writing an unfinished UserProfile row to SQL.
@@ -91,6 +93,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 await SeedIdentityAsync(app);
+await SeedGlossaryAsync(app);
 
 if (app.Environment.IsDevelopment())
 {
@@ -201,4 +204,11 @@ static async Task SeedIdentityAsync(WebApplication app)
         var errors = string.Join("; ", createResult.Errors.Select(e => e.Description));
         throw new InvalidOperationException($"Failed to seed admin user: {errors}");
     }
+}
+
+static async Task SeedGlossaryAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<CarFitDbContext>();
+    await InspectionGlossarySeed.SeedAsync(context);
 }

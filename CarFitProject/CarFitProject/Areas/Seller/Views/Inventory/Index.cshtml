@@ -75,6 +75,12 @@
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold">
                                             <i class="fa fa-pen me-1"></i>Edit
                                         </a>
+                                        @if (item.CarId.HasValue)
+                                        {
+                                            <a asp-controller="Inspections" asp-action="Edit" asp-route-carId="@item.CarId" class="btn btn-sm btn-outline-info fw-bold">
+                                                <i class="fa fa-clipboard-check me-1"></i>Inspection
+                                            </a>
+                                        }
                                         @if (item.Status == "Active")
                                         {
                                             <form asp-action="Deactivate" method="post" class="m-0"

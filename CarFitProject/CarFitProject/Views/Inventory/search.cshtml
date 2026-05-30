@@ -77,7 +77,11 @@
                 var primary = l.Car?.CarImages?.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.SortOrder).FirstOrDefault();
                 <div class="col-md-6 col-lg-4">
                     <a asp-action="Detail" asp-route-id="@l.Id" class="text-decoration-none text-dark">
-                        <div class="bg-white shadow-sm rounded-4 overflow-hidden h-100 d-flex flex-column hover-lift">
+                        <div class="bg-white shadow-sm rounded-4 overflow-hidden h-100 d-flex flex-column hover-lift position-relative">
+                            @if (l.Car?.InspectionReport?.CarseerAttached == true)
+                            {
+                                <span class="badge bg-info text-white position-absolute top-0 end-0 m-2 z-1"><i class="fa fa-shield-halved me-1"></i>CarSeer</span>
+                            }
                             <div style="height: 180px; background:#f1f1f1;">
                                 @if (primary != null)
                                 {

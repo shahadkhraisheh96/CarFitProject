@@ -1,5 +1,6 @@
 using CarFitProject.Helpers;
 using CarFitProject.Models;
+using CarFitProject.Services;
 using CarFitProject.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace CarFitProject.Controllers
         private const int PageSize = 12;
 
         private readonly CarFitDbContext _context;
+        private readonly IInspectionScoringService _scoring;
 
-        public InventoryController(CarFitDbContext context)
+        public InventoryController(CarFitDbContext context, IInspectionScoringService scoring)
         {
             _context = context;
+            _scoring = scoring;
         }
 
         // GET: /Inventory/Search?make=Toyota&priceTo=15000&page=2
@@ -25,6 +28,8 @@ namespace CarFitProject.Controllers
                 .AsNoTracking()
                 .Include(l => l.Car)
                     .ThenInclude(c => c!.CarImages)
+                .Include(l => l.Car)
+                    .ThenInclude(c => c!.InspectionReport)
                 .Where(l => l.Status == "Active");
 
             if (!string.IsNullOrWhiteSpace(filters.Make))
@@ -63,6 +68,11 @@ namespace CarFitProject.Controllers
                 .FirstOrDefaultAsync(l => l.Id == id && l.Status == "Active");
 
             if (listing == null) return NotFound();
+
+            if (listing.Car?.InspectionReport != null)
+            {
+                ViewBag.InspectionSignals = _scoring.Compute(listing.Car.InspectionReport);
+            }
             return View(listing);
         }
 
