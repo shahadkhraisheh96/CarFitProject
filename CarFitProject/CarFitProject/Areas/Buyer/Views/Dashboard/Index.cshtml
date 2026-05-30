@@ -12,54 +12,117 @@
 }
 
 <div class="container py-4">
-    <div class="row align-items-center mb-5 g-3 border-bottom pb-4">
-        <div class="col-md-7 text-start">
-            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">FR-5 MATCHMAKING PIPELINE</span>
-            <h1 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-check me-2 text-primary"></i>@L["Dashboard.Title"]</h1>
-            <p class="text-muted mb-0">@L["Dashboard.Subtitle"]</p>
+    <div class="page-hero mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-12">
+                <span class="eyebrow"><i class="fa-solid fa-bolt me-1"></i> FR-5 Matchmaking Pipeline</span>
+                <h1 class="mb-2">@L["Dashboard.Title"]</h1>
+                <p class="lead mb-0">@L["Dashboard.Subtitle"] — currently viewing as <strong class="text-white">@currentProfileName</strong>.</p>
+            </div>
         </div>
-        
-        <div class="col-md-5 text-md-end">
-            <div class="d-inline-block text-start" style="min-width: 280px;">
-                <label class="form-label small fw-bold text-secondary mb-1">@L["Dashboard.SwitchPersona"]</label>
-                <div class="dropdown">
-                    <button class="btn btn-white border-2 border-dark dropdown-toggle w-100 d-flex justify-content-between align-items-center fw-bold text-dark py-2.5 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius:12px;">
-                        <span>🎯 @currentProfileName</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end w-100 shadow rounded-3 border-0 mt-2">
-                        @foreach (var profile in profiles)
-                        {
-                            <li>
-                                <a class="dropdown-item py-2.5 d-flex justify-content-between align-items-center @(profile.ProfileId == currentProfileId ? "active bg-primary text-white" : "")" 
-                                   asp-action="Index" asp-route-activeProfileId="@profile.ProfileId">
-                                    <span>@profile.ProfileName</span>
-                                    @if(profile.ProfileId == currentProfileId) {
-                                        <span class="badge bg-white bg-opacity-20 text-white border border-white border-opacity-30 px-2 py-0.5 small">Selected</span>
+    </div>
+
+    <div class="form-section-card mb-4" style="max-width:none; padding:1.5rem 1.75rem;">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+            <div>
+                <span class="text-eyebrow d-block">@L["Dashboard.SwitchPersona"]</span>
+                <div class="text-muted small">Click a persona below to load its matches.</div>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-controller="Profiles" asp-action="Index" class="btn btn-sm btn-outline-secondary fw-bold">
+                    <i class="fa-solid fa-list-check me-1"></i>@L["Dashboard.ManageProfiles"]
+                </a>
+                <a asp-controller="Questionnaire" asp-action="Start" class="btn btn-sm btn-primary fw-bold">
+                    <i class="fa-solid fa-plus me-1"></i>@L["Dashboard.NewPersona"]
+                </a>
+            </div>
+        </div>
+
+        @if (profiles.Any())
+        {
+            <div class="row g-2">
+                @foreach (var profile in profiles)
+                {
+                    var isActive = profile.ProfileId == currentProfileId;
+                    var initial = string.IsNullOrEmpty(profile.ProfileName) ? "?" : profile.ProfileName.Substring(0, 1).ToUpper();
+                    <div class="col-sm-6 col-lg-4">
+                        <a asp-action="Index" asp-route-activeProfileId="@profile.ProfileId"
+                           class="persona-card d-flex align-items-center gap-3 text-decoration-none @(isActive ? "is-active" : "")">
+                            <div class="persona-avatar" style="width:44px;height:44px;border-radius:12px;font-size:1.1rem;">@initial</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold text-dark">@profile.ProfileName</div>
+                                <div class="text-muted small">
+                                    @if (isActive)
+                                    {
+                                        <span class="chip chip-success" style="font-size:0.7rem; padding:0.15rem 0.55rem;"><i class="fa fa-circle-check"></i>Active</span>
                                     }
-                                </a>
-                            </li>
-                        }
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Profiles" asp-action="Index">
-                                <i class="fa-solid fa-list-check"></i> @L["Dashboard.ManageProfiles"]
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Saved" asp-action="Index">
-                                <i class="fa-solid fa-bookmark"></i> @L["Dashboard.SavedCars"]
-                                <span class="badge bg-primary ms-auto">@savedCount</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item py-2.5 text-success fw-bold d-flex align-items-center gap-2" asp-controller="Questionnaire" asp-action="Start">
-                                <i class="fa-solid fa-plus-circle"></i> @L["Dashboard.NewPersona"]
-                            </a>
-                        </li>
-                    </ul>
+                                    else
+                                    {
+                                        <span>@(profile.BudgetMin ?? 0)–@profile.BudgetMax JD · @(profile.Purpose ?? "—")</span>
+                                    }
+                                </div>
+                            </div>
+                            @if (!isActive)
+                            {
+                                <i class="fa-solid fa-arrow-right text-muted"></i>
+                            }
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-3">
+                <div class="text-muted mb-2">You haven't created any personas yet.</div>
+                <a asp-controller="Questionnaire" asp-action="Start" class="btn btn-primary fw-bold">
+                    <i class="fa-solid fa-plus me-1"></i>@L["Dashboard.NewPersona"]
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <div>
+                    <div class="stat-value">@(Model?.Count() ?? 0)</div>
+                    <div class="stat-label">Matches</div>
                 </div>
             </div>
         </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card stat-success">
+                <div class="stat-icon"><i class="fa-solid fa-bookmark"></i></div>
+                <div>
+                    <div class="stat-value">@savedCount</div>
+                    <div class="stat-label">Saved</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card stat-info">
+                <div class="stat-icon"><i class="fa-solid fa-user-gear"></i></div>
+                <div>
+                    <div class="stat-value">@profiles.Count()</div>
+                    <div class="stat-label">Personas</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-card stat-warning">
+                <div class="stat-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <div>
+                    <div class="stat-value"><a asp-controller="Compare" asp-action="Index" class="text-decoration-none text-dark">@L["Compare.Button"]</a></div>
+                    <div class="stat-label">Side-by-side</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h3><i class="fa-solid fa-sparkles me-2 text-primary"></i>@L["Dashboard.Title"]</h3>
     </div>
 
     @if (ViewBag.BudgetRelaxed == true)
@@ -72,11 +135,11 @@
 
     @if (Model == null || !Model.Any())
     {
-        <div class="glass-card text-center py-5 bg-white border-0">
-            <div class="fs-1 mb-3">🔍</div>
-            <h3 class="fw-bold text-dark">@L["Dashboard.NoMatches.Title"]</h3>
-            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">@L["Dashboard.NoMatches.Body"]</p>
-            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-controller="Questionnaire" asp-action="Start" asp-route-profileId="@currentProfileId">@L["Dashboard.NoMatches.CTA"]</a>
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <h3>@L["Dashboard.NoMatches.Title"]</h3>
+            <p>@L["Dashboard.NoMatches.Body"]</p>
+            <a class="btn btn-primary fw-bold px-4" asp-controller="Questionnaire" asp-action="Start" asp-route-profileId="@currentProfileId">@L["Dashboard.NoMatches.CTA"]</a>
         </div>
     }
     else

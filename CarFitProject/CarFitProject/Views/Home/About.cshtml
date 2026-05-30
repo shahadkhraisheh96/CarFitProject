@@ -3,16 +3,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid page-header mb-5 p-0" style="background-image: url('/img/carousel-bg-1.jpg');">
-    <div class="container-fluid page-header-inner py-5">
-        <div class="container text-center">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">@Localizer["About.Title"]</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb justify-content-center text-uppercase">
-                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">@Localizer["About.Crumb.Home"]</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">@Localizer["About.Crumb.About"]</li>
-                </ol>
-            </nav>
+<div class="container py-4">
+    <div class="page-hero mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-12 text-center">
+                <span class="eyebrow"><i class="fa-solid fa-car-burst me-1"></i> About CarFit</span>
+                <h1 class="mb-2">@Localizer["About.Title"]</h1>
+                <p class="lead mb-0">Matching Jordanian drivers to the right car since day one.</p>
+                <nav aria-label="breadcrumb" class="mt-3">
+                    <ol class="breadcrumb justify-content-center mb-0">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50 text-decoration-none">@Localizer["About.Crumb.Home"]</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">@Localizer["About.Crumb.About"]</li>
+                    </ol>
+                </nav>
+            </div>
         </div>
     </div>
 </div>
@@ -26,31 +30,60 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">@Localizer["About.Badge"]</span>
-                <h1 class="fw-bold text-dark mb-4">@Localizer["About.Heading"]</h1>
-                <p class="text-muted mb-4">@Localizer["About.Lead"]</p>
+                <span class="text-eyebrow d-block mb-2">@Localizer["About.Badge"]</span>
+                <h1 class="fw-bold text-dark mb-3" style="letter-spacing:-0.03em;">@Localizer["About.Heading"]</h1>
+                <p class="cf-subtitle mb-4">@Localizer["About.Lead"]</p>
 
                 <div class="d-flex flex-column gap-3 mb-4">
-                    <div class="d-flex align-items-center bg-white p-3 rounded-3 shadow-sm">
-                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 me-3">
-                            <i class="fa-solid fa-chart-line fs-4"></i>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
                         <div>
-                            <h5 class="fw-bold mb-1 text-dark">@Localizer["About.F1.Title"]</h5>
-                            <p class="mb-0 text-muted small">@Localizer["About.F1.Body"]</p>
+                            <div class="fw-bold text-dark fs-6">@Localizer["About.F1.Title"]</div>
+                            <div class="text-muted small">@Localizer["About.F1.Body"]</div>
                         </div>
                     </div>
-
-                    <div class="d-flex align-items-center bg-white p-3 rounded-3 shadow-sm">
-                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2.5 me-3">
-                            <i class="fa-solid fa-shield-halved fs-4"></i>
-                        </div>
+                    <div class="stat-card stat-success">
+                        <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
                         <div>
-                            <h5 class="fw-bold mb-1 text-dark">@Localizer["About.F2.Title"]</h5>
-                            <p class="mb-0 text-muted small">@Localizer["About.F2.Body"]</p>
+                            <div class="fw-bold text-dark fs-6">@Localizer["About.F2.Title"]</div>
+                            <div class="text-muted small">@Localizer["About.F2.Body"]</div>
                         </div>
                     </div>
                 </div>
+
+                <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary fw-bold">
+                    <i class="fa-solid fa-clipboard-check me-2"></i>Book an Inspection
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="section-heading">
+        <h2>How CarFit works</h2>
+    </div>
+    <p class="cf-subtitle mb-4">Three steps from "I want a car" to "this is the right car."</p>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="form-section-card h-100" style="max-width:none;">
+                <div class="persona-avatar mb-3" style="width:52px;height:52px;border-radius:14px;font-size:1.2rem;">1</div>
+                <h5 class="fw-bold mb-1">Tell us about you</h5>
+                <p class="text-muted small mb-0">A short 6-step questionnaire covers your family, budget, trip patterns, and preferences.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-section-card h-100" style="max-width:none;">
+                <div class="persona-avatar mb-3" style="width:52px;height:52px;border-radius:14px;font-size:1.2rem;background:linear-gradient(135deg,#06b6d4 0%,#0e7490 100%);">2</div>
+                <h5 class="fw-bold mb-1">Get matched</h5>
+                <p class="text-muted small mb-0">Our matching engine ranks every listing in your range and surfaces the cars that fit your life.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-section-card h-100" style="max-width:none;">
+                <div class="persona-avatar mb-3" style="width:52px;height:52px;border-radius:14px;font-size:1.2rem;background:linear-gradient(135deg,#10b981 0%,#047857 100%);">3</div>
+                <h5 class="fw-bold mb-1">Inspect &amp; buy</h5>
+                <p class="text-muted small mb-0">Book a 150-point inspection at the dealer's lot. Buy with confidence — or walk away knowing why.</p>
             </div>
         </div>
     </div>

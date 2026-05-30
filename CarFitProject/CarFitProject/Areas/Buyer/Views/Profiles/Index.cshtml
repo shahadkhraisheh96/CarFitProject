@@ -3,17 +3,58 @@
     ViewData["Title"] = L["Profiles.Page.Title"].Value;
 }
 
-<div class="container py-5">
-    <div class="row mb-4 align-items-center">
-        <div class="col">
-            <h2 class="fw-bold text-dark mb-1">@L["Profiles.Page.Title"]</h2>
-            <p class="text-muted mb-0">@L["Profiles.Page.Subtitle"]</p>
+<div class="container py-4">
+    <div class="page-hero mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-12">
+                <span class="eyebrow"><i class="fa fa-user-gear me-1"></i> Personas</span>
+                <h1 class="mb-2">@L["Profiles.Page.Title"]</h1>
+                <p class="lead mb-0">@L["Profiles.Page.Subtitle"]</p>
+            </div>
         </div>
-        <div class="col-auto">
-            <a asp-action="Start" asp-controller="Questionnaire" class="btn btn-primary fw-bold">
-                <i class="fa fa-plus me-2"></i>@L["Profiles.New"]
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a asp-controller="Saved" asp-action="Index" class="text-decoration-none">
+                <div class="persona-card h-100 d-flex align-items-center gap-3">
+                    <div class="persona-avatar" style="width:48px;height:48px;border-radius:14px;font-size:1.1rem;"><i class="fa fa-bookmark"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold text-dark">Saved Cars</div>
+                        <div class="text-muted small">View cars you've bookmarked</div>
+                    </div>
+                    <i class="fa fa-arrow-right text-muted"></i>
+                </div>
             </a>
         </div>
+        <div class="col-md-4">
+            <a asp-controller="Compare" asp-action="Index" class="text-decoration-none">
+                <div class="persona-card h-100 d-flex align-items-center gap-3">
+                    <div class="persona-avatar" style="width:48px;height:48px;border-radius:14px;font-size:1.1rem;background:linear-gradient(135deg,#06b6d4 0%,#0e7490 100%);"><i class="fa fa-scale-balanced"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold text-dark">Compare Cars</div>
+                        <div class="text-muted small">Side-by-side specs &amp; scores</div>
+                    </div>
+                    <i class="fa fa-arrow-right text-muted"></i>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a asp-action="Start" asp-controller="Questionnaire" class="text-decoration-none">
+                <div class="persona-card h-100 d-flex align-items-center gap-3">
+                    <div class="persona-avatar" style="width:48px;height:48px;border-radius:14px;font-size:1.1rem;background:linear-gradient(135deg,#10b981 0%,#047857 100%);"><i class="fa fa-plus"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold text-dark">@L["Profiles.New"]</div>
+                        <div class="text-muted small">Run the 6-step questionnaire</div>
+                    </div>
+                    <i class="fa fa-arrow-right text-muted"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <h3><i class="fa fa-user-gear me-2 text-primary"></i>My Personas</h3>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -27,9 +68,10 @@
 
     @if (!Model.Any())
     {
-        <div class="bg-white shadow-sm rounded-4 p-5 text-center">
-            <i class="fa fa-clipboard-list fs-1 text-muted opacity-25 mb-3 d-block"></i>
-            <p class="text-muted mb-3">@L["Profiles.Empty"]</p>
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa fa-clipboard-list"></i></div>
+            <h3>@L["Profiles.Empty"]</h3>
+            <p>Create your first persona to start receiving tailored car recommendations.</p>
             <a asp-action="Start" asp-controller="Questionnaire" class="btn btn-primary fw-bold">
                 @L["Profiles.StartQuestionnaire"]
             </a>
@@ -40,19 +82,28 @@
         <div class="row g-3">
             @foreach (var profile in Model)
             {
+                var initial = string.IsNullOrEmpty(profile.ProfileName) ? "?" : profile.ProfileName.Substring(0, 1).ToUpper();
                 <div class="col-md-6">
-                    <div class="bg-white shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="fw-bold mb-0">@profile.ProfileName</h5>
-                            @if (profile.IsActive == true)
-                            {
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-1 fw-bold">@L["Profiles.Active"]</span>
-                            }
+                    <div class="persona-card @(profile.IsActive == true ? "is-active" : "") d-flex flex-column">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="persona-avatar">@initial</div>
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold mb-1">@profile.ProfileName</h5>
+                                @if (profile.IsActive == true)
+                                {
+                                    <span class="chip chip-success"><i class="fa fa-circle-check"></i>@L["Profiles.Active"]</span>
+                                }
+                            </div>
                         </div>
 
-                        <div class="text-muted small mb-3">
-                            <div>Budget: @(profile.BudgetMin ?? 0) – @profile.BudgetMax JD</div>
-                            <div>@(profile.Purpose ?? "—") · @(profile.TransmissionPref ?? "—") · @(profile.SizePref ?? "—")</div>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            <span class="chip chip-primary"><i class="fa fa-wallet"></i>@(profile.BudgetMin ?? 0) – @profile.BudgetMax JD</span>
+                            @if (!string.IsNullOrEmpty(profile.Purpose))
+                            { <span class="chip"><i class="fa fa-bullseye"></i>@profile.Purpose</span> }
+                            @if (!string.IsNullOrEmpty(profile.TransmissionPref))
+                            { <span class="chip"><i class="fa fa-gears"></i>@profile.TransmissionPref</span> }
+                            @if (!string.IsNullOrEmpty(profile.SizePref))
+                            { <span class="chip"><i class="fa fa-car-side"></i>@profile.SizePref</span> }
                         </div>
 
                         <div class="d-flex flex-wrap gap-2 mt-auto">
