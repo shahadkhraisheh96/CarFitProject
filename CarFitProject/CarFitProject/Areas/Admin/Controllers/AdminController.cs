@@ -195,7 +195,7 @@ namespace CarFitProject.Areas.Admin.Controllers
 
                         listingsToInsert.Add(new CarListing
                         {
-                            Available = true,
+                            Status = "Active",
                             ListingPrice = row.ListingPrice,
                             Car = new Car
                             {

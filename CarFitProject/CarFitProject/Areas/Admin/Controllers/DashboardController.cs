@@ -24,7 +24,7 @@ namespace CarFitProject.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.TotalUsers = await _userManager.Users.CountAsync();
-            ViewBag.TotalListings = await _context.CarListings.CountAsync(c => c.Available == true);
+            ViewBag.TotalListings = await _context.CarListings.CountAsync(c => c.Status == "Active");
             ViewBag.TotalGlossaryTerms = await _context.InspectionTermsGlossaries.CountAsync();
 
             var chartLabels = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };

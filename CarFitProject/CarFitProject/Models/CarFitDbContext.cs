@@ -18,6 +18,8 @@ public partial class CarFitDbContext : DbContext
 
     public virtual DbSet<Car> Cars { get; set; }
 
+    public virtual DbSet<CarImage> CarImages { get; set; }
+
     public virtual DbSet<CarListing> CarListings { get; set; }
 
     public virtual DbSet<InspectionReport> InspectionReports { get; set; }
@@ -43,6 +45,10 @@ public partial class CarFitDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Cars__3213E83F43C12A3A");
 
             entity.HasIndex(e => new { e.Transmission, e.BodyType, e.Year }, "IX_Cars_Matching");
+            entity.HasIndex(e => e.Make, "IX_Cars_Make");
+            entity.HasIndex(e => e.Model, "IX_Cars_Model");
+            entity.HasIndex(e => e.Price, "IX_Cars_Price");
+            entity.HasIndex(e => e.Type, "IX_Cars_Type");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.BodyType)
@@ -100,12 +106,13 @@ public partial class CarFitDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__CarListi__3213E83F8D2FA73D");
 
-            entity.HasIndex(e => e.Available, "IX_CarListings_Availability");
+            entity.HasIndex(e => e.Status, "IX_CarListings_Status");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Available)
-                .HasDefaultValue(true)
-                .HasColumnName("available");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .HasDefaultValue("Active")
+                .HasColumnName("status");
             entity.Property(e => e.CarId).HasColumnName("car_id");
             entity.Property(e => e.InstallmentOption)
                 .HasDefaultValue(false)
@@ -125,6 +132,32 @@ public partial class CarFitDbContext : DbContext
             entity.HasOne(d => d.Seller).WithMany(p => p.CarListings)
                 .HasForeignKey(d => d.SellerId)
                 .HasConstraintName("FK__CarListin__selle__45F365D3");
+        });
+
+        modelBuilder.Entity<CarImage>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("CarImages");
+
+            entity.HasIndex(e => e.CarId, "IX_CarImages_car_id");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CarId).HasColumnName("car_id");
+            entity.Property(e => e.Url)
+                .IsRequired()
+                .HasMaxLength(2048)
+                .HasColumnName("url");
+            entity.Property(e => e.SortOrder)
+                .HasDefaultValue(0)
+                .HasColumnName("sort_order");
+            entity.Property(e => e.IsPrimary)
+                .HasDefaultValue(false)
+                .HasColumnName("is_primary");
+
+            entity.HasOne(d => d.Car).WithMany(c => c.CarImages)
+                .HasForeignKey(d => d.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<InspectionReport>(entity =>

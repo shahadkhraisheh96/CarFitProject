@@ -82,7 +82,7 @@ namespace CarFitProject.Areas.Seller.Controllers
                 SellerId = seller.Id,
                 ListingPrice = listingPrice,
                 PaymentMethodAllowed = paymentMethodAllowed,
-                Available = true,
+                Status = "Active",
                 InstallmentOption = !string.IsNullOrEmpty(paymentMethodAllowed)
                     && paymentMethodAllowed.Contains("Installment", StringComparison.OrdinalIgnoreCase)
             };

@@ -51,6 +51,8 @@ public partial class Car
 
     public virtual ICollection<CarListing> CarListings { get; set; } = new List<CarListing>();
 
+    public virtual ICollection<CarImage> CarImages { get; set; } = new List<CarImage>();
+
     public virtual InspectionReport? InspectionReport { get; set; }
 
     public virtual ICollection<SavedResult> SavedResults { get; set; } = new List<SavedResult>();

@@ -20,7 +20,7 @@ namespace CarFitProject.Controllers
             // Pull only available vehicles to the customer catalog
             var listings = await _context.CarListings
                 .Include(l => l.Car)
-                .Where(l => l.Available == true)
+                .Where(l => l.Status == "Active")
                 .OrderByDescending(l => l.Id)
                 .ToListAsync();
 
