@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CarFitProject.Helpers;
 using CarFitProject.Models;
 using CarFitProject.Services;
@@ -13,12 +14,22 @@ namespace CarFitProject.Controllers
 
         private readonly CarFitDbContext _context;
         private readonly IInspectionScoringService _scoring;
+        private readonly ISavedCarsService _savedCars;
+        private readonly ISubscriptionService _subscriptions;
 
-        public InventoryController(CarFitDbContext context, IInspectionScoringService scoring)
+        public InventoryController(
+            CarFitDbContext context,
+            IInspectionScoringService scoring,
+            ISavedCarsService savedCars,
+            ISubscriptionService subscriptions)
         {
             _context = context;
             _scoring = scoring;
+            _savedCars = savedCars;
+            _subscriptions = subscriptions;
         }
+
+        private string? CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         // GET: /Inventory/Search?make=Toyota&priceTo=15000&page=2
         [HttpGet]
@@ -51,6 +62,10 @@ namespace CarFitProject.Controllers
 
             filters.Results = await PaginatedList<CarListing>.CreateAsync(
                 query.OrderByDescending(l => l.Id), filters.Page, PageSize);
+
+            ViewBag.SavedCarIds = User.IsInRole("Buyer")
+                ? await _savedCars.GetSavedCarIdsAsync(CurrentUserId!)
+                : new HashSet<int>();
             return View(filters);
         }
 
@@ -73,6 +88,21 @@ namespace CarFitProject.Controllers
             {
                 ViewBag.InspectionSignals = _scoring.Compute(listing.Car.InspectionReport);
             }
+
+            ViewBag.IsBuyer = User.IsInRole("Buyer");
+            if (ViewBag.IsBuyer)
+            {
+                ViewBag.IsSaved = await _context.SavedResults
+                    .AnyAsync(s => s.UserId == CurrentUserId && s.CarId == listing.CarId);
+                ViewBag.IsPremium = await _subscriptions.IsPremiumAsync(CurrentUserId);
+            }
+
+            var sellerCity = listing.Seller?.City;
+            ViewBag.Mechanics = await _context.Mechanics
+                .AsNoTracking()
+                .OrderBy(m => m.City).ThenBy(m => m.Name)
+                .ToListAsync();
+            ViewBag.SellerCity = sellerCity;
             return View(listing);
         }
 

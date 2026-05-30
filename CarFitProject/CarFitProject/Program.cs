@@ -75,6 +75,8 @@ builder.Services.AddScoped<IListingService, ListingService>();
 builder.Services.AddScoped<IImageStorageService, ImageStorageService>();
 builder.Services.AddSingleton<IInspectionScoringService, InspectionScoringService>();
 builder.Services.AddScoped<IInspectionReportService, InspectionReportService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<ISavedCarsService, SavedCarsService>();
 
 // Session is used by the Buyer questionnaire wizard to persist partial state
 // across step transitions without writing an unfinished UserProfile row to SQL.

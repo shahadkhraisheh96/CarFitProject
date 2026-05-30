@@ -13,11 +13,16 @@ namespace CarFitProject.Areas.Buyer.Controllers
     {
         private readonly CarFitDbContext _context;
         private readonly IRecommendationService _recommendations;
+        private readonly ISavedCarsService _savedCars;
 
-        public DashboardController(CarFitDbContext context, IRecommendationService recommendations)
+        public DashboardController(
+            CarFitDbContext context,
+            IRecommendationService recommendations,
+            ISavedCarsService savedCars)
         {
             _context = context;
             _recommendations = recommendations;
+            _savedCars = savedCars;
         }
 
         public async Task<IActionResult> Index(int? activeProfileId)
@@ -47,6 +52,8 @@ namespace CarFitProject.Areas.Buyer.Controllers
             var result = await _recommendations.GetMatchesAsync(selectedProfile, userId);
             ViewBag.BudgetRelaxed = result.BudgetRelaxed;
             ViewBag.RelaxationMessage = result.RelaxationMessage;
+            ViewBag.SavedCarIds = await _savedCars.GetSavedCarIdsAsync(userId);
+            ViewBag.SavedCount = await _savedCars.CountAsync(userId);
             return View(result.Cars);
         }
     }

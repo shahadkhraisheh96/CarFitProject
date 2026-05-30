@@ -7,6 +7,8 @@
     var profiles = ViewBag.AllUserProfiles as IEnumerable<CarFitProject.Models.UserProfile> ?? new List<CarFitProject.Models.UserProfile>();
     var currentProfileId = ViewBag.CurrentProfileId as int?;
     var currentProfileName = ViewBag.CurrentProfileName as string ?? "Active Profile";
+    var savedIds = ViewBag.SavedCarIds as HashSet<int> ?? new HashSet<int>();
+    var savedCount = (int)(ViewBag.SavedCount ?? 0);
 }
 
 <div class="container py-4">
@@ -41,6 +43,12 @@
                         <li>
                             <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Profiles" asp-action="Index">
                                 <i class="fa-solid fa-list-check"></i> Manage profiles
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Saved" asp-action="Index">
+                                <i class="fa-solid fa-bookmark"></i> Saved cars
+                                <span class="badge bg-primary ms-auto">@savedCount</span>
                             </a>
                         </li>
                         <li>
@@ -146,10 +154,30 @@
                             </div>
                         </div>
 
-                        <div class="p-4 border-top pt-3 mt-auto">
+                        <div class="p-4 border-top pt-3 mt-auto d-flex flex-column gap-2">
                             <a asp-controller="Inventory" asp-action="Detail" asp-area="" asp-route-id="@car.ListingId" class="btn btn-primary w-100 fw-bold">
                                 View listing <i class="fa-solid fa-arrow-right-long ms-2"></i>
                             </a>
+                            <div class="d-flex gap-2">
+                                @{
+                                    var isCarSaved = savedIds.Contains(car.CarId);
+                                }
+                                <form asp-controller="Saved" asp-action="Toggle" method="post" class="m-0 flex-grow-1">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="carId" value="@car.CarId" />
+                                    <input type="hidden" name="returnUrl" value="/Buyer/Dashboard?activeProfileId=@currentProfileId" />
+                                    <button type="submit" class="btn btn-sm @(isCarSaved ? "btn-danger" : "btn-outline-primary") fw-bold w-100">
+                                        <i class="fa @(isCarSaved ? "fa-bookmark-slash" : "fa-bookmark") me-1"></i>@(isCarSaved ? "Unsave" : "Save")
+                                    </button>
+                                </form>
+                                @if (car.ListingId.HasValue)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-secondary fw-bold compare-toggle"
+                                            data-listing-id="@car.ListingId" data-car-label="@car.Make @car.Model">
+                                        <i class="fa fa-scale-balanced me-1"></i>Compare
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -158,7 +186,10 @@
     }
 </div>
 
+<partial name="_CompareBar" />
+
 @section Scripts {
+    <partial name="_CompareBarScripts" />
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

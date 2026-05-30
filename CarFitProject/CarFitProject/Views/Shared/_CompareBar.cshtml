@@ -1,0 +1,21 @@
+@*
+    Floating compare drawer. Populated client-side from sessionStorage by the
+    _CompareBarScripts partial — also wires up any element with the
+    .compare-toggle class.
+*@
+<div id="compareBar"
+     class="position-fixed bottom-0 start-0 end-0 bg-dark text-white px-3 py-2 d-none"
+     style="z-index: 1040; box-shadow: 0 -2px 10px rgba(0,0,0,0.2);">
+    <div class="container d-flex justify-content-between align-items-center gap-3 flex-wrap">
+        <div>
+            <strong>Compare</strong>
+            <span class="ms-2 small text-white-50" id="compareBarSummary">No cars selected.</span>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-light" id="compareBarClear">Clear</button>
+            <a id="compareBarGo" class="btn btn-sm btn-primary fw-bold disabled" href="#">
+                <i class="fa fa-scale-balanced me-1"></i>Compare
+            </a>
+        </div>
+    </div>
+</div>

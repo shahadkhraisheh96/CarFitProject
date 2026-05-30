@@ -1,14 +1,37 @@
 @model CarFitProject.Models.CarListing
+@using CarFitProject.Helpers
 @{
     ViewData["Title"] = $"{Model.Car?.Make} {Model.Car?.Model}";
     var photos = Model.Car?.CarImages?.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.SortOrder).ToList() ?? new List<CarFitProject.Models.CarImage>();
     var primary = photos.FirstOrDefault();
+
+    var isBuyer = (bool)(ViewBag.IsBuyer ?? false);
+    var isSaved = (bool)(ViewBag.IsSaved ?? false);
+    var isPremium = (bool)(ViewBag.IsPremium ?? false);
+    var mechanics = ViewBag.Mechanics as List<CarFitProject.Models.Mechanic> ?? new List<CarFitProject.Models.Mechanic>();
+    var sellerCity = ViewBag.SellerCity as string;
+
+    var waNumber = PhoneHelper.ToWaMeNumber(Model.Seller?.Phone);
+    var waUrl = waNumber == null
+        ? null
+        : $"https://wa.me/{waNumber}?text=" + Uri.EscapeDataString($"Hi, I'm interested in the {Model.Car?.Make} {Model.Car?.Model} ({Model.Car?.Year}) on CarFit (listing #{Model.Id}).");
 }
 
 <div class="container py-5">
-    <a asp-action="Search" class="text-decoration-none text-primary small fw-bold">
-        <i class="fa fa-arrow-left me-1"></i>Back to search
-    </a>
+    <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+        <a asp-action="Search" class="text-decoration-none text-primary small fw-bold">
+            <i class="fa fa-arrow-left me-1"></i>Back to search
+        </a>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success py-2 px-3 mb-0 small" role="alert">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-warning py-2 px-3 mb-0 small" role="alert">@TempData["ErrorMessage"]</div>
+        }
+    </div>
 
     <div class="row g-4 mt-1">
         <div class="col-lg-8">
@@ -176,23 +199,141 @@
                 }
             </div>
 
+            @* Buyer actions: Save / Compare / Share — visible to Buyers; Compare + Share are anonymous-friendly. *@
+            <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
+                <div class="d-flex flex-column gap-2">
+                    @if (isBuyer)
+                    {
+                        <form asp-area="Buyer" asp-controller="Saved" asp-action="Toggle" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="carId" value="@Model.CarId" />
+                            <input type="hidden" name="returnUrl" value="/Inventory/Detail/@Model.Id" />
+                            <button type="submit" class="btn @(isSaved ? "btn-danger" : "btn-outline-primary") fw-bold w-100">
+                                <i class="fa @(isSaved ? "fa-bookmark-slash" : "fa-bookmark") me-2"></i>@(isSaved ? "Unsave" : "Save this car")
+                            </button>
+                        </form>
+                    }
+                    <button type="button" class="btn btn-outline-secondary fw-bold compare-toggle"
+                            data-listing-id="@Model.Id" data-car-label="@Model.Car?.Make @Model.Car?.Model">
+                        <i class="fa fa-scale-balanced me-2"></i>Add to compare
+                    </button>
+                    <button type="button" id="shareListingBtn" class="btn btn-outline-secondary fw-bold">
+                        <i class="fa fa-link me-2"></i>Copy listing link
+                    </button>
+                </div>
+            </div>
+
             @if (Model.Seller != null)
             {
-                <div class="bg-white shadow-sm rounded-4 p-4">
+                <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
                     <div class="text-muted small fw-bold text-uppercase mb-2">Dealer</div>
                     <h5 class="fw-bold mb-1">@Model.Seller.Name</h5>
                     @if (!string.IsNullOrEmpty(Model.Seller.City))
                     {
-                        <div class="text-muted small mb-2">@Model.Seller.City@(string.IsNullOrEmpty(Model.Seller.Neighborhood) ? "" : " · " + Model.Seller.Neighborhood)</div>
+                        <div class="text-muted small mb-3">@Model.Seller.City@(string.IsNullOrEmpty(Model.Seller.Neighborhood) ? "" : " · " + Model.Seller.Neighborhood)</div>
                     }
-                    @if (!string.IsNullOrEmpty(Model.Seller.Phone))
+                    @if (waUrl != null)
                     {
-                        <a href="tel:@Model.Seller.Phone" class="btn btn-outline-primary w-100 fw-bold mt-2">
-                            <i class="fa fa-phone me-2"></i>@Model.Seller.Phone
+                        <a href="@waUrl" target="_blank" rel="noopener" class="btn btn-success w-100 fw-bold mb-2">
+                            <i class="fa-brands fa-whatsapp me-2"></i>WhatsApp the dealer
                         </a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Seller.Email))
+                    {
+                        if (isPremium)
+                        {
+                            <a href="mailto:@Model.Seller.Email?subject=@Uri.EscapeDataString($"CarFit listing #{Model.Id}")"
+                               class="btn btn-outline-primary w-100 fw-bold">
+                                <i class="fa fa-envelope me-2"></i>Email the dealer
+                            </a>
+                        }
+                        else
+                        {
+                            <div class="text-muted small text-center py-2">
+                                <i class="fa fa-lock me-1"></i>Email contact is a Premium feature.
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-primary text-decoration-none">Upgrade →</a>
+                            </div>
+                        }
                     }
                 </div>
             }
+
+            @* Mechanic visit (FR-6.4) *@
+            <div class="bg-white shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-1"><i class="fa fa-screwdriver-wrench text-primary me-2"></i>Request a mechanic visit</h5>
+                <p class="text-muted small mb-3">A trusted mechanic will inspect this car before you commit.</p>
+                <form asp-controller="Inspection" asp-action="BookMechanic" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="CarListingId" value="@Model.Id" />
+
+                    <div class="mb-2">
+                        <label class="form-label small fw-bold text-secondary">Mechanic</label>
+                        @if (mechanics.Any())
+                        {
+                            <select name="MechanicId" class="form-select" id="mechanicSelect">
+                                <option value="">— pick a mechanic —</option>
+                                @{
+                                    var grouped = mechanics
+                                        .GroupBy(m => m.City ?? "—")
+                                        .OrderByDescending(g => string.Equals(g.Key, sellerCity, StringComparison.OrdinalIgnoreCase))
+                                        .ThenBy(g => g.Key);
+                                }
+                                @foreach (var group in grouped)
+                                {
+                                    <optgroup label="@group.Key">
+                                        @foreach (var m in group)
+                                        {
+                                            <option value="@m.Id" selected="@(string.Equals(group.Key, sellerCity, StringComparison.OrdinalIgnoreCase))">@m.Name @(string.IsNullOrEmpty(m.Phone) ? "" : "(" + m.Phone + ")")</option>
+                                        }
+                                    </optgroup>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <div class="text-muted small">No mechanics seeded yet.</div>
+                        }
+                    </div>
+
+                    <div class="mb-2">
+                        <input name="CustomerName" class="form-control form-control-sm" placeholder="Your name" required />
+                    </div>
+                    <div class="mb-2">
+                        <input name="CustomerEmail" type="email" class="form-control form-control-sm" placeholder="Email" required />
+                    </div>
+                    <div class="mb-2">
+                        <input name="PreferredDate" type="date" class="form-control form-control-sm" value="@DateTime.Today.AddDays(2):yyyy-MM-dd" required />
+                    </div>
+                    <div class="mb-3">
+                        <textarea name="VehicleNotes" class="form-control form-control-sm" rows="2" placeholder="Anything we should know? (optional)"></textarea>
+                    </div>
+                    <input type="hidden" name="PackageType" value="Mechanic visit" />
+                    <button type="submit" class="btn btn-primary fw-bold w-100" @(mechanics.Any() ? "" : "disabled")>
+                        <i class="fa fa-paper-plane me-1"></i>Request visit
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<partial name="_CompareBar" />
+
+@section Scripts {
+    <partial name="_CompareBarScripts" />
+    <script>
+        (function () {
+            var btn = document.getElementById('shareListingBtn');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                navigator.clipboard.writeText(window.location.href).then(function () {
+                    var prev = btn.innerHTML;
+                    btn.innerHTML = '<i class="fa fa-check me-2"></i>Link copied';
+                    setTimeout(function () { btn.innerHTML = prev; }, 1800);
+                }, function () {
+                    alert(window.location.href);
+                });
+            });
+        })();
+    </script>
+}
