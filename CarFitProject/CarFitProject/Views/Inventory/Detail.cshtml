@@ -1,5 +1,6 @@
 @model CarFitProject.Models.CarListing
 @using CarFitProject.Helpers
+@inject IViewLocalizer L
 @{
     ViewData["Title"] = $"{Model.Car?.Make} {Model.Car?.Model}";
     var photos = Model.Car?.CarImages?.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.SortOrder).ToList() ?? new List<CarFitProject.Models.CarImage>();
@@ -20,7 +21,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
         <a asp-action="Search" class="text-decoration-none text-primary small fw-bold">
-            <i class="fa fa-arrow-left me-1"></i>Back to search
+            <i class="fa fa-arrow-left me-1"></i>@L["Detail.BackToSearch"]
         </a>
 
         @if (TempData["SuccessMessage"] != null)
@@ -90,16 +91,16 @@
 
             <div class="bg-white shadow-sm rounded-4 p-4 mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>Inspection report (ورقة الفحص)</h5>
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>@L["Detail.Inspection.Title"]</h5>
                     @if (Model.Car?.InspectionReport?.CarseerAttached == true)
                     {
-                        <span class="badge bg-info text-white px-3 py-2"><i class="fa-solid fa-shield-halved me-1"></i>CarSeer attached</span>
+                        <span class="badge bg-info text-white px-3 py-2"><i class="fa-solid fa-shield-halved me-1"></i>@L["Detail.Inspection.CarSeer"]</span>
                     }
                 </div>
 
                 @if (Model.Car?.InspectionReport == null)
                 {
-                    <p class="text-muted mb-0">No inspection report has been attached to this listing yet.</p>
+                    <p class="text-muted mb-0">@L["Detail.Inspection.NoReport"]</p>
                 }
                 else
                 {
@@ -191,11 +192,11 @@
 
         <div class="col-lg-4">
             <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
-                <div class="text-muted small fw-bold text-uppercase mb-1">Listing price</div>
+                <div class="text-muted small fw-bold text-uppercase mb-1">@L["Detail.ListingPrice"]</div>
                 <div class="fw-bold text-primary fs-2">@(Model.ListingPrice?.ToString("N0")) <span class="fs-6 text-muted">JD</span></div>
                 @if (!string.IsNullOrEmpty(Model.PaymentMethodAllowed))
                 {
-                    <div class="text-muted small mt-2">Payment: @Model.PaymentMethodAllowed</div>
+                    <div class="text-muted small mt-2">@L["Detail.Payment"]: @Model.PaymentMethodAllowed</div>
                 }
             </div>
 
@@ -209,16 +210,16 @@
                             <input type="hidden" name="carId" value="@Model.CarId" />
                             <input type="hidden" name="returnUrl" value="/Inventory/Detail/@Model.Id" />
                             <button type="submit" class="btn @(isSaved ? "btn-danger" : "btn-outline-primary") fw-bold w-100">
-                                <i class="fa @(isSaved ? "fa-bookmark-slash" : "fa-bookmark") me-2"></i>@(isSaved ? "Unsave" : "Save this car")
+                                <i class="fa @(isSaved ? "fa-bookmark-slash" : "fa-bookmark") me-2"></i>@(isSaved ? L["Save.Unsave"] : L["Save.SaveThisCar"])
                             </button>
                         </form>
                     }
                     <button type="button" class="btn btn-outline-secondary fw-bold compare-toggle"
                             data-listing-id="@Model.Id" data-car-label="@Model.Car?.Make @Model.Car?.Model">
-                        <i class="fa fa-scale-balanced me-2"></i>Add to compare
+                        <i class="fa fa-scale-balanced me-2"></i>@L["Compare.AddToCompare"]
                     </button>
                     <button type="button" id="shareListingBtn" class="btn btn-outline-secondary fw-bold">
-                        <i class="fa fa-link me-2"></i>Copy listing link
+                        <i class="fa fa-link me-2"></i>@L["Detail.Share"]
                     </button>
                 </div>
             </div>
@@ -226,7 +227,7 @@
             @if (Model.Seller != null)
             {
                 <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
-                    <div class="text-muted small fw-bold text-uppercase mb-2">Dealer</div>
+                    <div class="text-muted small fw-bold text-uppercase mb-2">@L["Detail.Dealer"]</div>
                     <h5 class="fw-bold mb-1">@Model.Seller.Name</h5>
                     @if (!string.IsNullOrEmpty(Model.Seller.City))
                     {
@@ -235,7 +236,7 @@
                     @if (waUrl != null)
                     {
                         <a href="@waUrl" target="_blank" rel="noopener" class="btn btn-success w-100 fw-bold mb-2">
-                            <i class="fa-brands fa-whatsapp me-2"></i>WhatsApp the dealer
+                            <i class="fa-brands fa-whatsapp me-2"></i>@L["Detail.WhatsApp"]
                         </a>
                     }
                     @if (!string.IsNullOrEmpty(Model.Seller.Email))
@@ -244,14 +245,14 @@
                         {
                             <a href="mailto:@Model.Seller.Email?subject=@Uri.EscapeDataString($"CarFit listing #{Model.Id}")"
                                class="btn btn-outline-primary w-100 fw-bold">
-                                <i class="fa fa-envelope me-2"></i>Email the dealer
+                                <i class="fa fa-envelope me-2"></i>@L["Detail.Email"]
                             </a>
                         }
                         else
                         {
                             <div class="text-muted small text-center py-2">
-                                <i class="fa fa-lock me-1"></i>Email contact is a Premium feature.
-                                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-primary text-decoration-none">Upgrade →</a>
+                                <i class="fa fa-lock me-1"></i>@L["Detail.Email.PremiumOnly"]
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="text-primary text-decoration-none">@L["Detail.Upgrade"]</a>
                             </div>
                         }
                     }
@@ -260,18 +261,18 @@
 
             @* Mechanic visit (FR-6.4) *@
             <div class="bg-white shadow-sm rounded-4 p-4">
-                <h5 class="fw-bold mb-1"><i class="fa fa-screwdriver-wrench text-primary me-2"></i>Request a mechanic visit</h5>
-                <p class="text-muted small mb-3">A trusted mechanic will inspect this car before you commit.</p>
+                <h5 class="fw-bold mb-1"><i class="fa fa-screwdriver-wrench text-primary me-2"></i>@L["Detail.Mechanic.Title"]</h5>
+                <p class="text-muted small mb-3">@L["Detail.Mechanic.Subtitle"]</p>
                 <form asp-controller="Inspection" asp-action="BookMechanic" method="post" novalidate>
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="CarListingId" value="@Model.Id" />
 
                     <div class="mb-2">
-                        <label class="form-label small fw-bold text-secondary">Mechanic</label>
+                        <label class="form-label small fw-bold text-secondary">@L["Detail.Mechanic.Label"]</label>
                         @if (mechanics.Any())
                         {
                             <select name="MechanicId" class="form-select" id="mechanicSelect">
-                                <option value="">— pick a mechanic —</option>
+                                <option value="">@L["Detail.Mechanic.Placeholder"]</option>
                                 @{
                                     var grouped = mechanics
                                         .GroupBy(m => m.City ?? "—")
@@ -291,25 +292,25 @@
                         }
                         else
                         {
-                            <div class="text-muted small">No mechanics seeded yet.</div>
+                            <div class="text-muted small">@L["Detail.Mechanic.None"]</div>
                         }
                     </div>
 
                     <div class="mb-2">
-                        <input name="CustomerName" class="form-control form-control-sm" placeholder="Your name" required />
+                        <input name="CustomerName" class="form-control form-control-sm" placeholder="@L["Detail.Mechanic.YourName"]" required />
                     </div>
                     <div class="mb-2">
-                        <input name="CustomerEmail" type="email" class="form-control form-control-sm" placeholder="Email" required />
+                        <input name="CustomerEmail" type="email" class="form-control form-control-sm" placeholder="@L["Detail.Mechanic.Email"]" required />
                     </div>
                     <div class="mb-2">
                         <input name="PreferredDate" type="date" class="form-control form-control-sm" value="@DateTime.Today.AddDays(2):yyyy-MM-dd" required />
                     </div>
                     <div class="mb-3">
-                        <textarea name="VehicleNotes" class="form-control form-control-sm" rows="2" placeholder="Anything we should know? (optional)"></textarea>
+                        <textarea name="VehicleNotes" class="form-control form-control-sm" rows="2" placeholder="@L["Detail.Mechanic.Notes"]"></textarea>
                     </div>
                     <input type="hidden" name="PackageType" value="Mechanic visit" />
                     <button type="submit" class="btn btn-primary fw-bold w-100" @(mechanics.Any() ? "" : "disabled")>
-                        <i class="fa fa-paper-plane me-1"></i>Request visit
+                        <i class="fa fa-paper-plane me-1"></i>@L["Detail.Mechanic.Submit"]
                     </button>
                 </form>
             </div>

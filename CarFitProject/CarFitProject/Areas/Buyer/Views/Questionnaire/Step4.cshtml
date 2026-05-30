@@ -1,6 +1,7 @@
 @model CarFitProject.ViewModel.QuestionnaireStep4ViewModel
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Profile — Budget & Payment";
+    ViewData["Title"] = L["Wizard.Step4.Title"].Value;
     ViewData["WizardStep"] = 4;
 }
 
@@ -10,8 +11,8 @@
             <div class="bg-white shadow-sm rounded-4 p-5">
                 <partial name="_WizardProgress" />
 
-                <h2 class="fw-bold text-dark mb-1">Budget & payment</h2>
-                <p class="text-muted mb-4">All amounts are in Jordanian Dinar (JD).</p>
+                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Step4.Title"]</h2>
+                <p class="text-muted mb-4">@L["Wizard.Step4.Subtitle"]</p>
 
                 <form method="post" asp-action="Step4" novalidate>
                     @Html.AntiForgeryToken()
@@ -35,12 +36,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="fw-bold text-secondary d-block mb-2">Payment method</label>
-                        <div class="btn-group" role="group" aria-label="Payment method">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.PaymentMethod"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.PaymentMethod"]">
                             <input asp-for="PaymentMethod" type="radio" class="btn-check" id="pm-cash" value="Cash" autocomplete="off" />
-                            <label for="pm-cash" class="btn btn-outline-primary">Cash</label>
+                            <label for="pm-cash" class="btn btn-outline-primary">@L["Field.PaymentCash"]</label>
                             <input asp-for="PaymentMethod" type="radio" class="btn-check" id="pm-instal" value="Installments" autocomplete="off" />
-                            <label for="pm-instal" class="btn btn-outline-primary">Installments</label>
+                            <label for="pm-instal" class="btn btn-outline-primary">@L["Field.PaymentInstallments"]</label>
                         </div>
                         <span asp-validation-for="PaymentMethod" class="text-danger small mt-1 d-block"></span>
                     </div>
@@ -53,10 +54,10 @@
 
                     <div class="d-flex justify-content-between gap-2">
                         <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
-                            <i class="fa fa-arrow-left me-2"></i>Back
+                            <i class="fa fa-arrow-left me-2"></i>@L["Action.Back"]
                         </button>
                         <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
-                            Next<i class="fa fa-arrow-right ms-2"></i>
+                            @L["Action.Next"]<i class="fa fa-arrow-right ms-2"></i>
                         </button>
                     </div>
                 </form>

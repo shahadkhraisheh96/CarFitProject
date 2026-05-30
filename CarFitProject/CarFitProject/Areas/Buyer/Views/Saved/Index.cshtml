@@ -1,6 +1,7 @@
 @model List<CarFitProject.Models.CarListing>
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Saved cars";
+    ViewData["Title"] = L["Save.Page.Title"].Value;
     var isPremium = (bool)(ViewBag.IsPremium ?? false);
     var freeLimit = (int)(ViewBag.FreeLimit ?? 3);
     var savedCount = (int)(ViewBag.SavedCount ?? 0);
@@ -9,15 +10,15 @@
 <div class="container py-5">
     <div class="row align-items-center mb-4 g-3">
         <div class="col">
-            <h2 class="fw-bold text-dark mb-1"><i class="fa fa-bookmark me-2 text-primary"></i>Saved cars</h2>
+            <h2 class="fw-bold text-dark mb-1"><i class="fa fa-bookmark me-2 text-primary"></i>@L["Save.Page.Title"]</h2>
             <p class="text-muted mb-0">
                 @if (isPremium)
                 {
-                    <span><i class="fa fa-crown text-warning me-1"></i>Premium plan — unlimited saves.</span>
+                    <span><i class="fa fa-crown text-warning me-1"></i>@L["Save.Premium.Status"]</span>
                 }
                 else
                 {
-                    <span>@savedCount / @freeLimit on the Free plan.</span>
+                    <span>@string.Format(L["Save.Free.Status"].Value, savedCount, freeLimit)</span>
                 }
             </p>
         </div>
@@ -36,8 +37,8 @@
     {
         <div class="bg-white shadow-sm rounded-4 p-5 text-center">
             <i class="fa fa-bookmark fs-1 text-muted opacity-25 mb-3 d-block"></i>
-            <p class="text-muted mb-3">You haven't saved any cars yet.</p>
-            <a asp-area="" asp-controller="Inventory" asp-action="Search" class="btn btn-primary fw-bold">Browse listings</a>
+            <p class="text-muted mb-3">@L["Save.Empty"]</p>
+            <a asp-area="" asp-controller="Inventory" asp-action="Search" class="btn btn-primary fw-bold">@L["Save.BrowseListings"]</a>
         </div>
     }
     else
@@ -66,12 +67,12 @@
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="carId" value="@l.CarId" />
                                 <button type="submit" class="btn btn-outline-danger fw-bold w-100">
-                                    <i class="fa fa-bookmark-slash me-1"></i>Unsave
+                                    <i class="fa fa-bookmark-slash me-1"></i>@L["Save.Unsave"]
                                 </button>
                             </form>
                             <button type="button" class="btn btn-outline-secondary fw-bold compare-toggle"
                                     data-listing-id="@l.Id" data-car-label="@l.Car?.Make @l.Car?.Model">
-                                <i class="fa fa-scale-balanced me-1"></i>Compare
+                                <i class="fa fa-scale-balanced me-1"></i>@L["Compare.Button"]
                             </button>
                         </div>
                     </div>

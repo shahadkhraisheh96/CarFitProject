@@ -1,13 +1,14 @@
 @model CarFitProject.ViewModel.CompareViewModel
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Compare cars";
+    ViewData["Title"] = L["Compare.Page.Title"].Value;
 }
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark mb-0"><i class="fa fa-scale-balanced me-2 text-primary"></i>Compare cars</h2>
+        <h2 class="fw-bold text-dark mb-0"><i class="fa fa-scale-balanced me-2 text-primary"></i>@L["Compare.Page.Title"]</h2>
         <a asp-area="" asp-controller="Inventory" asp-action="Search" class="text-decoration-none text-primary small fw-bold">
-            <i class="fa fa-arrow-left me-1"></i>Back to search
+            <i class="fa fa-arrow-left me-1"></i>@L["Compare.BackToSearch"]
         </a>
     </div>
 
@@ -16,7 +17,7 @@
             <table class="table align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4" style="width: 20%;">Spec</th>
+                        <th class="ps-4" style="width: 20%;">@L["Compare.Spec"]</th>
                         @foreach (var r in Model.Cars)
                         {
                             <th>

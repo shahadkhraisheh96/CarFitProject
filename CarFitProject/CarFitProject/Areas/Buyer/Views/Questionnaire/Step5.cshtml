@@ -1,6 +1,7 @@
 @model CarFitProject.ViewModel.QuestionnaireStep5ViewModel
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Profile — Preferences";
+    ViewData["Title"] = L["Wizard.Step5.Title"].Value;
     ViewData["WizardStep"] = 5;
 }
 
@@ -10,56 +11,56 @@
             <div class="bg-white shadow-sm rounded-4 p-5">
                 <partial name="_WizardProgress" />
 
-                <h2 class="fw-bold text-dark mb-1">Car preferences</h2>
-                <p class="text-muted mb-4">Last set of choices before we match cars to you.</p>
+                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Step5.Title"]</h2>
+                <p class="text-muted mb-4">@L["Wizard.Step5.Subtitle"]</p>
 
                 <form method="post" asp-action="Step5" novalidate>
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
 
                     <div class="mb-3">
-                        <label class="fw-bold text-secondary d-block mb-2">Condition</label>
-                        <div class="btn-group" role="group" aria-label="Condition">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.Condition"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.Condition"]">
                             <input asp-for="ConditionPref" type="radio" class="btn-check" id="cond-new" value="New" autocomplete="off" />
-                            <label for="cond-new" class="btn btn-outline-primary">New</label>
+                            <label for="cond-new" class="btn btn-outline-primary">@L["Field.ConditionNew"]</label>
                             <input asp-for="ConditionPref" type="radio" class="btn-check" id="cond-used" value="Used" autocomplete="off" />
-                            <label for="cond-used" class="btn btn-outline-primary">Used</label>
+                            <label for="cond-used" class="btn btn-outline-primary">@L["Field.ConditionUsed"]</label>
                             <input asp-for="ConditionPref" type="radio" class="btn-check" id="cond-any" value="Any" autocomplete="off" />
-                            <label for="cond-any" class="btn btn-outline-primary">No preference</label>
+                            <label for="cond-any" class="btn btn-outline-primary">@L["Field.ConditionAny"]</label>
                         </div>
                         <span asp-validation-for="ConditionPref" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="fw-bold text-secondary d-block mb-2">Transmission</label>
-                        <div class="btn-group" role="group" aria-label="Transmission">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.Transmission"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.Transmission"]">
                             <input asp-for="TransmissionPref" type="radio" class="btn-check" id="tr-auto" value="Automatic" autocomplete="off" />
-                            <label for="tr-auto" class="btn btn-outline-primary">Automatic</label>
+                            <label for="tr-auto" class="btn btn-outline-primary">@L["Field.TransmissionAuto"]</label>
                             <input asp-for="TransmissionPref" type="radio" class="btn-check" id="tr-manual" value="Manual" autocomplete="off" />
-                            <label for="tr-manual" class="btn btn-outline-primary">Manual</label>
+                            <label for="tr-manual" class="btn btn-outline-primary">@L["Field.TransmissionManual"]</label>
                         </div>
                         <span asp-validation-for="TransmissionPref" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="mb-4">
-                        <label class="fw-bold text-secondary d-block mb-2">Size</label>
-                        <div class="btn-group" role="group" aria-label="Size">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.Size"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.Size"]">
                             <input asp-for="SizePref" type="radio" class="btn-check" id="size-small" value="Small" autocomplete="off" />
-                            <label for="size-small" class="btn btn-outline-primary">Small</label>
+                            <label for="size-small" class="btn btn-outline-primary">@L["Field.SizeSmall"]</label>
                             <input asp-for="SizePref" type="radio" class="btn-check" id="size-med" value="Medium" autocomplete="off" />
-                            <label for="size-med" class="btn btn-outline-primary">Medium</label>
+                            <label for="size-med" class="btn btn-outline-primary">@L["Field.SizeMedium"]</label>
                             <input asp-for="SizePref" type="radio" class="btn-check" id="size-suv" value="SUV" autocomplete="off" />
-                            <label for="size-suv" class="btn btn-outline-primary">SUV</label>
+                            <label for="size-suv" class="btn btn-outline-primary">@L["Field.SizeSUV"]</label>
                         </div>
                         <span asp-validation-for="SizePref" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="d-flex justify-content-between gap-2">
                         <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
-                            <i class="fa fa-arrow-left me-2"></i>Back
+                            <i class="fa fa-arrow-left me-2"></i>@L["Action.Back"]
                         </button>
                         <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
-                            Review<i class="fa fa-arrow-right ms-2"></i>
+                            @L["Action.Review"]<i class="fa fa-arrow-right ms-2"></i>
                         </button>
                     </div>
                 </form>

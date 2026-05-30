@@ -1,6 +1,7 @@
 @model CarFitProject.ViewModel.QuestionnaireStep1ViewModel
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Profile — Basics";
+    ViewData["Title"] = L["Wizard.Step1.Title"].Value;
     ViewData["WizardStep"] = 1;
 }
 
@@ -10,8 +11,8 @@
             <div class="bg-white shadow-sm rounded-4 p-5">
                 <partial name="_WizardProgress" />
 
-                <h2 class="fw-bold text-dark mb-1">Tell us about yourself</h2>
-                <p class="text-muted mb-4">A few quick basics to set the tone of your recommendations.</p>
+                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Step1.Title"]</h2>
+                <p class="text-muted mb-4">@L["Wizard.Step1.Subtitle"]</p>
 
                 <form method="post" asp-action="Step1" novalidate>
                     @Html.AntiForgeryToken()
@@ -30,22 +31,22 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="fw-bold text-secondary d-block mb-2">Marital status</label>
-                        <div class="btn-group" role="group" aria-label="Marital status">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.MaritalStatus"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.MaritalStatus"]">
                             <input asp-for="MaritalStatus" type="radio" class="btn-check" id="ms-single" value="Single" autocomplete="off" />
-                            <label for="ms-single" class="btn btn-outline-primary">Single</label>
+                            <label for="ms-single" class="btn btn-outline-primary">@L["Field.MaritalSingle"]</label>
                             <input asp-for="MaritalStatus" type="radio" class="btn-check" id="ms-married" value="Married" autocomplete="off" />
-                            <label for="ms-married" class="btn btn-outline-primary">Married</label>
+                            <label for="ms-married" class="btn btn-outline-primary">@L["Field.MaritalMarried"]</label>
                         </div>
                         <span asp-validation-for="MaritalStatus" class="text-danger small mt-1 d-block"></span>
                     </div>
 
                     <div class="d-flex justify-content-between gap-2">
                         <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
-                            <i class="fa fa-xmark me-1"></i>Cancel
+                            <i class="fa fa-xmark me-1"></i>@L["Action.Cancel"]
                         </button>
                         <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
-                            Next<i class="fa fa-arrow-right ms-2"></i>
+                            @L["Action.Next"]<i class="fa fa-arrow-right ms-2"></i>
                         </button>
                     </div>
                 </form>

@@ -1,17 +1,18 @@
 @model List<CarFitProject.Models.UserProfile>
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "My Profiles";
+    ViewData["Title"] = L["Profiles.Page.Title"].Value;
 }
 
 <div class="container py-5">
     <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2 class="fw-bold text-dark mb-1">My profiles</h2>
-            <p class="text-muted mb-0">Create, edit, and switch between your CarFit lifestyle profiles.</p>
+            <h2 class="fw-bold text-dark mb-1">@L["Profiles.Page.Title"]</h2>
+            <p class="text-muted mb-0">@L["Profiles.Page.Subtitle"]</p>
         </div>
         <div class="col-auto">
             <a asp-action="Start" asp-controller="Questionnaire" class="btn btn-primary fw-bold">
-                <i class="fa fa-plus me-2"></i>New profile
+                <i class="fa fa-plus me-2"></i>@L["Profiles.New"]
             </a>
         </div>
     </div>
@@ -29,9 +30,9 @@
     {
         <div class="bg-white shadow-sm rounded-4 p-5 text-center">
             <i class="fa fa-clipboard-list fs-1 text-muted opacity-25 mb-3 d-block"></i>
-            <p class="text-muted mb-3">You don't have any profiles yet.</p>
+            <p class="text-muted mb-3">@L["Profiles.Empty"]</p>
             <a asp-action="Start" asp-controller="Questionnaire" class="btn btn-primary fw-bold">
-                Start the questionnaire
+                @L["Profiles.StartQuestionnaire"]
             </a>
         </div>
     }
@@ -46,7 +47,7 @@
                             <h5 class="fw-bold mb-0">@profile.ProfileName</h5>
                             @if (profile.IsActive == true)
                             {
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-1 fw-bold">Active</span>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-1 fw-bold">@L["Profiles.Active"]</span>
                             }
                         </div>
 
@@ -58,7 +59,7 @@
                         <div class="d-flex flex-wrap gap-2 mt-auto">
                             <a asp-action="Start" asp-controller="Questionnaire" asp-route-profileId="@profile.ProfileId"
                                class="btn btn-sm btn-outline-primary fw-bold">
-                                <i class="fa fa-pen me-1"></i>Edit
+                                <i class="fa fa-pen me-1"></i>@L["Action.Edit"]
                             </a>
 
                             @if (profile.IsActive != true)
@@ -67,22 +68,22 @@
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@profile.ProfileId" />
                                     <button type="submit" class="btn btn-sm btn-outline-success fw-bold">
-                                        <i class="fa fa-circle-check me-1"></i>Activate
+                                        <i class="fa fa-circle-check me-1"></i>@L["Action.Activate"]
                                     </button>
                                 </form>
                             }
 
                             <button type="button" class="btn btn-sm btn-outline-secondary fw-bold"
                                     data-bs-toggle="collapse" data-bs-target="#rename-@profile.ProfileId">
-                                <i class="fa fa-tag me-1"></i>Rename
+                                <i class="fa fa-tag me-1"></i>@L["Action.Rename"]
                             </button>
 
                             <form asp-action="Delete" method="post" class="m-0"
-                                  onsubmit="return confirm('Delete this profile? This cannot be undone.');">
+                                  onsubmit="return confirm('@L["Action.Delete"]?');">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@profile.ProfileId" />
                                 <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">
-                                    <i class="fa fa-trash me-1"></i>Delete
+                                    <i class="fa fa-trash me-1"></i>@L["Action.Delete"]
                                 </button>
                             </form>
                         </div>

@@ -90,7 +90,29 @@ builder.Services.AddSession(options =>
     options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
-builder.Services.AddControllersWithViews();
+// Bilingual EN / AR (NFR-U1). All localizable strings resolve through
+// Resources/SharedResource.{en|ar}.resx via IStringLocalizer<SharedResource>
+// / IHtmlLocalizer<SharedResource>; data-annotation messages on view models
+// look up against the same shared file. Culture is sticky via a cookie set
+// by /Language/Set.
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(CarFitProject.Resources.SharedResource));
+    });
+
+var supportedCultures = new[] { "en", "ar" };
+builder.Services.Configure<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture("en");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+    options.RequestCultureProviders.Insert(0,
+        new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider());
+});
 
 var app = builder.Build();
 
@@ -109,6 +131,9 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+var locOptions = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(locOptions);
 
 app.UseSession();
 

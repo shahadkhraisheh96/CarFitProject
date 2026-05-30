@@ -1,7 +1,8 @@
 @model IEnumerable<CarFitProject.ViewModel.RecommendedCarViewModel>
+@inject IViewLocalizer L
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "My Fit Recommendations";
+    ViewData["Title"] = L["Dashboard.Title"].Value;
     
     // Grab the multi-profile data collection we stored in the controller's ViewBag
     var profiles = ViewBag.AllUserProfiles as IEnumerable<CarFitProject.Models.UserProfile> ?? new List<CarFitProject.Models.UserProfile>();
@@ -15,13 +16,13 @@
     <div class="row align-items-center mb-5 g-3 border-bottom pb-4">
         <div class="col-md-7 text-start">
             <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">FR-5 MATCHMAKING PIPELINE</span>
-            <h1 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-check me-2 text-primary"></i>Your Tailored Match Portfolio</h1>
-            <p class="text-muted mb-0">Cross-referencing your custom lifestyle habits against live vehicle listings.</p>
+            <h1 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-check me-2 text-primary"></i>@L["Dashboard.Title"]</h1>
+            <p class="text-muted mb-0">@L["Dashboard.Subtitle"]</p>
         </div>
         
         <div class="col-md-5 text-md-end">
             <div class="d-inline-block text-start" style="min-width: 280px;">
-                <label class="form-label small fw-bold text-secondary mb-1">Switch Active Persona:</label>
+                <label class="form-label small fw-bold text-secondary mb-1">@L["Dashboard.SwitchPersona"]</label>
                 <div class="dropdown">
                     <button class="btn btn-white border-2 border-dark dropdown-toggle w-100 d-flex justify-content-between align-items-center fw-bold text-dark py-2.5 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius:12px;">
                         <span>🎯 @currentProfileName</span>
@@ -42,18 +43,18 @@
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Profiles" asp-action="Index">
-                                <i class="fa-solid fa-list-check"></i> Manage profiles
+                                <i class="fa-solid fa-list-check"></i> @L["Dashboard.ManageProfiles"]
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item py-2.5 fw-bold d-flex align-items-center gap-2" asp-controller="Saved" asp-action="Index">
-                                <i class="fa-solid fa-bookmark"></i> Saved cars
+                                <i class="fa-solid fa-bookmark"></i> @L["Dashboard.SavedCars"]
                                 <span class="badge bg-primary ms-auto">@savedCount</span>
                             </a>
                         </li>
                         <li>
                             <a class="dropdown-item py-2.5 text-success fw-bold d-flex align-items-center gap-2" asp-controller="Questionnaire" asp-action="Start">
-                                <i class="fa-solid fa-plus-circle"></i> Build New Persona...
+                                <i class="fa-solid fa-plus-circle"></i> @L["Dashboard.NewPersona"]
                             </a>
                         </li>
                     </ul>
@@ -74,11 +75,9 @@
     {
         <div class="glass-card text-center py-5 bg-white border-0">
             <div class="fs-1 mb-3">🔍</div>
-            <h3 class="fw-bold text-dark">No direct matches found...</h3>
-            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">
-                We couldn't find vehicles matching this specific profile ruleset right now. Try loosening your budget slider caps or altering your vehicle size choices!
-            </p>
-            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-controller="Questionnaire" asp-action="Start" asp-route-profileId="@currentProfileId">Modify Questionnaire Parameters</a>
+            <h3 class="fw-bold text-dark">@L["Dashboard.NoMatches.Title"]</h3>
+            <p class="text-muted mx-auto mb-4" style="max-width: 500px;">@L["Dashboard.NoMatches.Body"]</p>
+            <a class="btn btn-primary fw-bold px-4 py-2.5" asp-controller="Questionnaire" asp-action="Start" asp-route-profileId="@currentProfileId">@L["Dashboard.NoMatches.CTA"]</a>
         </div>
     }
     else
@@ -91,7 +90,7 @@
 
                         <div class="position-absolute top-0 end-0 m-3" style="z-index: 2;">
                             <span class="badge badge-match">
-                                <i class="fa-solid fa-bolt me-1"></i> @car.DynamicMatchScore% Match
+                                <i class="fa-solid fa-bolt me-1"></i> @string.Format(L["Dashboard.MatchPercent"].Value, car.DynamicMatchScore)
                             </span>
                         </div>
                         @if (car.CarseerAttached)
@@ -122,11 +121,11 @@
 
                                 <div class="d-flex justify-content-between align-items-baseline mb-3 border-bottom pb-3">
                                     <div>
-                                        <span class="text-muted d-block small">Listing</span>
+                                        <span class="text-muted d-block small">@L["Dashboard.Listing"]</span>
                                         <span class="fs-3 fw-bold text-dark text-nowrap">@car.ListingPrice.ToString("N0") <span class="fs-6 fw-normal text-secondary">JD</span></span>
                                     </div>
                                     <div class="text-end">
-                                        <span class="text-muted d-block small">Trust</span>
+                                        <span class="text-muted d-block small">@L["Dashboard.Trust"]</span>
                                         <span class="badge bg-info bg-opacity-10 text-info border border-info px-2 py-1 fw-bold"><i class="fa-solid fa-star me-1 text-info"></i>@car.TrustScore.ToString("F1") / 5</span>
                                     </div>
                                 </div>
@@ -142,7 +141,7 @@
                                 @if (car.MatchReasons.Any())
                                 {
                                     <div class="mb-3">
-                                        <div class="small fw-bold text-secondary text-start mb-2"><i class="fa-solid fa-list-check me-1"></i>Why this match:</div>
+                                        <div class="small fw-bold text-secondary text-start mb-2"><i class="fa-solid fa-list-check me-1"></i>@L["Dashboard.WhyThisMatch"]</div>
                                         <ul class="list-unstyled mb-0 small">
                                             @foreach (var reason in car.MatchReasons)
                                             {
@@ -156,7 +155,7 @@
 
                         <div class="p-4 border-top pt-3 mt-auto d-flex flex-column gap-2">
                             <a asp-controller="Inventory" asp-action="Detail" asp-area="" asp-route-id="@car.ListingId" class="btn btn-primary w-100 fw-bold">
-                                View listing <i class="fa-solid fa-arrow-right-long ms-2"></i>
+                                @L["Dashboard.ViewListing"] <i class="fa-solid fa-arrow-right-long ms-2"></i>
                             </a>
                             <div class="d-flex gap-2">
                                 @{
@@ -167,14 +166,14 @@
                                     <input type="hidden" name="carId" value="@car.CarId" />
                                     <input type="hidden" name="returnUrl" value="/Buyer/Dashboard?activeProfileId=@currentProfileId" />
                                     <button type="submit" class="btn btn-sm @(isCarSaved ? "btn-danger" : "btn-outline-primary") fw-bold w-100">
-                                        <i class="fa @(isCarSaved ? "fa-bookmark-slash" : "fa-bookmark") me-1"></i>@(isCarSaved ? "Unsave" : "Save")
+                                        <i class="fa @(isCarSaved ? "fa-bookmark-slash" : "fa-bookmark") me-1"></i>@(isCarSaved ? L["Save.Unsave"] : L["Save.Save"])
                                     </button>
                                 </form>
                                 @if (car.ListingId.HasValue)
                                 {
                                     <button type="button" class="btn btn-sm btn-outline-secondary fw-bold compare-toggle"
                                             data-listing-id="@car.ListingId" data-car-label="@car.Make @car.Model">
-                                        <i class="fa fa-scale-balanced me-1"></i>Compare
+                                        <i class="fa fa-scale-balanced me-1"></i>@L["Compare.Button"]
                                     </button>
                                 }
                             </div>
