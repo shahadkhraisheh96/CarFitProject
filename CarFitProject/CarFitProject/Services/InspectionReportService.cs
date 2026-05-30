@@ -66,10 +66,39 @@ namespace CarFitProject.Services
             return vm;
         }
 
+        /// <summary>
+        /// Allowed values for each of the four chassis fields, per the official
+        /// Jordanian inspection scale (FR-4.2). Enforced server-side so values
+        /// from non-form callers (API, scripts, direct EF code) cannot bypass
+        /// the UI select-list constraint.
+        /// </summary>
+        public static bool IsAllowedChassisValue(string? value, IReadOnlyList<string> allowed)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return false;
+            for (int i = 0; i < allowed.Count; i++)
+            {
+                if (string.Equals(allowed[i], value, StringComparison.Ordinal)) return true;
+            }
+            return false;
+        }
+
+        /// <inheritdoc/>
         public async Task<bool> SaveAsync(int carId, InspectionReportFormViewModel vm)
         {
             var carExists = await _context.Cars.AnyAsync(c => c.Id == carId);
             if (!carExists) return false;
+
+            var allowed = _scoring.ChassisTerms;
+            var chassisInputs = new[] { vm.Chassis1Status, vm.Chassis2Status, vm.Chassis3Status, vm.Chassis4Status };
+            foreach (var c in chassisInputs)
+            {
+                if (!IsAllowedChassisValue(c, allowed))
+                {
+                    throw new ArgumentException(
+                        $"Invalid chassis value '{c}'. Allowed values: {string.Join(", ", allowed)}.",
+                        nameof(vm));
+                }
+            }
 
             var report = await _context.InspectionReports.FirstOrDefaultAsync(r => r.CarId == carId);
             if (report == null)

@@ -4,14 +4,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Subscription-tier checks that drive premium-only features
+    /// (unlimited Save Car FR-6.1, email contact FR-6.3).
+    /// </summary>
     public interface ISubscriptionService
     {
+        /// <summary>Maximum saved cars allowed on the free tier.</summary>
         int FreeSaveLimit { get; }
+
+        /// <summary>True when the user's <c>SubscriptionTier</c> equals "Premium".</summary>
         bool IsPremium(ApplicationUser? user);
+
+        /// <summary>Async overload that resolves the user by Identity id first.</summary>
         Task<bool> IsPremiumAsync(string? userId);
+
+        /// <summary>True if the user can save another car (always true for Premium, else under the free limit).</summary>
         Task<bool> CanSaveMoreAsync(string? userId);
     }
 
+    /// <summary>
+    /// Default <see cref="ISubscriptionService"/> backed by Identity's
+    /// <c>SubscriptionTier</c> string and the SavedResults row count.
+    /// </summary>
     public class SubscriptionService : ISubscriptionService
     {
         private const int FreeLimit = 3;

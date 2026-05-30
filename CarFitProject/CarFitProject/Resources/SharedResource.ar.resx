@@ -242,4 +242,48 @@
   <data name="Transmission" xml:space="preserve"><value>ناقل الحركة</value></data>
   <data name="Size" xml:space="preserve"><value>الحجم</value></data>
 
+  <!-- Admin chrome -->
+  <data name="Admin.BrandSuffix" xml:space="preserve"><value>إدارة CarFit</value></data>
+  <data name="Admin.Panel" xml:space="preserve"><value>لوحة الإدارة</value></data>
+  <data name="Admin.PanelSubtitle" xml:space="preserve"><value>مسؤول CarFit</value></data>
+  <data name="Admin.Nav.Dashboard" xml:space="preserve"><value>لوحة التحكم</value></data>
+  <data name="Admin.Nav.Users" xml:space="preserve"><value>إدارة المستخدمين</value></data>
+  <data name="Admin.Nav.DealerApprovals" xml:space="preserve"><value>اعتماد التجار</value></data>
+  <data name="Admin.Nav.Listings" xml:space="preserve"><value>قوائم السيارات</value></data>
+  <data name="Admin.Nav.Glossary" xml:space="preserve"><value>إدارة المصطلحات</value></data>
+  <data name="Admin.Nav.InventoryLot" xml:space="preserve"><value>ساحة المخزون</value></data>
+  <data name="Admin.Nav.ViewSite" xml:space="preserve"><value>عرض الموقع</value></data>
+  <data name="Admin.Nav.Logout" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="Admin.Nav.DashboardControl" xml:space="preserve"><value>التحكم بلوحة المعلومات</value></data>
+  <data name="Admin.Nav.SignOut" xml:space="preserve"><value>الخروج من النظام</value></data>
+  <data name="Admin.SearchPlaceholder" xml:space="preserve"><value>معايير البحث...</value></data>
+  <data name="Admin.NoNotifications" xml:space="preserve"><value>لا توجد إشعارات جديدة.</value></data>
+  <data name="Admin.RoleLabel" xml:space="preserve"><value>المسؤول</value></data>
+  <data name="Admin.Footer.Brand" xml:space="preserve"><value>منصة عمل CarFit</value></data>
+  <data name="Admin.Footer.Context" xml:space="preserve"><value>سياق أمان جذر FR-7</value></data>
+
+  <!-- Admin screens -->
+  <data name="Admin.Dashboard.Title" xml:space="preserve"><value>نظرة عامة على التحليلات</value></data>
+  <data name="Admin.Users.Title" xml:space="preserve"><value>إدارة المستخدمين</value></data>
+  <data name="Admin.Dealers.Pending.Title" xml:space="preserve"><value>طلبات اعتماد التجار</value></data>
+  <data name="Admin.Listings.Title" xml:space="preserve"><value>جميع القوائم</value></data>
+  <data name="Admin.Listings.Form.Create" xml:space="preserve"><value>إنشاء قائمة</value></data>
+  <data name="Admin.Listings.Form.Edit" xml:space="preserve"><value>تعديل القائمة</value></data>
+  <data name="Admin.Inspections.Form.Title" xml:space="preserve"><value>تقرير الفحص</value></data>
+  <data name="Admin.Glossary.Title" xml:space="preserve"><value>إدارة قاموس المصطلحات</value></data>
+  <data name="Admin.BulkLoader.Title" xml:space="preserve"><value>المُحمِّل المجمَّع (CSV)</value></data>
+
+  <!-- Seller screens -->
+  <data name="Seller.Dashboard.Title" xml:space="preserve"><value>لوحة تحكم التاجر</value></data>
+  <data name="Seller.Dashboard.Welcome" xml:space="preserve"><value>مرحباً، {0}</value></data>
+  <data name="Seller.Onboarding.Title" xml:space="preserve"><value>تسجيل التاجر</value></data>
+  <data name="Seller.Onboarding.Heading" xml:space="preserve"><value>أخبرنا عن وكالتك</value></data>
+  <data name="Seller.Onboarding.Subtitle" xml:space="preserve"><value>سنراجع طلبك قبل أن تتمكّن من إدراج السيارات.</value></data>
+  <data name="Seller.Inventory.Title" xml:space="preserve"><value>قوائمي</value></data>
+  <data name="Seller.Inventory.Subtitle" xml:space="preserve"><value>أدر السيارات التي أرسلتها إلى CarFit.</value></data>
+  <data name="Seller.Inventory.Add" xml:space="preserve"><value>إضافة قائمة</value></data>
+  <data name="Seller.Inventory.Form.Title" xml:space="preserve"><value>إضافة سيارة</value></data>
+  <data name="Seller.Approved" xml:space="preserve"><value>معتمد</value></data>
+  <data name="Seller.PendingReview" xml:space="preserve"><value>قيد المراجعة</value></data>
+
 </root>

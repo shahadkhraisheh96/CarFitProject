@@ -5,6 +5,11 @@ using Microsoft.Extensions.Options;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Production <see cref="IEmailSender"/>: sends transactional mail
+    /// (password reset, email confirmation) over SMTP using <see cref="EmailSettings"/>.
+    /// Throws if Host/From are not configured.
+    /// </summary>
     public class SmtpEmailSender : IEmailSender
     {
         private readonly EmailSettings _settings;

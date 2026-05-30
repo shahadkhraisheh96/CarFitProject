@@ -1,6 +1,6 @@
 @model CarFitProject.ViewModel.InspectionReportFormViewModel
 @{
-    ViewData["Title"] = "Inspection report";
+    ViewData["Title"] = SharedLocalizer["Admin.Inspections.Form.Title"].Value;
     var chassisTerms = ViewBag.ChassisTerms as IReadOnlyList<string> ?? new List<string>();
     var returnAction = (string?)ViewBag.ReturnAction ?? "Index";
     var returnController = (string?)ViewBag.ReturnController ?? "Listings";

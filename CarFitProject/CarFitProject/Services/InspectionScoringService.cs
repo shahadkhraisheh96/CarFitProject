@@ -2,9 +2,16 @@ using CarFitProject.Models;
 
 namespace CarFitProject.Services
 {
+    /// <summary>Engine condition derived from the report's health % and smoke flag (FR-4.5).</summary>
     public enum EngineStatus { Unknown, Good, Weak, Unsafe }
+
+    /// <summary>Gearbox condition derived from the report's gearbox status text (FR-4.5).</summary>
     public enum GearboxStatus { Unknown, Good, Knocking }
 
+    /// <summary>
+    /// Computed inspection signals returned by <see cref="IInspectionScoringService.Compute"/>.
+    /// All values are derived from the raw <see cref="InspectionReport"/> inputs.
+    /// </summary>
     public sealed record InspectionDerivedSignals(
         decimal OverallScore,
         decimal CalculatedTrustScore,
@@ -12,13 +19,27 @@ namespace CarFitProject.Services
         EngineStatus Engine,
         GearboxStatus Gearbox);
 
+    /// <summary>
+    /// Scores a <see cref="InspectionReport"/> per the official Jordanian
+    /// inspection scale (FR-4.2, FR-4.3, FR-4.5). Risky cars (شاصي مقصوص /
+    /// خالي قص قلبان) are flagged regardless of overall score.
+    /// </summary>
     public interface IInspectionScoringService
     {
+        /// <summary>Allowed chassis enum values in spec severity order. Used for both UI lists and server validation.</summary>
         IReadOnlyList<string> ChassisTerms { get; }
+
+        /// <summary>Pure function — derives overall score, trust score, Risky flag, and engine/gearbox bands from the report.</summary>
         InspectionDerivedSignals Compute(InspectionReport report);
+
+        /// <summary>Computes signals and writes OverallScore + CalculatedTrustScore back onto the report instance.</summary>
         void ApplyTo(InspectionReport report);
     }
 
+    /// <summary>
+    /// Default <see cref="IInspectionScoringService"/> implementation. Stateless
+    /// and safe to register as a singleton. Scoring rules are documented per-method.
+    /// </summary>
     public class InspectionScoringService : IInspectionScoringService
     {
         // Per-chassis penalty in spec severity order (least to most severe).
@@ -44,8 +65,14 @@ namespace CarFitProject.Services
             "خالي قص قلبان"
         };
 
+        /// <inheritdoc/>
         public IReadOnlyList<string> ChassisTerms => InspectionGlossarySeed.ChassisTerms;
 
+        /// <summary>
+        /// Computes the overall score (0.00–9.99), trust score (0.00–4.99),
+        /// Risky flag, and engine/gearbox bands from a report's raw fields.
+        /// Throws <see cref="ArgumentNullException"/> if <paramref name="r"/> is null.
+        /// </summary>
         public InspectionDerivedSignals Compute(InspectionReport r)
         {
             if (r == null) throw new ArgumentNullException(nameof(r));
@@ -79,6 +106,11 @@ namespace CarFitProject.Services
             return new InspectionDerivedSignals(overall, trust, isRisky, engine, gearbox);
         }
 
+        /// <summary>
+        /// Convenience helper for the inspection persistence path: runs
+        /// <see cref="Compute"/> and copies the resulting scores back onto the
+        /// supplied <paramref name="report"/> instance prior to SaveChangesAsync.
+        /// </summary>
         public void ApplyTo(InspectionReport report)
         {
             var signals = Compute(report);

@@ -1,5 +1,6 @@
 namespace CarFitProject.Services
 {
+    /// <summary>SMTP configuration bound from the <c>EmailSettings</c> configuration section.</summary>
     public class EmailSettings
     {
         public string? Host { get; set; }

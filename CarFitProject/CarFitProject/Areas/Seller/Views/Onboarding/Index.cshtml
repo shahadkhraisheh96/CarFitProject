@@ -1,6 +1,6 @@
 @model CarFitProject.ViewModel.DealerOnboardingViewModel
 @{
-    ViewData["Title"] = "Dealer Onboarding";
+    ViewData["Title"] = SharedLocalizer["Seller.Onboarding.Title"].Value;
 }
 
 <div class="container py-5">
@@ -9,8 +9,8 @@
             <div class="bg-white shadow-sm rounded-4 p-5">
                 <div class="text-center mb-4">
                     <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-3">DEALER ONBOARDING</span>
-                    <h2 class="fw-bold text-dark mb-1">Tell us about your dealership</h2>
-                    <p class="text-muted">We'll review your application before you can list vehicles.</p>
+                    <h2 class="fw-bold text-dark mb-1">@SharedLocalizer["Seller.Onboarding.Heading"]</h2>
+                    <p class="text-muted">@SharedLocalizer["Seller.Onboarding.Subtitle"]</p>
                 </div>
 
                 <form method="post">

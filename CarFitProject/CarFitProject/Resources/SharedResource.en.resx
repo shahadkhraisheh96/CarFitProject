@@ -243,4 +243,48 @@
   <data name="Transmission" xml:space="preserve"><value>Transmission</value></data>
   <data name="Size" xml:space="preserve"><value>Size</value></data>
 
+  <!-- Admin chrome -->
+  <data name="Admin.BrandSuffix" xml:space="preserve"><value>CarFit Admin</value></data>
+  <data name="Admin.Panel" xml:space="preserve"><value>Admin Panel</value></data>
+  <data name="Admin.PanelSubtitle" xml:space="preserve"><value>CarFit Administrator</value></data>
+  <data name="Admin.Nav.Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="Admin.Nav.Users" xml:space="preserve"><value>User Management</value></data>
+  <data name="Admin.Nav.DealerApprovals" xml:space="preserve"><value>Dealer Approvals</value></data>
+  <data name="Admin.Nav.Listings" xml:space="preserve"><value>Listings</value></data>
+  <data name="Admin.Nav.Glossary" xml:space="preserve"><value>Glossary Manager</value></data>
+  <data name="Admin.Nav.InventoryLot" xml:space="preserve"><value>Inventory Lot</value></data>
+  <data name="Admin.Nav.ViewSite" xml:space="preserve"><value>View Website</value></data>
+  <data name="Admin.Nav.Logout" xml:space="preserve"><value>Logout System</value></data>
+  <data name="Admin.Nav.DashboardControl" xml:space="preserve"><value>Dashboard Control</value></data>
+  <data name="Admin.Nav.SignOut" xml:space="preserve"><value>Sign Out System</value></data>
+  <data name="Admin.SearchPlaceholder" xml:space="preserve"><value>Search parameters...</value></data>
+  <data name="Admin.NoNotifications" xml:space="preserve"><value>No new notification alerts.</value></data>
+  <data name="Admin.RoleLabel" xml:space="preserve"><value>Admin</value></data>
+  <data name="Admin.Footer.Brand" xml:space="preserve"><value>CarFit Workspace Platform</value></data>
+  <data name="Admin.Footer.Context" xml:space="preserve"><value>FR-7 Root Security Context</value></data>
+
+  <!-- Admin screens -->
+  <data name="Admin.Dashboard.Title" xml:space="preserve"><value>Analytics Overview</value></data>
+  <data name="Admin.Users.Title" xml:space="preserve"><value>User Management</value></data>
+  <data name="Admin.Dealers.Pending.Title" xml:space="preserve"><value>Pending Dealer Approvals</value></data>
+  <data name="Admin.Listings.Title" xml:space="preserve"><value>All Listings</value></data>
+  <data name="Admin.Listings.Form.Create" xml:space="preserve"><value>Create Listing</value></data>
+  <data name="Admin.Listings.Form.Edit" xml:space="preserve"><value>Edit Listing</value></data>
+  <data name="Admin.Inspections.Form.Title" xml:space="preserve"><value>Inspection Report</value></data>
+  <data name="Admin.Glossary.Title" xml:space="preserve"><value>Glossary Manager</value></data>
+  <data name="Admin.BulkLoader.Title" xml:space="preserve"><value>Bulk CSV Loader</value></data>
+
+  <!-- Seller screens -->
+  <data name="Seller.Dashboard.Title" xml:space="preserve"><value>Dealer Dashboard</value></data>
+  <data name="Seller.Dashboard.Welcome" xml:space="preserve"><value>Welcome, {0}</value></data>
+  <data name="Seller.Onboarding.Title" xml:space="preserve"><value>Dealer Onboarding</value></data>
+  <data name="Seller.Onboarding.Heading" xml:space="preserve"><value>Tell us about your dealership</value></data>
+  <data name="Seller.Onboarding.Subtitle" xml:space="preserve"><value>We'll review your application before you can list vehicles.</value></data>
+  <data name="Seller.Inventory.Title" xml:space="preserve"><value>My Listings</value></data>
+  <data name="Seller.Inventory.Subtitle" xml:space="preserve"><value>Manage the vehicles you've submitted to CarFit.</value></data>
+  <data name="Seller.Inventory.Add" xml:space="preserve"><value>Add a listing</value></data>
+  <data name="Seller.Inventory.Form.Title" xml:space="preserve"><value>Add a Vehicle</value></data>
+  <data name="Seller.Approved" xml:space="preserve"><value>Approved</value></data>
+  <data name="Seller.PendingReview" xml:space="preserve"><value>Pending review</value></data>
+
 </root>

@@ -1,7 +1,7 @@
 @model CarFitProject.ViewModel.AdminAnalyticsViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "System Control Dashboard";
+    ViewData["Title"] = SharedLocalizer["Admin.Dashboard.Title"].Value;
 
     var regsLabels = System.Text.Json.JsonSerializer.Serialize(Model.RegistrationsByMonth.Select(r => r.Label).ToArray());
     var regsData = System.Text.Json.JsonSerializer.Serialize(Model.RegistrationsByMonth.Select(r => r.Count).ToArray());

@@ -1,7 +1,7 @@
 @model List<CarFitProject.Models.Seller>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Pending Dealer Approvals";
+    ViewData["Title"] = SharedLocalizer["Admin.Dealers.Pending.Title"].Value;
     var tiers = ViewBag.Tiers as string[] ?? new[] { "Basic", "Standard", "Premium" };
 }
 

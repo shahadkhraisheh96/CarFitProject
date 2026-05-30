@@ -1,7 +1,7 @@
 @model CarFitProject.Helpers.PaginatedList<CarFitProject.Models.CarListing>
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Listings";
+    ViewData["Title"] = SharedLocalizer["Admin.Listings.Title"].Value;
     var statusFilter = ViewBag.StatusFilter as string;
 }
 

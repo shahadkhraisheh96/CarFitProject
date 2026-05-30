@@ -152,6 +152,32 @@ remain English in the current pass.
   seeder to run. Failures fall through to the standard ASP.NET Core error
   pipeline.
 
+## Operational & Unverified Requirements
+
+These requirements are real but are **not** enforced by application code in
+this build — they are operational concerns or quality bars that need a live
+environment to measure. Document them here so they don't get lost.
+
+- **NFR-R1 — 99.5% uptime (≤ ~3.6 h downtime/month)**: hosting responsibility.
+  Achieved through the Azure App Service SLA / IIS health monitoring / load
+  balancer configuration of whichever environment runs the app.
+- **NFR-R2 — Daily database backups, 30-day retention**: hosting
+  responsibility (see Ops notes above). Configure SQL Server Agent or Azure
+  SQL PITR with ≥ 30-day retention.
+- **NFR-P1 — Page load < 3 s on 4G**: not formally measured in this build.
+  Validate with Lighthouse against a representative deployment under
+  4G-throttled network conditions before launch.
+- **NFR-P2 — Recommendation response < 2 s**: the recommendation service is
+  LINQ-based with indexed columns and a deterministic top-5 cut, but
+  end-to-end timing has not been benchmarked. Add timing instrumentation
+  (Application Insights or `ILogger` scope) before launch.
+- **NFR-P3 — 200 concurrent users**: not load-tested. Run a k6 / Azure Load
+  Testing scenario against staging before public launch.
+- **NFR-U2 — Responsive 320 px → 1920 px**: the layout uses stock Bootstrap 5
+  responsive utilities but has not had a formal cross-viewport audit. Walk
+  the questionnaire wizard, Search, Detail, and Saved screens at
+  320 / 768 / 1024 / 1440 / 1920 before launch.
+
 ## Status
 
 Phases 0a → 8a have landed. Phase 8b (this README, audits, XML docs,

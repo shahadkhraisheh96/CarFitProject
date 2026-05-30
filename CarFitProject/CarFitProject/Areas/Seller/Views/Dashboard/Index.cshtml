@@ -1,6 +1,6 @@
 @model CarFitProject.Models.Seller
 @{
-    ViewData["Title"] = "Dealer Dashboard";
+    ViewData["Title"] = SharedLocalizer["Seller.Dashboard.Title"].Value;
 }
 
 <div class="container py-5">
@@ -13,14 +13,14 @@
         <div class="col-12">
             <div class="bg-white shadow-sm rounded-4 p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div>
-                    <h2 class="fw-bold text-dark mb-1">Welcome, @Model.Name</h2>
+                    <h2 class="fw-bold text-dark mb-1">@string.Format(SharedLocalizer["Seller.Dashboard.Welcome"].Value, Model.Name)</h2>
                     <p class="text-muted mb-0">@Model.City@(string.IsNullOrEmpty(Model.Neighborhood) ? "" : " · " + Model.Neighborhood)</p>
                 </div>
                 <div class="text-md-end">
                     @if (Model.IsApproved)
                     {
                         <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fw-bold">
-                            <i class="fa fa-check-circle me-1"></i>Approved
+                            <i class="fa fa-check-circle me-1"></i>@SharedLocalizer["Seller.Approved"]
                             @if (!string.IsNullOrEmpty(Model.Tier))
                             {
                                 <span class="ms-2 text-uppercase">@Model.Tier</span>

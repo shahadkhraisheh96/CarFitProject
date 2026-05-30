@@ -2,7 +2,7 @@
 @{
     Layout = "_Layout";
     var isEdit = Model.ListingId.HasValue;
-    ViewData["Title"] = isEdit ? "Edit listing" : "Add listing";
+    ViewData["Title"] = (isEdit ? SharedLocalizer["Admin.Listings.Form.Edit"] : SharedLocalizer["Admin.Listings.Form.Create"]).Value;
     var sellers = ViewBag.AvailableSellers as List<CarFitProject.Models.Seller> ?? new List<CarFitProject.Models.Seller>();
     var currentSellerId = ViewBag.CurrentSellerId as int?;
     var actionName = isEdit ? "Edit" : "Create";

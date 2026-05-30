@@ -1,7 +1,7 @@
 @model CarFitProject.ViewModel.CarListingFormViewModel
 @{
     var isEdit = Model.ListingId.HasValue;
-    ViewData["Title"] = isEdit ? "Edit listing" : "Add a new listing";
+    ViewData["Title"] = (isEdit ? SharedLocalizer["Admin.Listings.Form.Edit"] : SharedLocalizer["Seller.Inventory.Form.Title"]).Value;
     var actionName = isEdit ? "Edit" : "AddCar";
     var routeValues = isEdit ? new { id = Model.ListingId } : null;
 }

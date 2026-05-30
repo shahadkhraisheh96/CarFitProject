@@ -2,7 +2,7 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Config
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "User Accounts Directory";
+    ViewData["Title"] = SharedLocalizer["Admin.Users.Title"].Value;
     var seededAdminEmail = Config["AdminSeed:Email"];
 }
 

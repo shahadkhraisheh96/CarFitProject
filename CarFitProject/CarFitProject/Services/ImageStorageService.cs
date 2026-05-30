@@ -7,6 +7,10 @@ using SixLabors.ImageSharp.Processing;
 
 namespace CarFitProject.Services
 {
+    /// <summary>
+    /// Listing-image pipeline (FR-3.4, NFR-P4). Saves uploaded files as
+    /// WebP under wwwroot/uploads/cars/{carId}/ and records <see cref="CarImage"/> rows.
+    /// </summary>
     public interface IImageStorageService
     {
         /// <summary>
