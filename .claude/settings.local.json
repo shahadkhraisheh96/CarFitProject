@@ -19,7 +19,8 @@
       "Bash(powershell -Command ' *)",
       "Bash(taskkill //F //PID 16704)",
       "Bash(tasklist)",
-      "Bash(taskkill //F //PID 17132)"
+      "Bash(taskkill //F //PID 17132)",
+      "Bash(taskkill //F //PID 16784)"
     ]
   }
 }
