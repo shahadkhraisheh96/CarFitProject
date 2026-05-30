@@ -1,5 +1,4 @@
 @model CarFitProject.Helpers.PaginatedList<CarFitProject.Models.CarListing>
-@inject IViewLocalizer L
 @{
     ViewData["Title"] = L["Save.Page.Title"].Value;
     var isPremium = (bool)(ViewBag.IsPremium ?? false);

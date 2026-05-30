@@ -1,6 +1,5 @@
 @model CarFitProject.Models.CarListing
 @using CarFitProject.Helpers
-@inject IViewLocalizer L
 @{
     ViewData["Title"] = $"{Model.Car?.Make} {Model.Car?.Model}";
     var photos = Model.Car?.CarImages?.OrderByDescending(i => i.IsPrimary).ThenBy(i => i.SortOrder).ToList() ?? new List<CarFitProject.Models.CarImage>();

@@ -1,45 +1,43 @@
 @{
-    ViewData["Title"] = "Our Inspection Architecture";
+    ViewData["Title"] = Localizer["Inspection.Title"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Page Header Start -->
 <div class="container-fluid page-header mb-5 p-0" style="background-image: url('/img/carousel-bg-2.jpg');">
     <div class="container-fluid page-header-inner py-5">
         <div class="container text-center">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Inspection Modules</h1>
+            <h1 class="display-3 text-white mb-3 animated slideInDown">@Localizer["Inspection.Title"]</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center text-uppercase">
-                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">Home</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">Modules</li>
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-white-50">@Localizer["About.Crumb.Home"]</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">@Localizer["Inspection.Crumb"]</li>
                 </ol>
             </nav>
         </div>
     </div>
 </div>
-<!-- Page Header End -->
 
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">CORE DIAGNOSTIC INFRASTRUCTURE</span>
-            <h1 class="fw-bold text-dark">Explore Our Diagnostic Inspection Framework</h1>
-            <p class="text-muted">We offer transparent appraisal standards built for secondary markets.</p>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">@Localizer["Inspection.Badge"]</span>
+            <h1 class="fw-bold text-dark">@Localizer["Inspection.Heading"]</h1>
+            <p class="text-muted">@Localizer["Inspection.Tagline"]</p>
         </div>
         <div class="row g-4">
             <div class="col-lg-4">
                 <div class="nav w-100 nav-pills me-4 d-flex flex-column gap-3">
                     <button class="nav-link w-100 d-flex align-items-center text-start p-4 active border-2" data-bs-toggle="pill" data-bs-target="#tab-pane-1" type="button" style="border-radius:16px;">
                         <i class="fa-solid fa-car-battery fs-3 me-3 text-primary"></i>
-                        <h5 class="m-0 text-dark">01. Powertrain Scanner</h5>
+                        <h5 class="m-0 text-dark">@Localizer["Inspection.Tab1"]</h5>
                     </button>
                     <button class="nav-link w-100 d-flex align-items-center text-start p-4 border-2" data-bs-toggle="pill" data-bs-target="#tab-pane-2" type="button" style="border-radius:16px;">
                         <i class="fa-solid fa-car-burst fs-3 me-3 text-primary"></i>
-                        <h5 class="m-0 text-dark">02. Chassis Integrity</h5>
+                        <h5 class="m-0 text-dark">@Localizer["Inspection.Tab2"]</h5>
                     </button>
                     <button class="nav-link w-100 d-flex align-items-center text-start p-4 border-2" data-bs-toggle="pill" data-bs-target="#tab-pane-3" type="button" style="border-radius:16px;">
                         <i class="fa-solid fa-magnifying-glass-chart fs-3 me-3 text-primary"></i>
-                        <h5 class="m-0 text-dark">03. History & Evaluation</h5>
+                        <h5 class="m-0 text-dark">@Localizer["Inspection.Tab3"]</h5>
                     </button>
                 </div>
             </div>
@@ -50,19 +48,18 @@
                             <div class="row g-4 align-items-center">
                                 <div class="col-md-5" style="min-height: 250px;">
                                     <div class="position-relative h-100 rounded-3 overflow-hidden shadow-sm">
-                                        <img class="img-fluid w-100 h-100" src="/img/service-1.jpg" style="object-fit: cover;" alt="Engine scan">
+                                        <img class="img-fluid w-100 h-100" src="/img/service-1.jpg" style="object-fit: cover;" alt="">
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <h3 class="fw-bold mb-3 text-dark">Powertrain and ECU Diagnostic Scanning</h3>
-                                    <p class="text-muted small mb-4">We hook deep sensor telemetry directly to the vehicle's onboard terminal to monitor cylinder compression balance, transmission shift delays, and active warning codes.</p>
-                                    
+                                    <h3 class="fw-bold mb-3 text-dark">@Localizer["Inspection.Tab1.Heading"]</h3>
+                                    <p class="text-muted small mb-4">@Localizer["Inspection.Tab1.Body"]</p>
                                     <div class="d-flex flex-column gap-2 mb-4">
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Live sensor data acquisition</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Historical fault code decoding</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Fluid degradation evaluation</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab1.B1"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab1.B2"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab1.B3"]</div>
                                     </div>
-                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">Book This Package</a>
+                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">@Localizer["Inspection.BookBtn"]</a>
                                 </div>
                             </div>
                         </div>
@@ -72,19 +69,18 @@
                             <div class="row g-4 align-items-center">
                                 <div class="col-md-5" style="min-height: 250px;">
                                     <div class="position-relative h-100 rounded-3 overflow-hidden shadow-sm">
-                                        <img class="img-fluid w-100 h-100" src="/img/service-2.jpg" style="object-fit: cover;" alt="Chassis check">
+                                        <img class="img-fluid w-100 h-100" src="/img/service-2.jpg" style="object-fit: cover;" alt="">
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <h3 class="fw-bold mb-3 text-dark">Chassis Structure Alignment Validation</h3>
-                                    <p class="text-muted small mb-4">Our inspection specialists check the undercarriage structural members with precision thickness tools to spot hidden frame repairs, collision fixes, or rust patterns.</p>
-                                    
+                                    <h3 class="fw-bold mb-3 text-dark">@Localizer["Inspection.Tab2.Heading"]</h3>
+                                    <p class="text-muted small mb-4">@Localizer["Inspection.Tab2.Body"]</p>
                                     <div class="d-flex flex-column gap-2 mb-4">
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Chassis frame thickness measurement</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Prior collision structural tracking</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Suspension geometry checkups</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab2.B1"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab2.B2"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab2.B3"]</div>
                                     </div>
-                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">Book This Package</a>
+                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">@Localizer["Inspection.BookBtn"]</a>
                                 </div>
                             </div>
                         </div>
@@ -94,19 +90,18 @@
                             <div class="row g-4 align-items-center">
                                 <div class="col-md-5" style="min-height: 250px;">
                                     <div class="position-relative h-100 rounded-3 overflow-hidden shadow-sm">
-                                        <img class="img-fluid w-100 h-100" src="/img/service-3.jpg" style="object-fit: cover;" alt="History check">
+                                        <img class="img-fluid w-100 h-100" src="/img/service-3.jpg" style="object-fit: cover;" alt="">
                                     </div>
                                 </div>
                                 <div class="col-md-7">
-                                    <h3 class="fw-bold mb-3 text-dark">Market History Tracking & Valuation Matrix</h3>
-                                    <p class="text-muted small mb-4">We combine technical field findings with ownership database histories to establish a true vehicle condition baseline and fair pricing valuation metrics.</p>
-                                    
+                                    <h3 class="fw-bold mb-3 text-dark">@Localizer["Inspection.Tab3.Heading"]</h3>
+                                    <p class="text-muted small mb-4">@Localizer["Inspection.Tab3.Body"]</p>
                                     <div class="d-flex flex-column gap-2 mb-4">
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Ownership sequence tracking</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Odometer tracking validation</div>
-                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>Fair market value calculation</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab3.B1"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab3.B2"]</div>
+                                        <div class="d-flex align-items-center text-secondary small"><i class="fa-solid fa-circle-check text-success me-2"></i>@Localizer["Inspection.Tab3.B3"]</div>
                                     </div>
-                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">Book This Package</a>
+                                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary w-100 py-3 fw-bold">@Localizer["Inspection.BookBtn"]</a>
                                 </div>
                             </div>
                         </div>

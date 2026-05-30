@@ -286,5 +286,130 @@
   <data name="Seller.Inventory.Form.Title" xml:space="preserve"><value>Add a Vehicle</value></data>
   <data name="Seller.Approved" xml:space="preserve"><value>Approved</value></data>
   <data name="Seller.PendingReview" xml:space="preserve"><value>Pending review</value></data>
+  <data name="Seller.Dashboard.PendingApproval" xml:space="preserve"><value>Pending admin approval</value></data>
+  <data name="Seller.Dashboard.PendingAlert" xml:space="preserve"><value>Your dealership profile is awaiting review. You'll be able to list vehicles once an administrator approves your account.</value></data>
+  <data name="Seller.Dashboard.Phone" xml:space="preserve"><value>Contact phone</value></data>
+  <data name="Seller.Dashboard.Email" xml:space="preserve"><value>Contact email</value></data>
+  <data name="Seller.Dashboard.Inventory" xml:space="preserve"><value>Inventory</value></data>
+  <data name="Seller.Dashboard.ManageListings" xml:space="preserve"><value>Manage listings</value></data>
+
+  <!-- About -->
+  <data name="About.Title" xml:space="preserve"><value>About Our Advisor</value></data>
+  <data name="About.Crumb.Home" xml:space="preserve"><value>Home</value></data>
+  <data name="About.Crumb.About" xml:space="preserve"><value>About</value></data>
+  <data name="About.Badge" xml:space="preserve"><value>CARFIT TECHNOLOGY</value></data>
+  <data name="About.Heading" xml:space="preserve"><value>Smart Way to Evaluate Pre-Owned Vehicles</value></data>
+  <data name="About.Lead" xml:space="preserve"><value>We bridge backend technical analytical inspection data with clean, user-focused diagnostic metrics. Our mission is to take the guesswork out of purchasing used vehicles through rigorous verification parameters and AI-driven matching profiles.</value></data>
+  <data name="About.F1.Title" xml:space="preserve"><value>Data-Driven Vehicle Compatibility</value></data>
+  <data name="About.F1.Body" xml:space="preserve"><value>Match vehicles to exact lifestyle profiles using multi-point scoring variables.</value></data>
+  <data name="About.F2.Title" xml:space="preserve"><value>Uncompromising Verification</value></data>
+  <data name="About.F2.Body" xml:space="preserve"><value>Every report is backed by real-time field engine scanners and diagnostic logs.</value></data>
+  <data name="About.Stat.Checkpoints" xml:space="preserve"><value>Inspection Checkpoints</value></data>
+  <data name="About.Stat.Vehicles" xml:space="preserve"><value>Vehicles Evaluated</value></data>
+  <data name="About.Stat.Specialists" xml:space="preserve"><value>Expert Specialists</value></data>
+  <data name="About.Stat.Success" xml:space="preserve"><value>Success Match Rate</value></data>
+
+  <!-- Contact -->
+  <data name="Contact.Title" xml:space="preserve"><value>Contact Us</value></data>
+  <data name="Contact.Crumb" xml:space="preserve"><value>Contact</value></data>
+  <data name="Contact.Badge" xml:space="preserve"><value>COMMUNICATION NODE</value></data>
+  <data name="Contact.Heading" xml:space="preserve"><value>Contact For Report Verification Queries</value></data>
+  <data name="Contact.Tagline" xml:space="preserve"><value>Reach out to our vehicle valuation coordinators for live assistance.</value></data>
+  <data name="Contact.Body" xml:space="preserve"><value>Have questions regarding a recent vehicle inspection report, or need help adjusting your matching filter constraints? Send our technical automotive evaluation desk a direct message.</value></data>
+  <data name="Contact.Field.Name" xml:space="preserve"><value>Your Name</value></data>
+  <data name="Contact.Field.Email" xml:space="preserve"><value>Your Email</value></data>
+  <data name="Contact.Field.Subject" xml:space="preserve"><value>Subject</value></data>
+  <data name="Contact.Field.Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Contact.Send" xml:space="preserve"><value>Send Message</value></data>
+
+  <!-- Privacy -->
+  <data name="Privacy.Badge" xml:space="preserve"><value>LEGAL DATA PROTECTION</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="Privacy.Body1" xml:space="preserve"><value>At CarFit, we prioritize the protection and security of your personal data. This privacy policy describes how we collect, process, and protect your information when using our smart recommendation questionnaire or listing dealership inventory.</value></data>
+  <data name="Privacy.Body2" xml:space="preserve"><value>We securely store user profiles and vehicle search constraints locally in Jordan. We do not sell or share user data with unauthorized third parties. All inspection logs are fully encrypted during transit.</value></data>
+
+  <!-- Inspection Index -->
+  <data name="Inspection.Title" xml:space="preserve"><value>Inspection Modules</value></data>
+  <data name="Inspection.Crumb" xml:space="preserve"><value>Modules</value></data>
+  <data name="Inspection.Badge" xml:space="preserve"><value>CORE DIAGNOSTIC INFRASTRUCTURE</value></data>
+  <data name="Inspection.Heading" xml:space="preserve"><value>Explore Our Diagnostic Inspection Framework</value></data>
+  <data name="Inspection.Tagline" xml:space="preserve"><value>We offer transparent appraisal standards built for secondary markets.</value></data>
+  <data name="Inspection.Tab1" xml:space="preserve"><value>01. Powertrain Scanner</value></data>
+  <data name="Inspection.Tab2" xml:space="preserve"><value>02. Chassis Integrity</value></data>
+  <data name="Inspection.Tab3" xml:space="preserve"><value>03. History &amp; Evaluation</value></data>
+  <data name="Inspection.Tab1.Heading" xml:space="preserve"><value>Powertrain and ECU Diagnostic Scanning</value></data>
+  <data name="Inspection.Tab1.Body" xml:space="preserve"><value>We hook deep sensor telemetry directly to the vehicle's onboard terminal to monitor cylinder compression balance, transmission shift delays, and active warning codes.</value></data>
+  <data name="Inspection.Tab1.B1" xml:space="preserve"><value>Live sensor data acquisition</value></data>
+  <data name="Inspection.Tab1.B2" xml:space="preserve"><value>Historical fault code decoding</value></data>
+  <data name="Inspection.Tab1.B3" xml:space="preserve"><value>Fluid degradation evaluation</value></data>
+  <data name="Inspection.Tab2.Heading" xml:space="preserve"><value>Chassis Structure Alignment Validation</value></data>
+  <data name="Inspection.Tab2.Body" xml:space="preserve"><value>Our inspection specialists check the undercarriage structural members with precision thickness tools to spot hidden frame repairs, collision fixes, or rust patterns.</value></data>
+  <data name="Inspection.Tab2.B1" xml:space="preserve"><value>Chassis frame thickness measurement</value></data>
+  <data name="Inspection.Tab2.B2" xml:space="preserve"><value>Prior collision structural tracking</value></data>
+  <data name="Inspection.Tab2.B3" xml:space="preserve"><value>Suspension geometry checkups</value></data>
+  <data name="Inspection.Tab3.Heading" xml:space="preserve"><value>Market History Tracking &amp; Valuation Matrix</value></data>
+  <data name="Inspection.Tab3.Body" xml:space="preserve"><value>We combine technical field findings with ownership database histories to establish a true vehicle condition baseline and fair pricing valuation metrics.</value></data>
+  <data name="Inspection.Tab3.B1" xml:space="preserve"><value>Ownership sequence tracking</value></data>
+  <data name="Inspection.Tab3.B2" xml:space="preserve"><value>Odometer tracking validation</value></data>
+  <data name="Inspection.Tab3.B3" xml:space="preserve"><value>Fair market value calculation</value></data>
+  <data name="Inspection.BookBtn" xml:space="preserve"><value>Book This Package</value></data>
+
+  <!-- Book -->
+  <data name="Book.Title" xml:space="preserve"><value>Book Inspection Report</value></data>
+  <data name="Book.Header" xml:space="preserve"><value>Schedule Appraisals</value></data>
+  <data name="Book.Crumb" xml:space="preserve"><value>Booking Gateway</value></data>
+  <data name="Book.Success" xml:space="preserve"><value>Success!</value></data>
+  <data name="Book.Badge" xml:space="preserve"><value>FR-6 BOOKING ENGINE</value></data>
+  <data name="Book.Heading" xml:space="preserve"><value>Verify Your Next Vehicle Purchase</value></data>
+  <data name="Book.Subtitle" xml:space="preserve"><value>Schedule a detailed mobile inspection at the dealer's lot in Jordan.</value></data>
+  <data name="Book.Name" xml:space="preserve"><value>Your Name</value></data>
+  <data name="Book.NamePlaceholder" xml:space="preserve"><value>e.g. Ahmad Al-Saeed</value></data>
+  <data name="Book.Email" xml:space="preserve"><value>Email Address</value></data>
+  <data name="Book.Package" xml:space="preserve"><value>Inspection Package</value></data>
+  <data name="Book.PackagePlaceholder" xml:space="preserve"><value>Select Package Tier</value></data>
+  <data name="Book.Package1" xml:space="preserve"><value>01. Powertrain &amp; ECU Scanner (JD 35)</value></data>
+  <data name="Book.Package2" xml:space="preserve"><value>02. Undercarriage &amp; Chassis Alignment (JD 50)</value></data>
+  <data name="Book.Package3" xml:space="preserve"><value>03. All-Inclusive Ultimate Verification (JD 75)</value></data>
+  <data name="Book.Date" xml:space="preserve"><value>Preferred Inspection Date</value></data>
+  <data name="Book.Notes" xml:space="preserve"><value>Vehicle Details &amp; Location Notes</value></data>
+  <data name="Book.NotesPlaceholder" xml:space="preserve"><value>Mention Make, Model, Year, Seller Location, or specific areas of concern...</value></data>
+  <data name="Book.Submit" xml:space="preserve"><value>Schedule Verification Session</value></data>
+
+  <!-- Error -->
+  <data name="Error.Title" xml:space="preserve"><value>Error.</value></data>
+  <data name="Error.Subtitle" xml:space="preserve"><value>An error occurred while processing your request.</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>Request ID:</value></data>
+
+  <!-- Compare bar -->
+  <data name="Compare.Bar.Label" xml:space="preserve"><value>Compare</value></data>
+  <data name="Compare.Bar.Clear" xml:space="preserve"><value>Clear</value></data>
+
+  <!-- Login partial -->
+  <data name="LoginPartial.Hello" xml:space="preserve"><value>Hello {0}!</value></data>
+
+  <!-- Admin Dashboard extra -->
+  <data name="Admin.Dashboard.Badge" xml:space="preserve"><value>FR-7 Administrative Root</value></data>
+  <data name="Admin.Dashboard.Heading" xml:space="preserve"><value>CarFit Central Control Engine</value></data>
+  <data name="Admin.Dashboard.BulkLoader" xml:space="preserve"><value>Bulk CSV Loader Matrix</value></data>
+  <data name="Admin.Dashboard.Welcome" xml:space="preserve"><value>Welcome to the administrative master workspace.</value></data>
+  <data name="Admin.Dashboard.KPI.Users" xml:space="preserve"><value>Platform Users</value></data>
+  <data name="Admin.Dashboard.KPI.Listings" xml:space="preserve"><value>Active Listings</value></data>
+  <data name="Admin.Dashboard.KPI.Glossary" xml:space="preserve"><value>Glossary Terms</value></data>
+  <data name="Admin.Dashboard.Monthly" xml:space="preserve"><value>Monthly new registrations</value></data>
+  <data name="Admin.Dashboard.TopRecommended" xml:space="preserve"><value>Top 5 most-recommended cars</value></data>
+  <data name="Admin.Dashboard.TopSearch" xml:space="preserve"><value>Top 10 search terms</value></data>
+  <data name="Admin.Dashboard.RecentListings" xml:space="preserve"><value>Recent inventory additions</value></data>
+  <data name="Admin.Dashboard.Vehicle" xml:space="preserve"><value>Vehicle</value></data>
+  <data name="Admin.Dashboard.Recommendations" xml:space="preserve"><value>Recommendations</value></data>
+  <data name="Admin.Dashboard.Term" xml:space="preserve"><value>Term</value></data>
+  <data name="Admin.Dashboard.Searches" xml:space="preserve"><value>Searches</value></data>
+  <data name="Admin.Dashboard.ListingId" xml:space="preserve"><value>Listing ID</value></data>
+  <data name="Admin.Dashboard.Price" xml:space="preserve"><value>Listing Price</value></data>
+  <data name="Admin.Dashboard.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Admin.Dashboard.NoRecs" xml:space="preserve"><value>No recommendation history yet.</value></data>
+  <data name="Admin.Dashboard.NoSearches" xml:space="preserve"><value>No search activity logged yet.</value></data>
+  <data name="Admin.Dashboard.NoListings" xml:space="preserve"><value>No listings yet.</value></data>
+  <data name="Admin.Dashboard.Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Admin.Dashboard.Pending" xml:space="preserve"><value>Pending</value></data>
 
 </root>

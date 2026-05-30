@@ -95,7 +95,7 @@ builder.Services.AddSession(options =>
 // / IHtmlLocalizer<SharedResource>; data-annotation messages on view models
 // look up against the same shared file. Culture is sticky via a cookie set
 // by /Language/Set.
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddLocalization();
 builder.Services.AddControllersWithViews()
     .AddViewLocalization()
     .AddDataAnnotationsLocalization(options =>
