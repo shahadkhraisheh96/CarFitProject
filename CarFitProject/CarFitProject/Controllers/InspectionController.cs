@@ -1,13 +1,13 @@
-﻿using CarFitProject.Data;
+using CarFitProject.Data;
 using CarFitProject.Models;
 using CarFitProject.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarFitProject.Controllers
 {
     public class InspectionController : Controller
     {
-        // Change from ApplicationDbContext to CarFitDbContext to point to your main application data layer
         private readonly CarFitDbContext _context;
 
         public InspectionController(CarFitDbContext context)
@@ -15,20 +15,11 @@ namespace CarFitProject.Controllers
             _context = context;
         }
 
-        // GET: /Inspection/
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        // GET: /Inspection/Book
         [HttpGet]
-        public IActionResult Book()
-        {
-            return View(new InspectionBookingViewModel());
-        }
+        public IActionResult Book() => View(new InspectionBookingViewModel());
 
-        // POST: /Inspection/Book
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(InspectionBookingViewModel model)
@@ -40,8 +31,7 @@ namespace CarFitProject.Controllers
 
             try
             {
-                // 1. Map the ViewModel data explicitly over to a new Database Entity object
-                var bookingEntity = new InspectionBooking
+                _context.InspectionBookings.Add(new InspectionBooking
                 {
                     CustomerName = model.CustomerName,
                     CustomerEmail = model.CustomerEmail,
@@ -49,13 +39,9 @@ namespace CarFitProject.Controllers
                     PreferredDate = model.PreferredDate,
                     VehicleNotes = model.VehicleNotes,
                     CreatedAt = DateTime.UtcNow
-                };
-
-                // 2. State tracking mutation & database commit execution pipelines
-                _context.InspectionBookings.Add(bookingEntity);
+                });
                 await _context.SaveChangesAsync();
 
-                // 3. Set confirmation triggers and redirect to prevent duplicate submissions on refresh
                 TempData["SuccessMessage"] = "Your CarFit evaluation request has been processed successfully!";
                 return RedirectToAction(nameof(Book));
             }
@@ -64,6 +50,54 @@ namespace CarFitProject.Controllers
                 ModelState.AddModelError(string.Empty, "An unhandled issue occurred while saving your data to SQL Server. Please try again.");
                 return View(model);
             }
+        }
+
+        // FR-6.4: dedicated entry point for the mechanic-visit form rendered on the
+        // listing detail page. Persists an InspectionBooking with CarListingId and
+        // (optionally) the chosen MechanicId.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BookMechanic(MechanicBookingFormViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Please double-check your details and try again.";
+                return Redirect($"/Inventory/Detail/{model.CarListingId}");
+            }
+
+            var listing = await _context.CarListings
+                .AsNoTracking()
+                .Where(l => l.Id == model.CarListingId)
+                .Select(l => new { l.Id })
+                .FirstOrDefaultAsync();
+            if (listing == null)
+            {
+                TempData["ErrorMessage"] = "We couldn't find that listing.";
+                return Redirect("/Inventory/Search");
+            }
+
+            var mechanicId = model.MechanicId > 0 ? model.MechanicId : (int?)null;
+            if (mechanicId.HasValue)
+            {
+                var exists = await _context.Mechanics.AnyAsync(m => m.Id == mechanicId.Value);
+                if (!exists) mechanicId = null;
+            }
+
+            _context.InspectionBookings.Add(new InspectionBooking
+            {
+                CustomerName = model.CustomerName.Trim(),
+                CustomerEmail = model.CustomerEmail.Trim(),
+                PackageType = string.IsNullOrWhiteSpace(model.PackageType) ? "Mechanic visit" : model.PackageType.Trim(),
+                PreferredDate = model.PreferredDate,
+                VehicleNotes = model.VehicleNotes,
+                CarListingId = model.CarListingId,
+                MechanicId = mechanicId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Mechanic visit requested — we'll be in touch shortly.";
+            return Redirect($"/Inventory/Detail/{model.CarListingId}");
         }
     }
 }

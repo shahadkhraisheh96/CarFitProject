@@ -1,9 +1,13 @@
+@{
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var dir = culture == "ar" ? "rtl" : "ltr";
+}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@culture" dir="@dir">
 
 <head>
     <meta charset="utf-8">
-    <title>@ViewData["Title"] - CarFit Admin</title>
+    <title>@ViewData["Title"] - @SharedLocalizer["Admin.BrandSuffix"]</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="CarFit Admin Panel" name="description">
 
@@ -46,40 +50,50 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0 text-white">Admin Panel</h6>
-                        <small class="text-muted">CarFit Administrator</small>
+                        <h6 class="mb-0 text-white">@SharedLocalizer["Admin.Panel"]</h6>
+                        <small class="text-muted">@SharedLocalizer["Admin.PanelSubtitle"]</small>
                     </div>
                 </div>
 
                 <div class="navbar-nav w-100">
                     <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
                            class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dashboard" ? "active" : "")">
-                        <i class="fa fa-tachometer-alt me-2"></i> Dashboard
+                        <i class="fa fa-tachometer-alt me-2"></i> @SharedLocalizer["Admin.Nav.Dashboard"]
                     </a>
 
                     <a asp-area="Admin" asp-controller="Admin" asp-action="UsersList"
                            class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "UsersList" ? "active" : "")">
-                        <i class="fa fa-users-cog me-2"></i> User Management
+                        <i class="fa fa-users-cog me-2"></i> @SharedLocalizer["Admin.Nav.Users"]
+                    </a>
+
+                    <a asp-area="Admin" asp-controller="Dealers" asp-action="Pending"
+                           class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dealers" ? "active" : "")">
+                        <i class="fa fa-user-tie me-2"></i> @SharedLocalizer["Admin.Nav.DealerApprovals"]
+                    </a>
+
+                    <a asp-area="Admin" asp-controller="Listings" asp-action="Index"
+                           class="nav-item nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Listings" ? "active" : "")">
+                        <i class="fa fa-clipboard-list me-2"></i> @SharedLocalizer["Admin.Nav.Listings"]
                     </a>
 
                     <a asp-area="Admin" asp-controller="Admin" asp-action="GlossaryManager"
                            class="nav-item nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "GlossaryManager" ? "active" : "")">
-                        <i class="fa fa-book me-2"></i> Glossary Manager
+                        <i class="fa fa-book me-2"></i> @SharedLocalizer["Admin.Nav.Glossary"]
                     </a>
 
                     <a asp-area="Seller" asp-controller="Inventory" asp-action="Index" class="nav-item nav-link">
-                        <i class="fa fa-car me-2"></i> Inventory Lot
+                        <i class="fa fa-car me-2"></i> @SharedLocalizer["Admin.Nav.InventoryLot"]
                     </a>
 
                     <hr style="border-color:rgba(255,255,255,0.08);margin:12px 20px;">
 
                     <a href="/" class="nav-item nav-link">
-                        <i class="fa fa-globe me-2"></i> View Website
+                        <i class="fa fa-globe me-2"></i> @SharedLocalizer["Admin.Nav.ViewSite"]
                     </a>
-                
+
                     <div class="px-3 mt-3">
                         <button type="button" onclick="executeSystemBreakoutLogout();" class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2 fw-bold shadow-sm">
-                            <i class="fa fa-sign-out-alt"></i> Logout System
+                            <i class="fa fa-sign-out-alt"></i> @SharedLocalizer["Admin.Nav.Logout"]
                         </button>
                     </div>
                 </div>
@@ -97,7 +111,7 @@
                 </a>
 
                 <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search parameters..." style="background:rgba(255,255,255,0.06); color:#ffffff;">
+                    <input class="form-control border-0" type="search" placeholder="@SharedLocalizer["Admin.SearchPlaceholder"]" style="background:rgba(255,255,255,0.06); color:#ffffff;">
                 </form>
 
                 <div class="navbar-nav align-items-center ms-auto gap-2">
@@ -108,7 +122,7 @@
                         <ul class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0 shadow" aria-labelledby="notificationDropdown">
                             <li>
                                 <a href="#" class="dropdown-item py-2 text-center">
-                                    <small class="text-white-50">No new notification alerts.</small>
+                                    <small class="text-white-50">@SharedLocalizer["Admin.NoNotifications"]</small>
                                 </a>
                             </li>
                         </ul>
@@ -120,23 +134,23 @@
                                  style="width:32px;height:32px;background:linear-gradient(135deg,#D81324,#7f1d1d);font-size:0.85rem;">
                                 A
                             </div>
-                            <span class="d-none d-lg-inline-flex text-white-50">Admin</span>
+                            <span class="d-none d-lg-inline-flex text-white-50">@SharedLocalizer["Admin.RoleLabel"]</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0 p-2 shadow" aria-labelledby="profileDropdown">
                             <li>
                                 <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="dropdown-item py-2 rounded text-white">
-                                    <i class="fa fa-tachometer-alt me-2 text-primary"></i>Dashboard Control
+                                    <i class="fa fa-tachometer-alt me-2 text-primary"></i>@SharedLocalizer["Admin.Nav.DashboardControl"]
                                 </a>
                             </li>
                             <li>
                                 <a href="/" class="dropdown-item py-2 rounded text-white">
-                                    <i class="fa fa-globe me-2 text-primary"></i>View Public Site
+                                    <i class="fa fa-globe me-2 text-primary"></i>@SharedLocalizer["Admin.Nav.ViewSite"]
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider border-dark opacity-25"></li>
                             <li>
                                 <button type="button" onclick="executeSystemBreakoutLogout();" class="dropdown-item py-2 text-danger rounded bg-transparent border-0 text-start w-100 fw-bold">
-                                    <i class="fa fa-sign-out-alt me-2"></i>Sign Out System
+                                    <i class="fa fa-sign-out-alt me-2"></i>@SharedLocalizer["Admin.Nav.SignOut"]
                                 </button>
                             </li>
                         </ul>
@@ -152,10 +166,10 @@
                 <div class="bg-secondary rounded-top p-4" style="background: var(--bg-sidebar) !important; border-top: 1px solid var(--border-dim);">
                     <div class="row align-items-center">
                         <div class="col-12 col-sm-6 text-center text-sm-start text-white-50">
-                            &copy; @DateTime.Now.Year &mdash; <b class="text-white">CarFit Workspace Platform</b>
+                            &copy; @DateTime.Now.Year &mdash; <b class="text-white">@SharedLocalizer["Admin.Footer.Brand"]</b>
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end text-muted small font-monospace">
-                            FR-7 Root Security Context
+                            @SharedLocalizer["Admin.Footer.Context"]
                         </div>
                     </div>
                 </div>

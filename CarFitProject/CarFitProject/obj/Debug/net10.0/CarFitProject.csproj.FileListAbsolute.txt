@@ -345,3 +345,13 @@ C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.
 C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\CarFitProject.pdb
 C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\CarFitProject.genruntimeconfig.cache
 C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\ref\CarFitProject.dll
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\bin\Debug\net10.0\SixLabors.ImageSharp.dll
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\bin\Debug\net10.0\ar\CarFitProject.resources.dll
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\bin\Debug\net10.0\en\CarFitProject.resources.dll
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\CarFitProject.Resources.SharedResource.ar.resources
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\CarFitProject.Resources.SharedResource.en.resources
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\CarFitProject.csproj.GenerateResource.cache
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\ar\CarFitProject.resources.cs
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\ar\CarFitProject.resources.dll
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\en\CarFitProject.resources.cs
+C:\Users\user\Desktop\CarFitProject\CarFitProject\CarFitProject\obj\Debug\net10.0\en\CarFitProject.resources.dll

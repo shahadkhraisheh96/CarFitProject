@@ -13,11 +13,16 @@ namespace CarFitProject.Areas.Buyer.Controllers
     {
         private readonly CarFitDbContext _context;
         private readonly IRecommendationService _recommendations;
+        private readonly ISavedCarsService _savedCars;
 
-        public DashboardController(CarFitDbContext context, IRecommendationService recommendations)
+        public DashboardController(
+            CarFitDbContext context,
+            IRecommendationService recommendations,
+            ISavedCarsService savedCars)
         {
             _context = context;
             _recommendations = recommendations;
+            _savedCars = savedCars;
         }
 
         public async Task<IActionResult> Index(int? activeProfileId)
@@ -31,7 +36,7 @@ namespace CarFitProject.Areas.Buyer.Controllers
 
             if (!profiles.Any())
             {
-                return RedirectToAction("CreateProfile");
+                return RedirectToAction("Start", "Questionnaire");
             }
 
             var selectedProfile = activeProfileId.HasValue
@@ -44,35 +49,12 @@ namespace CarFitProject.Areas.Buyer.Controllers
             ViewBag.CurrentProfileId = selectedProfile.ProfileId;
             ViewBag.CurrentProfileName = selectedProfile.ProfileName;
 
-            var matches = await _recommendations.GetMatchesAsync(selectedProfile);
-            return View(matches);
-        }
-
-        [HttpGet]
-        public IActionResult CreateProfile()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProfile(UserProfile model)
-        {
-            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId)) return Challenge();
-
-            model.UserId = userId;
-            model.IsActive = true;
-
-            if (string.IsNullOrEmpty(model.ProfileName)) model.ProfileName = "My Lifestyle Fit";
-            if (string.IsNullOrEmpty(model.TransmissionPref)) model.TransmissionPref = "Automatic";
-            if (string.IsNullOrEmpty(model.SizePref)) model.SizePref = "Sedan";
-            if (string.IsNullOrEmpty(model.Purpose)) model.Purpose = "Commuting";
-
-            _context.UserProfiles.Add(model);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index", new { activeProfileId = model.ProfileId });
+            var result = await _recommendations.GetMatchesAsync(selectedProfile, userId);
+            ViewBag.BudgetRelaxed = result.BudgetRelaxed;
+            ViewBag.RelaxationMessage = result.RelaxationMessage;
+            ViewBag.SavedCarIds = await _savedCars.GetSavedCarIdsAsync(userId);
+            ViewBag.SavedCount = await _savedCars.CountAsync(userId);
+            return View(result.Cars);
         }
     }
 }

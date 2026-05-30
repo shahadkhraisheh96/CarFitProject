@@ -1,85 +1,114 @@
-@model IEnumerable<CarFitProject.Models.CarListing>
+@model CarFitProject.Helpers.PaginatedList<CarFitProject.Models.CarListing>
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Dealership Stock Control";
+    ViewData["Title"] = SharedLocalizer["Seller.Inventory.Title"].Value;
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5 pb-3 border-bottom">
-        <div>
-            <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill fw-bold mb-2">FR-3 SELLER MANAGEMENT WORKSPACE</span>
-            <h1 class="fw-bold text-dark mb-0"><i class="fa-solid fa-boxes-stacked me-2 text-success"></i>Dealership Inventory Dashboard</h1>
-            <p class="text-muted">Manage active listings, review inspections, and adjust marketplace valuations.</p>
+<div class="container py-5">
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col">
+            <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-car me-2 text-primary"></i>@SharedLocalizer["Seller.Inventory.Title"]</h2>
+            <p class="text-muted mb-0">@SharedLocalizer["Seller.Inventory.Subtitle"]</p>
         </div>
-        <div>
-            <a class="btn btn-primary btn-lg fw-bold px-4 shadow-sm" asp-action="AddCar">
-                <i class="fa-solid fa-circle-plus me-2"></i>List New Vehicle
+        <div class="col-auto">
+            <a asp-action="AddCar" class="btn btn-primary fw-bold">
+                <i class="fa fa-plus me-1"></i>@SharedLocalizer["Seller.Inventory.Add"]
             </a>
         </div>
     </div>
 
-    <div class="glass-card shadow-sm border-0 bg-white rounded-4 overflow-hidden p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-start">
-                <thead class="table-dark">
-                    <tr>
-                        <th class="ps-4">Vehicle Specs</th>
-                        <th>Year</th>
-                        <th>Market Price</th>
-                        <th>Payment Options</th>
-                        <th>Status</th>
-                        <th class="text-end pe-4">Lot Controls</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model == null || !Model.Any())
-                    {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning" role="alert">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="bg-white shadow-sm rounded-4 p-5 text-center">
+            <i class="fa fa-car-side fs-1 text-muted opacity-25 mb-3 d-block"></i>
+            <p class="text-muted mb-3">You haven't listed any vehicles yet.</p>
+            <a asp-action="AddCar" class="btn btn-primary fw-bold">Add your first listing</a>
+        </div>
+    }
+    else
+    {
+        <div class="bg-white shadow-sm rounded-4 p-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-car-burst fs-2 mb-3 d-block text-secondary"></i>
-                                No inventory items listed yet on your profile lot. Click "List New Vehicle" to get started.
-                            </td>
+                            <th class="ps-4">Vehicle</th>
+                            <th>Year</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
                         </tr>
-                    }
-                    else
-                    {
+                    </thead>
+                    <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="ps-4">
-                                    <div class="fw-bold text-dark fs-5">@item.Car?.Make @item.Car?.Model</div>
-                                    <span class="text-muted small">ID Ref Code: #@item.CarId</span>
+                                <td class="ps-4 fw-semibold">
+                                    @(item.Car?.Make) @(item.Car?.Model) <span class="text-muted small">@(item.Car?.Trim)</span>
                                 </td>
-                                <td><span class="badge bg-light text-dark border p-2 fw-bold">@item.Car?.Year</span></td>
-                                <td class="fw-bold text-primary">@(item.ListingPrice.HasValue ? item.ListingPrice.Value.ToString("N0") + " JD" : "Price on Request")</td>
+                                <td>@(item.Car?.Year)</td>
+                                <td class="font-monospace">@(item.ListingPrice?.ToString("N0")) JD</td>
                                 <td>
-                                    <span class="badge bg-info bg-opacity-10 text-info border border-info px-2.5 py-1.5 fw-bold">
-                                        <i class="fa-solid fa-credit-card me-1"></i> @item.PaymentMethodAllowed
-                                    </span>
-                                </td>
-                                <td>
-                                    @if (item.Available == true)
+                                    @if (item.Status == "Active")
                                     {
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success px-2.5 py-1.5 fw-bold">Active Lot</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Active</span>
+                                    }
+                                    else if (item.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending Review</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-2.5 py-1.5 fw-bold">Delisted</span>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">@item.Status</span>
                                     }
                                 </td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-outline-secondary me-1 fw-bold" onclick="alert('Manage Specifications console integration is available on production deployment.')">
-                                        <i class="fa-solid fa-pen me-1"></i>Edit
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger fw-bold" onclick="alert('Listing suspension must be requested through admin moderation desk.')">
-                                        <i class="fa-solid fa-trash me-1"></i>Delist
-                                    </button>
+                                    <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold">
+                                            <i class="fa fa-pen me-1"></i>Edit
+                                        </a>
+                                        @if (item.CarId.HasValue)
+                                        {
+                                            <a asp-controller="Inspections" asp-action="Edit" asp-route-carId="@item.CarId" class="btn btn-sm btn-outline-info fw-bold">
+                                                <i class="fa fa-clipboard-check me-1"></i>Inspection
+                                            </a>
+                                        }
+                                        @if (item.Status == "Active")
+                                        {
+                                            <form asp-action="Deactivate" method="post" class="m-0"
+                                                  onsubmit="return confirm('Mark this listing as sold?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-warning fw-bold">
+                                                    <i class="fa fa-ban me-1"></i>Mark sold
+                                                </button>
+                                            </form>
+                                        }
+                                        <form asp-action="Delete" method="post" class="m-0"
+                                              onsubmit="return confirm('Delete this listing permanently?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold">
+                                                <i class="fa fa-trash me-1"></i>Delete
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+
+        <partial name="_Pager" model="@(new CarFitProject.ViewModel.PagerViewModel { Page = Model.PageIndex, TotalPages = Model.TotalPages, Action = "Index" })" />
+    }
 </div>

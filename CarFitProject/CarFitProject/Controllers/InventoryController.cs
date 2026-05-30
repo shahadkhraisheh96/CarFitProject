@@ -1,4 +1,8 @@
-﻿using CarFitProject.Models;
+using System.Security.Claims;
+using CarFitProject.Helpers;
+using CarFitProject.Models;
+using CarFitProject.Services;
+using CarFitProject.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,46 +10,167 @@ namespace CarFitProject.Controllers
 {
     public class InventoryController : Controller
     {
-        private readonly CarFitDbContext _context;
+        private const int PageSize = 12;
 
-        public InventoryController(CarFitDbContext context)
+        private readonly CarFitDbContext _context;
+        private readonly IInspectionScoringService _scoring;
+        private readonly ISavedCarsService _savedCars;
+        private readonly ISubscriptionService _subscriptions;
+
+        public InventoryController(
+            CarFitDbContext context,
+            IInspectionScoringService scoring,
+            ISavedCarsService savedCars,
+            ISubscriptionService subscriptions)
         {
             _context = context;
+            _scoring = scoring;
+            _savedCars = savedCars;
+            _subscriptions = subscriptions;
         }
 
-        // GET: /Inventory/Search
+        private string? CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // GET: /Inventory/Search?make=Toyota&priceTo=15000&page=2
         [HttpGet]
-        public async Task<IActionResult> Search()
+        public async Task<IActionResult> Search(ListingSearchViewModel filters)
         {
-            // Pull only available vehicles to the customer catalog
-            var listings = await _context.CarListings
+            var query = _context.CarListings
+                .AsNoTracking()
                 .Include(l => l.Car)
-                .Where(l => l.Available == true)
-                .OrderByDescending(l => l.Id)
-                .ToListAsync();
+                    .ThenInclude(c => c!.CarImages)
+                .Include(l => l.Car)
+                    .ThenInclude(c => c!.InspectionReport)
+                .Where(l => l.Status == "Active");
 
-            return View(listings);
+            if (!string.IsNullOrWhiteSpace(filters.Make))
+                query = query.Where(l => l.Car!.Make.Contains(filters.Make));
+            if (!string.IsNullOrWhiteSpace(filters.Model))
+                query = query.Where(l => l.Car!.Model.Contains(filters.Model));
+            if (filters.YearFrom.HasValue)
+                query = query.Where(l => l.Car!.Year >= filters.YearFrom.Value);
+            if (filters.YearTo.HasValue)
+                query = query.Where(l => l.Car!.Year <= filters.YearTo.Value);
+            if (filters.PriceFrom.HasValue)
+                query = query.Where(l => l.ListingPrice >= filters.PriceFrom.Value);
+            if (filters.PriceTo.HasValue)
+                query = query.Where(l => l.ListingPrice <= filters.PriceTo.Value);
+            if (!string.IsNullOrWhiteSpace(filters.Type))
+                query = query.Where(l => l.Car!.Type == filters.Type);
+            if (!string.IsNullOrWhiteSpace(filters.Transmission))
+                query = query.Where(l => l.Car!.Transmission == filters.Transmission);
+
+            filters.Results = await PaginatedList<CarListing>.CreateAsync(
+                query.OrderByDescending(l => l.Id), filters.Page, PageSize);
+
+            await LogSearchAsync(filters);
+
+            ViewBag.SavedCarIds = User.IsInRole("Buyer")
+                ? await _savedCars.GetSavedCarIdsAsync(CurrentUserId!)
+                : new HashSet<int>();
+            return View(filters);
         }
-        // GET: /Inventory/GetTermExplanation?term=جيد
+
+        private async Task LogSearchAsync(ListingSearchViewModel filters)
+        {
+            // Log only the first page of a search, and only when at least one
+            // substantive filter is set — keeps the analytics noise-free when a
+            // visitor lands on the bare /Inventory/Search page or pages through
+            // the same filter set.
+            if (filters.Page > 1) return;
+
+            bool hasFilter =
+                !string.IsNullOrWhiteSpace(filters.Make) ||
+                !string.IsNullOrWhiteSpace(filters.Model) ||
+                filters.YearFrom.HasValue ||
+                filters.YearTo.HasValue ||
+                filters.PriceFrom.HasValue ||
+                filters.PriceTo.HasValue ||
+                !string.IsNullOrWhiteSpace(filters.Type) ||
+                !string.IsNullOrWhiteSpace(filters.Transmission);
+            if (!hasFilter) return;
+
+            var term = string.Join(" ",
+                new[] { filters.Make, filters.Model }
+                    .Where(s => !string.IsNullOrWhiteSpace(s)))
+                .Trim();
+            if (term.Length > 255) term = term[..255];
+
+            var snapshot = new
+            {
+                filters.Make,
+                filters.Model,
+                filters.YearFrom,
+                filters.YearTo,
+                filters.PriceFrom,
+                filters.PriceTo,
+                filters.Type,
+                filters.Transmission
+            };
+
+            _context.SearchLogs.Add(new SearchLog
+            {
+                Term = string.IsNullOrEmpty(term) ? null : term,
+                FiltersJson = System.Text.Json.JsonSerializer.Serialize(snapshot),
+                UserId = CurrentUserId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        // GET: /Inventory/Detail/42
+        [HttpGet]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var listing = await _context.CarListings
+                .AsNoTracking()
+                .Include(l => l.Car)
+                    .ThenInclude(c => c!.CarImages)
+                .Include(l => l.Car)
+                    .ThenInclude(c => c!.InspectionReport)
+                .Include(l => l.Seller)
+                .FirstOrDefaultAsync(l => l.Id == id && l.Status == "Active");
+
+            if (listing == null) return NotFound();
+
+            if (listing.Car?.InspectionReport != null)
+            {
+                ViewBag.InspectionSignals = _scoring.Compute(listing.Car.InspectionReport);
+            }
+
+            ViewBag.IsBuyer = User.IsInRole("Buyer");
+            if (ViewBag.IsBuyer)
+            {
+                ViewBag.IsSaved = await _context.SavedResults
+                    .AnyAsync(s => s.UserId == CurrentUserId && s.CarId == listing.CarId);
+                ViewBag.IsPremium = await _subscriptions.IsPremiumAsync(CurrentUserId);
+            }
+
+            var sellerCity = listing.Seller?.City;
+            ViewBag.Mechanics = await _context.Mechanics
+                .AsNoTracking()
+                .OrderBy(m => m.City).ThenBy(m => m.Name)
+                .ToListAsync();
+            ViewBag.SellerCity = sellerCity;
+            return View(listing);
+        }
+
+        // GET: /Inventory/GetTermExplanation?term=...
         [HttpGet]
         public async Task<IActionResult> GetTermExplanation(string term)
         {
-            if (string.IsNullOrWhiteSpace(term))
-                return BadRequest();
+            if (string.IsNullOrWhiteSpace(term)) return BadRequest();
 
-            // Query your SQL Server glossary index context array pool
-            var dictionaryMatch = await _context.InspectionTermsGlossaries
+            var match = await _context.InspectionTermsGlossaries
                 .FirstOrDefaultAsync(g => g.Term.Trim().ToLower() == term.Trim().ToLower());
 
-            if (dictionaryMatch == null)
-                return NotFound();
+            if (match == null) return NotFound();
 
-            // Return structured bilingual metadata properties payload
             return Json(new
             {
-                severity = dictionaryMatch.SeverityLevel, // e.g., Low, Medium, High, Critical
-                ar = dictionaryMatch.ExplanationAr,
-                en = dictionaryMatch.ExplanationEn
+                severity = match.SeverityLevel,
+                ar = match.ExplanationAr,
+                en = match.ExplanationEn
             });
         }
     }

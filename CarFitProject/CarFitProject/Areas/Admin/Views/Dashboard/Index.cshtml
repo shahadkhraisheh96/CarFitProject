@@ -1,48 +1,31 @@
-@model List<CarFitProject.Models.CarListing>
+@model CarFitProject.ViewModel.AdminAnalyticsViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "System Control Dashboard";
+    ViewData["Title"] = SharedLocalizer["Admin.Dashboard.Title"].Value;
+
+    var regsLabels = System.Text.Json.JsonSerializer.Serialize(Model.RegistrationsByMonth.Select(r => r.Label).ToArray());
+    var regsData = System.Text.Json.JsonSerializer.Serialize(Model.RegistrationsByMonth.Select(r => r.Count).ToArray());
 }
 
 <style>
-    .widescreen-wrapper {
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
+    .widescreen-wrapper { width: 100% !important; padding: 0 !important; margin: 0 !important; }
     .kpi-number {
-        font-size: 2.25rem;
-        font-weight: 800;
+        font-size: 2.25rem; font-weight: 800;
         background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .meta-year-badge {
-        background-color: #0b0f19;
-        color: var(--text-muted);
-        border: 1px solid var(--border-dim);
+        background-color: #0b0f19; color: var(--text-muted); border: 1px solid var(--border-dim);
     }
-
     .custom-wide-table th {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.05rem;
-        background-color: var(--bg-sidebar) !important;
-        border-bottom: 1px solid var(--border-dim) !important;
-        padding: 14px 12px !important;
+        font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05rem;
+        background-color: var(--bg-sidebar) !important; border-bottom: 1px solid var(--border-dim) !important; padding: 14px 12px !important;
     }
-
-    .custom-wide-table td {
-        border-bottom: 1px solid var(--border-dim) !important;
-        padding: 1rem 0.75rem !important;
-    }
+    .custom-wide-table td { border-bottom: 1px solid var(--border-dim) !important; padding: 1rem 0.75rem !important; }
 </style>
 
 <div class="widescreen-wrapper">
-    
+
     <div class="row mb-4">
         <div class="col-12">
             <div class="admin-card">
@@ -64,6 +47,7 @@
         </div>
     </div>
 
+    @* KPIs *@
     <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">
             <div class="admin-card d-flex align-items-center justify-content-between p-4">
@@ -72,7 +56,7 @@
                 </div>
                 <div class="text-end">
                     <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Platform Users</p>
-                    <h2 class="mb-0 kpi-number">@(ViewBag.TotalUsers ?? 0)</h2>
+                    <h2 class="mb-0 kpi-number">@Model.TotalUsers</h2>
                 </div>
             </div>
         </div>
@@ -83,7 +67,7 @@
                 </div>
                 <div class="text-end">
                     <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Active Listings</p>
-                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@(ViewBag.TotalListings ?? 0)</h2>
+                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@Model.TotalActiveListings</h2>
                 </div>
             </div>
         </div>
@@ -93,45 +77,125 @@
                     <i class="fa fa-book-atlas fa-2x text-warning"></i>
                 </div>
                 <div class="text-end">
-                    <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Glossary Dictionary</p>
-                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@(ViewBag.TotalGlossaryTerms ?? 0)</h2>
+                    <p class="mb-1 text-muted small fw-bold text-uppercase tracking-wider">Glossary Terms</p>
+                    <h2 class="mb-0 font-monospace fw-bold text-white" style="font-size: 2.25rem;">@Model.TotalGlossaryTerms</h2>
                 </div>
             </div>
         </div>
     </div>
 
+    @* Monthly registrations chart *@
     <div class="row mb-4">
         <div class="col-12">
             <div class="admin-card p-4">
-                <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-chart-area me-2 text-primary"></i>Platform Inventory Growth Trend</h5>
+                <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-chart-area me-2 text-primary"></i>Monthly new registrations</h5>
                 <div style="height: 300px; width: 100%;">
-                    <canvas id="inventoryGrowthChart"></canvas>
+                    <canvas id="registrationsChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    @* Top recommended + top search terms *@
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-lg-6">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="py-3 px-4 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(0,0,0,0.15); border-color: var(--border-dim) !important;">
+                    <h5 class="mb-0 text-white fw-bold"><i class="fa fa-trophy me-2 text-primary"></i>Top 5 most-recommended cars</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0 custom-wide-table">
+                        <thead>
+                            <tr class="text-white">
+                                <th class="ps-4">#</th>
+                                <th>Vehicle</th>
+                                <th class="text-end pe-4">Recommendations</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.TopRecommended.Any())
+                            {
+                                <tr><td colspan="3" class="text-center py-4 text-muted">No recommendation history yet.</td></tr>
+                            }
+                            else
+                            {
+                                int rank = 1;
+                                foreach (var row in Model.TopRecommended)
+                                {
+                                    <tr>
+                                        <td class="ps-4 text-muted font-monospace fw-bold">@rank</td>
+                                        <td class="text-white fw-semibold">@row.Label</td>
+                                        <td class="text-end pe-4"><span class="badge badge-low">@row.Count</span></td>
+                                    </tr>
+                                    rank++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <div class="admin-card p-0 overflow-hidden">
+                <div class="py-3 px-4 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(0,0,0,0.15); border-color: var(--border-dim) !important;">
+                    <h5 class="mb-0 text-white fw-bold"><i class="fa fa-magnifying-glass me-2 text-primary"></i>Top 10 search terms</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0 custom-wide-table">
+                        <thead>
+                            <tr class="text-white">
+                                <th class="ps-4">#</th>
+                                <th>Term</th>
+                                <th class="text-end pe-4">Searches</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.TopSearchTerms.Any())
+                            {
+                                <tr><td colspan="3" class="text-center py-4 text-muted">No search activity logged yet.</td></tr>
+                            }
+                            else
+                            {
+                                int rank = 1;
+                                foreach (var t in Model.TopSearchTerms)
+                                {
+                                    <tr>
+                                        <td class="ps-4 text-muted font-monospace fw-bold">@rank</td>
+                                        <td class="text-white fw-semibold">@t.Term</td>
+                                        <td class="text-end pe-4"><span class="badge badge-low">@t.Count</span></td>
+                                    </tr>
+                                    rank++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Recent listings *@
     <div class="row mb-2">
         <div class="col-12">
             <div class="admin-card p-0 overflow-hidden shadow-sm">
                 <div class="py-3 px-4 border-bottom d-flex justify-content-between align-items-center" style="background: rgba(0,0,0,0.15); border-color: var(--border-dim) !important;">
-                    <h5 class="mb-0 text-white fw-bold"><i class="fa fa-clock me-2 text-primary"></i>Recent Inventory Additions</h5>
+                    <h5 class="mb-0 text-white fw-bold"><i class="fa fa-clock me-2 text-primary"></i>Recent inventory additions</h5>
                 </div>
                 <div class="table-responsive">
                     <table class="table mb-0 table-hover align-middle w-100 custom-wide-table">
                         <thead>
                             <tr class="text-white">
                                 <th class="ps-4">Listing ID</th>
-                                <th>Vehicle Specification Meta</th>
+                                <th>Vehicle</th>
                                 <th>Listing Price</th>
-                                <th>Creation Date</th>
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (Model != null && Model.Any())
+                            @if (Model.RecentListings.Any())
                             {
-                                @foreach (var listing in Model)
+                                foreach (var listing in Model.RecentListings)
                                 {
                                     <tr>
                                         <td class="ps-4 text-muted font-monospace fw-bold">#@listing.Id</td>
@@ -143,12 +207,26 @@
                                             </div>
                                         </td>
                                         <td class="text-primary fw-bold font-monospace">@(listing.ListingPrice?.ToString("N0")) JOD</td>
-                                        <td class="text-muted small">@DateTime.Now.ToShortDateString()</td>
                                         <td class="text-center">
-                                            <span class="badge badge-low">Available</span>
+                                            @if (listing.Status == "Active")
+                                            {
+                                                <span class="badge badge-low">Active</span>
+                                            }
+                                            else if (listing.Status == "Pending")
+                                            {
+                                                <span class="badge badge-medium">Pending</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-critical">@listing.Status</span>
+                                            }
                                         </td>
                                     </tr>
                                 }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" class="text-center py-4 text-muted">No listings yet.</td></tr>
                             }
                         </tbody>
                     </table>
@@ -161,10 +239,10 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            const labelsArray = @Html.Raw(ViewBag.ChartLabels ?? "[]");
-            const dataArray = @Html.Raw(ViewBag.ChartData ?? "[]");
-            const ctx = document.getElementById('inventoryGrowthChart').getContext('2d');
-            
+            const labelsArray = @Html.Raw(regsLabels);
+            const dataArray = @Html.Raw(regsData);
+            const ctx = document.getElementById('registrationsChart').getContext('2d');
+
             let gradientFill = ctx.createLinearGradient(0, 0, 0, 300);
             gradientFill.addColorStop(0, 'rgba(216, 19, 36, 0.6)');
             gradientFill.addColorStop(1, 'rgba(216, 19, 36, 0.01)');
@@ -174,6 +252,7 @@
                 data: {
                     labels: labelsArray,
                     datasets: [{
+                        label: 'New registrations',
                         data: dataArray,
                         backgroundColor: gradientFill,
                         borderColor: '#D81324',
@@ -188,7 +267,7 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' }, beginAtZero: true }
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8', precision: 0 }, beginAtZero: true }
                     }
                 }
             });

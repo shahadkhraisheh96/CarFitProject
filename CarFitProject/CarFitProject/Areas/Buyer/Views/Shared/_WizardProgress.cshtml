@@ -1,0 +1,25 @@
+@inject IViewLocalizer L
+@{
+    var currentStep = (int)(ViewData["WizardStep"] ?? 1);
+    var totalSteps = 6;
+    var pct = (int)Math.Round(100d * currentStep / totalSteps);
+    var labelKeys = new[]
+    {
+        "Wizard.Step.Basics",
+        "Wizard.Step.Family",
+        "Wizard.Step.PurposeTrip",
+        "Wizard.Step.Budget",
+        "Wizard.Step.Preferences",
+        "Wizard.Step.Review"
+    };
+}
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <small class="text-muted fw-bold">@string.Format(L["Wizard.StepOfN"].Value, currentStep, totalSteps)</small>
+        <small class="text-muted">@L[labelKeys[currentStep - 1]]</small>
+    </div>
+    <div class="progress" role="progressbar" aria-valuenow="@pct" aria-valuemin="0" aria-valuemax="100" style="height: 8px;">
+        <div class="progress-bar bg-primary" style="width: @pct%"></div>
+    </div>
+</div>

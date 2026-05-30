@@ -1,6 +1,7 @@
 @model List<CarFitProject.Models.CarListing>
+@inject IViewLocalizer L
 @{
-    ViewData["Title"] = "Smart Car Recommendation Platform";
+    ViewData["Title"] = L["Home.Hero.Headline"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,20 +11,20 @@
         <div class="row align-items-center">
             <div class="col-lg-7 text-start pt-3">
                 <span class="badge bg-primary bg-opacity-20 text-white border border-primary px-3 py-2 rounded-pill fw-bold mb-3">// CarFit Smart Match Engine //</span>
-                <h1 class="display-3 text-white mb-4 fw-black">The Intelligent Way to Buy a Used Car in Jordan</h1>
+                <h1 class="display-3 text-white mb-4 fw-black">@L["Home.Hero.Headline"]</h1>
                 <p class="fs-5 text-white-50 mb-5 leading-relaxed" style="max-width: 600px;">
-                    Unlike traditional listing sites, CarFit uses localized lifestyle mapping to pair first-time buyers, women, and non-technical users with their ideal vehicle matching constraints.
+                    @L["Home.Hero.Tagline"]
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a asp-controller="Inspection" asp-action="Book" class="btn btn-primary btn-lg px-5 py-3"><i class="fa-solid fa-clipboard-question me-2"></i>Take Lifestyle Questionnaire</a>
-                    
-                    <a asp-area="" asp-controller="Inventory" asp-action="Search" class="btn btn-outline-primary btn-lg px-4 py-3 text-white"><i class="fa-solid fa-car-side me-2"></i>Explore Live Showroom</a>
+                    <a asp-area="Buyer" asp-controller="Questionnaire" asp-action="Start" class="btn btn-primary btn-lg px-5 py-3"><i class="fa-solid fa-clipboard-question me-2"></i>@L["Home.Hero.CTA.Questionnaire"]</a>
+
+                    <a asp-area="" asp-controller="Inventory" asp-action="Search" class="btn btn-outline-primary btn-lg px-4 py-3 text-white"><i class="fa-solid fa-car-side me-2"></i>@L["Home.Hero.CTA.Showroom"]</a>
                 </div>
             </div>
             <div class="col-lg-5 d-none d-lg-block">
                 <div class="glass-card bg-opacity-10 border-white border-opacity-10 p-5 text-white shadow-lg text-center" style="backdrop-filter: blur(20px);">
                     <i class="fa-solid fa-award text-warning fs-1 mb-3"></i>
-                    <h3 class="text-white fw-bold">100% Verified</h3>
+                    <h3 class="text-white fw-bold">@L["Home.Hero.Verified"]</h3>
                     <p class="text-white-50 small mb-0">Every vehicle listed on CarFit goes through a comprehensive multi-point chassis and sensor scanner check before recommendation.</p>
                 </div>
             </div>
@@ -34,8 +35,8 @@
     <div class="container">
         <div class="text-center mb-5">
             <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-2">CORE VALUE PROPOSITION</span>
-            <h1 class="fw-bold text-dark">Protecting Buyers with Uncompromising Transparency</h1>
-            <p class="text-muted">We eliminate information asymmetry between dealers and non-technical car buyers.</p>
+            <h1 class="fw-bold text-dark">@L["Home.Value.SectionTitle"]</h1>
+            <p class="text-muted">@L["Home.Value.SectionSubtitle"]</p>
         </div>
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
@@ -43,8 +44,8 @@
                     <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-inline-block mb-4">
                         <i class="fa-solid fa-user-check fs-3"></i>
                     </div>
-                    <h5 class="fw-bold mb-3 text-dark">Profile-Driven Recommendations</h5>
-                    <p class="text-muted small mb-0">We match vehicles based on age, family requirements, purpose, and route configurations—not just price indices.</p>
+                    <h5 class="fw-bold mb-3 text-dark">@L["Home.Value.Profile.Title"]</h5>
+                    <p class="text-muted small mb-0">@L["Home.Value.Profile.Body"]</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
@@ -52,8 +53,8 @@
                     <div class="bg-white bg-opacity-10 text-white rounded-3 p-3 d-inline-block mb-4">
                         <i class="fa-solid fa-file-invoice fs-3"></i>
                     </div>
-                    <h5 class="fw-bold mb-3 text-white">White Card Decoding</h5>
-                    <p class="text-white-50 small mb-0">We break down official mechanical jargon from Jordanian inspection sheets (ورقة الفحص) into plain English and Arabic definitions.</p>
+                    <h5 class="fw-bold mb-3 text-white">@L["Home.Value.WhiteCard.Title"]</h5>
+                    <p class="text-white-50 small mb-0">@L["Home.Value.WhiteCard.Body"]</p>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
@@ -61,8 +62,8 @@
                     <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 d-inline-block mb-4">
                         <i class="fa-solid fa-shield-halved fs-3"></i>
                     </div>
-                    <h5 class="fw-bold mb-3 text-dark">Inexperienced Buyer Protection</h5>
-                    <p class="text-muted small mb-0">Automatic structural safeguards immediately isolate heavily damaged frame structures or cut chassis (شاصي مقصوص).</p>
+                    <h5 class="fw-bold mb-3 text-dark">@L["Home.Value.Protection.Title"]</h5>
+                    <p class="text-muted small mb-0">@L["Home.Value.Protection.Body"]</p>
                 </div>
             </div>
         </div>

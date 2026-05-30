@@ -133,9 +133,55 @@ namespace CarFitProject.Migrations
                     b.HasKey("Id")
                         .HasName("PK__Cars__3213E83F43C12A3A");
 
+                    b.HasIndex(new[] { "Make" }, "IX_Cars_Make");
+
                     b.HasIndex(new[] { "Transmission", "BodyType", "Year" }, "IX_Cars_Matching");
 
+                    b.HasIndex(new[] { "Model" }, "IX_Cars_Model");
+
+                    b.HasIndex(new[] { "Price" }, "IX_Cars_Price");
+
+                    b.HasIndex(new[] { "Type" }, "IX_Cars_Type");
+
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("CarFitProject.Models.CarImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int")
+                        .HasColumnName("car_id");
+
+                    b.Property<bool>("IsPrimary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_primary");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)")
+                        .HasColumnName("url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CarId" }, "IX_CarImages_car_id");
+
+                    b.ToTable("CarImages", (string)null);
                 });
 
             modelBuilder.Entity("CarFitProject.Models.CarListing", b =>
@@ -146,12 +192,6 @@ namespace CarFitProject.Migrations
                         .HasColumnName("id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool?>("Available")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true)
-                        .HasColumnName("available");
 
                     b.Property<int?>("CarId")
                         .HasColumnType("int")
@@ -176,6 +216,14 @@ namespace CarFitProject.Migrations
                         .HasColumnType("int")
                         .HasColumnName("seller_id");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasDefaultValue("Active")
+                        .HasColumnName("status");
+
                     b.HasKey("Id")
                         .HasName("PK__CarListi__3213E83F8D2FA73D");
 
@@ -183,7 +231,7 @@ namespace CarFitProject.Migrations
 
                     b.HasIndex("SellerId");
 
-                    b.HasIndex(new[] { "Available" }, "IX_CarListings_Availability");
+                    b.HasIndex(new[] { "Status" }, "IX_CarListings_Status");
 
                     b.ToTable("CarListings");
                 });
@@ -195,6 +243,9 @@ namespace CarFitProject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CarListingId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -211,6 +262,9 @@ namespace CarFitProject.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("MechanicId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PackageType")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -224,6 +278,10 @@ namespace CarFitProject.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CarListingId");
+
+                    b.HasIndex("MechanicId");
 
                     b.ToTable("InspectionBookings");
                 });
@@ -346,6 +404,38 @@ namespace CarFitProject.Migrations
                     b.ToTable("InspectionTermsGlossary", (string)null);
                 });
 
+            modelBuilder.Entity("CarFitProject.Models.Mechanic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("city");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("phone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "City" }, "IX_Mechanics_City");
+
+                    b.ToTable("Mechanics", (string)null);
+                });
+
             modelBuilder.Entity("CarFitProject.Models.RecommendationLog", b =>
                 {
                     b.Property<int>("Id")
@@ -369,22 +459,24 @@ namespace CarFitProject.Migrations
                         .HasColumnType("decimal(5, 2)")
                         .HasColumnName("score");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int")
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("PK__Recommen__3213E83F3C2D9495");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_RecommendationLog_user_id");
 
                     b.ToTable("RecommendationLog", (string)null);
                 });
 
             modelBuilder.Entity("CarFitProject.Models.SavedResult", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("user_id");
 
                     b.Property<int>("CarId")
@@ -405,6 +497,42 @@ namespace CarFitProject.Migrations
                     b.ToTable("SavedResults");
                 });
 
+            modelBuilder.Entity("CarFitProject.Models.SearchLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<string>("FiltersJson")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("filters_json");
+
+                    b.Property<string>("Term")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("term");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "CreatedAt" }, "IX_SearchLog_created_at");
+
+                    b.ToTable("SearchLog", (string)null);
+                });
+
             modelBuilder.Entity("CarFitProject.Models.Seller", b =>
                 {
                     b.Property<int>("Id")
@@ -418,6 +546,22 @@ namespace CarFitProject.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("city");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("IdentityUserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("identity_user_id");
+
+                    b.Property<bool>("IsApproved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_approved");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -435,6 +579,11 @@ namespace CarFitProject.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("phone");
 
+                    b.Property<string>("Tier")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("tier");
+
                     b.Property<string>("Type")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
@@ -443,51 +592,9 @@ namespace CarFitProject.Migrations
                     b.HasKey("Id")
                         .HasName("PK__Sellers__3213E83F4F76A86D");
 
+                    b.HasIndex(new[] { "IdentityUserId" }, "IX_Sellers_IdentityUserId");
+
                     b.ToTable("Sellers");
-                });
-
-            modelBuilder.Entity("CarFitProject.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("email");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("password");
-
-                    b.HasKey("Id")
-                        .HasName("PK__Users__3213E83F2A7BC1EE");
-
-                    b.HasIndex(new[] { "Email" }, "IX_Users_Email");
-
-                    b.HasIndex(new[] { "Email" }, "UQ__Users__AB6E61642DA1681D")
-                        .IsUnique();
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CarFitProject.Models.UserProfile", b =>
@@ -513,11 +620,20 @@ namespace CarFitProject.Migrations
                         .HasDefaultValue(0m)
                         .HasColumnName("budget_min");
 
+                    b.Property<string>("ConditionPref")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("condition_pref");
+
                     b.Property<bool?>("HasKids")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false)
                         .HasColumnName("has_kids");
+
+                    b.Property<int?>("InstallmentMonths")
+                        .HasColumnType("int")
+                        .HasColumnName("installment_months");
 
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -565,6 +681,11 @@ namespace CarFitProject.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
                         .HasColumnName("transmission_pref");
+
+                    b.Property<string>("TripType")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("trip_type");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -748,6 +869,7 @@ namespace CarFitProject.Migrations
                         .HasColumnName("DynamicMatchScore");
 
                     b.Property<decimal>("ListingPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("listing_price");
 
@@ -762,6 +884,7 @@ namespace CarFitProject.Migrations
                         .HasColumnName("model");
 
                     b.Property<decimal>("TrustScore")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("trust_score");
 
@@ -770,6 +893,17 @@ namespace CarFitProject.Migrations
                         .HasColumnName("year");
 
                     b.ToTable("RecommendedCarMatches");
+                });
+
+            modelBuilder.Entity("CarFitProject.Models.CarImage", b =>
+                {
+                    b.HasOne("CarFitProject.Models.Car", "Car")
+                        .WithMany("CarImages")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("CarFitProject.Models.CarListing", b =>
@@ -789,6 +923,23 @@ namespace CarFitProject.Migrations
                     b.Navigation("Seller");
                 });
 
+            modelBuilder.Entity("CarFitProject.Models.InspectionBooking", b =>
+                {
+                    b.HasOne("CarFitProject.Models.CarListing", "CarListing")
+                        .WithMany()
+                        .HasForeignKey("CarListingId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("CarFitProject.Models.Mechanic", "Mechanic")
+                        .WithMany("InspectionBookings")
+                        .HasForeignKey("MechanicId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("CarListing");
+
+                    b.Navigation("Mechanic");
+                });
+
             modelBuilder.Entity("CarFitProject.Models.InspectionReport", b =>
                 {
                     b.HasOne("CarFitProject.Models.Car", "Car")
@@ -801,16 +952,6 @@ namespace CarFitProject.Migrations
                     b.Navigation("Car");
                 });
 
-            modelBuilder.Entity("CarFitProject.Models.RecommendationLog", b =>
-                {
-                    b.HasOne("CarFitProject.Models.User", "User")
-                        .WithMany("RecommendationLogs")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK__Recommend__user___5441852A");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("CarFitProject.Models.SavedResult", b =>
                 {
                     b.HasOne("CarFitProject.Models.Car", "Car")
@@ -819,19 +960,13 @@ namespace CarFitProject.Migrations
                         .IsRequired()
                         .HasConstraintName("FK__SavedResu__car_i__5070F446");
 
-                    b.HasOne("CarFitProject.Models.User", "User")
-                        .WithMany("SavedResults")
-                        .HasForeignKey("UserId")
-                        .IsRequired()
-                        .HasConstraintName("FK__SavedResu__user___4F7CD00D");
-
                     b.Navigation("Car");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CarFitProject.Models.Car", b =>
                 {
+                    b.Navigation("CarImages");
+
                     b.Navigation("CarListings");
 
                     b.Navigation("InspectionReport");
@@ -839,16 +974,14 @@ namespace CarFitProject.Migrations
                     b.Navigation("SavedResults");
                 });
 
+            modelBuilder.Entity("CarFitProject.Models.Mechanic", b =>
+                {
+                    b.Navigation("InspectionBookings");
+                });
+
             modelBuilder.Entity("CarFitProject.Models.Seller", b =>
                 {
                     b.Navigation("CarListings");
-                });
-
-            modelBuilder.Entity("CarFitProject.Models.User", b =>
-                {
-                    b.Navigation("RecommendationLogs");
-
-                    b.Navigation("SavedResults");
                 });
 #pragma warning restore 612, 618
         }

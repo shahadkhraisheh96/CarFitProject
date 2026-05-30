@@ -1,0 +1,66 @@
+@model CarFitProject.ViewModel.QuestionnaireStep3ViewModel
+@inject IViewLocalizer L
+@{
+    ViewData["Title"] = L["Wizard.Step3.Title"].Value;
+    ViewData["WizardStep"] = 3;
+    var purposes = new (string Value, string Key)[]
+    {
+        ("Work", "Field.Purpose.Work"),
+        ("University", "Field.Purpose.University"),
+        ("Family use", "Field.Purpose.Family"),
+        ("Travel", "Field.Purpose.Travel")
+    };
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="bg-white shadow-sm rounded-4 p-5">
+                <partial name="_WizardProgress" />
+
+                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Step3.Title"]</h2>
+                <p class="text-muted mb-4">@L["Wizard.Step3.Subtitle"]</p>
+
+                <form method="post" asp-action="Step3" novalidate>
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold text-secondary d-block mb-2" asp-for="Purpose"></label>
+                        <select asp-for="Purpose" class="form-select border-2">
+                            @foreach (var (value, key) in purposes)
+                            {
+                                <option value="@value">@L[key]</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Purpose" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.TripType"]</label>
+                        <div class="btn-group" role="group" aria-label="@L["Field.TripType"]">
+                            <input asp-for="TripType" type="radio" class="btn-check" id="trip-short" value="Short" autocomplete="off" />
+                            <label for="trip-short" class="btn btn-outline-primary">@L["Field.TripShort"]</label>
+                            <input asp-for="TripType" type="radio" class="btn-check" id="trip-long" value="Long" autocomplete="off" />
+                            <label for="trip-long" class="btn btn-outline-primary">@L["Field.TripLong"]</label>
+                        </div>
+                        <span asp-validation-for="TripType" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between gap-2">
+                        <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
+                            <i class="fa fa-arrow-left me-2"></i>@L["Action.Back"]
+                        </button>
+                        <button type="submit" name="action" value="next" class="btn btn-primary fw-bold">
+                            @L["Action.Next"]<i class="fa fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

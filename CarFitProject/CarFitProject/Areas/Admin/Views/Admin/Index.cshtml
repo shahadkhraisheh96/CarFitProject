@@ -162,16 +162,16 @@
                                         </td>
                                         <td class="text-muted small">@DateTime.Now.ToShortDateString()</td>
                                         <td class="text-center pe-4">
-                                            @if (listing.Available == true)
+                                            @if (listing.Status == "Active")
                                             {
                                                 <span class="badge badge-low d-block py-1.5 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                                                    Available
+                                                    Active
                                                 </span>
                                             }
                                             else
                                             {
                                                 <span class="badge badge-medium d-block py-1.5 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">
-                                                    Sold
+                                                    @listing.Status
                                                 </span>
                                             }
                                         </td>

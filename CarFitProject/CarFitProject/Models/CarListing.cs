@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace CarFitProject.Models;
@@ -13,7 +13,7 @@ public partial class CarListing
 
     public decimal? ListingPrice { get; set; }
 
-    public bool? Available { get; set; }
+    public string Status { get; set; } = "Active";
 
     public bool? InstallmentOption { get; set; }
 

@@ -18,19 +18,23 @@ public partial class CarFitDbContext : DbContext
 
     public virtual DbSet<Car> Cars { get; set; }
 
+    public virtual DbSet<CarImage> CarImages { get; set; }
+
     public virtual DbSet<CarListing> CarListings { get; set; }
 
     public virtual DbSet<InspectionReport> InspectionReports { get; set; }
 
     public virtual DbSet<InspectionTermsGlossary> InspectionTermsGlossaries { get; set; }
 
+    public virtual DbSet<Mechanic> Mechanics { get; set; }
+
     public virtual DbSet<RecommendationLog> RecommendationLogs { get; set; }
 
     public virtual DbSet<SavedResult> SavedResults { get; set; }
 
-    public virtual DbSet<Seller> Sellers { get; set; }
+    public virtual DbSet<SearchLog> SearchLogs { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<Seller> Sellers { get; set; }
 
     public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
@@ -45,6 +49,10 @@ public partial class CarFitDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Cars__3213E83F43C12A3A");
 
             entity.HasIndex(e => new { e.Transmission, e.BodyType, e.Year }, "IX_Cars_Matching");
+            entity.HasIndex(e => e.Make, "IX_Cars_Make");
+            entity.HasIndex(e => e.Model, "IX_Cars_Model");
+            entity.HasIndex(e => e.Price, "IX_Cars_Price");
+            entity.HasIndex(e => e.Type, "IX_Cars_Type");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.BodyType)
@@ -102,12 +110,13 @@ public partial class CarFitDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__CarListi__3213E83F8D2FA73D");
 
-            entity.HasIndex(e => e.Available, "IX_CarListings_Availability");
+            entity.HasIndex(e => e.Status, "IX_CarListings_Status");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Available)
-                .HasDefaultValue(true)
-                .HasColumnName("available");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .HasDefaultValue("Active")
+                .HasColumnName("status");
             entity.Property(e => e.CarId).HasColumnName("car_id");
             entity.Property(e => e.InstallmentOption)
                 .HasDefaultValue(false)
@@ -127,6 +136,32 @@ public partial class CarFitDbContext : DbContext
             entity.HasOne(d => d.Seller).WithMany(p => p.CarListings)
                 .HasForeignKey(d => d.SellerId)
                 .HasConstraintName("FK__CarListin__selle__45F365D3");
+        });
+
+        modelBuilder.Entity<CarImage>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("CarImages");
+
+            entity.HasIndex(e => e.CarId, "IX_CarImages_car_id");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CarId).HasColumnName("car_id");
+            entity.Property(e => e.Url)
+                .IsRequired()
+                .HasMaxLength(2048)
+                .HasColumnName("url");
+            entity.Property(e => e.SortOrder)
+                .HasDefaultValue(0)
+                .HasColumnName("sort_order");
+            entity.Property(e => e.IsPrimary)
+                .HasDefaultValue(false)
+                .HasColumnName("is_primary");
+
+            entity.HasOne(d => d.Car).WithMany(c => c.CarImages)
+                .HasForeignKey(d => d.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<InspectionReport>(entity =>
@@ -207,6 +242,8 @@ public partial class CarFitDbContext : DbContext
 
             entity.ToTable("RecommendationLog");
 
+            entity.HasIndex(e => e.UserId, "IX_RecommendationLog_user_id");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -216,18 +253,18 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.Score)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("score");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.User).WithMany(p => p.RecommendationLogs)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Recommend__user___5441852A");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
         });
 
         modelBuilder.Entity<SavedResult>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.CarId }).HasName("PK__SavedRes__9D7797D4910E870F");
 
-            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
             entity.Property(e => e.CarId).HasColumnName("car_id");
             entity.Property(e => e.SavedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -238,21 +275,27 @@ public partial class CarFitDbContext : DbContext
                 .HasForeignKey(d => d.CarId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SavedResu__car_i__5070F446");
-
-            entity.HasOne(d => d.User).WithMany(p => p.SavedResults)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SavedResu__user___4F7CD00D");
         });
 
         modelBuilder.Entity<Seller>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Sellers__3213E83F4F76A86D");
 
+            entity.HasIndex(e => e.IdentityUserId, "IX_Sellers_IdentityUserId");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.City)
                 .HasMaxLength(100)
                 .HasColumnName("city");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.IdentityUserId)
+                .HasMaxLength(450)
+                .HasColumnName("identity_user_id");
+            entity.Property(e => e.IsApproved)
+                .HasDefaultValue(false)
+                .HasColumnName("is_approved");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
@@ -262,33 +305,12 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.Phone)
                 .HasMaxLength(20)
                 .HasColumnName("phone");
+            entity.Property(e => e.Tier)
+                .HasMaxLength(20)
+                .HasColumnName("tier");
             entity.Property(e => e.Type)
                 .HasMaxLength(20)
                 .HasColumnName("type");
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3213E83F2A7BC1EE");
-
-            entity.HasIndex(e => e.Email, "IX_Users_Email");
-
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61642DA1681D").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .HasColumnName("email");
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .HasColumnName("name");
-            entity.Property(e => e.Password)
-                .HasMaxLength(255)
-                .HasColumnName("password");
         });
 
         modelBuilder.Entity<UserProfile>(entity =>
@@ -332,9 +354,23 @@ public partial class CarFitDbContext : DbContext
             entity.Property(e => e.TransmissionPref)
                 .HasMaxLength(20)
                 .HasColumnName("transmission_pref");
+            entity.Property(e => e.TripType)
+                .HasMaxLength(20)
+                .HasColumnName("trip_type");
+            entity.Property(e => e.ConditionPref)
+                .HasMaxLength(20)
+                .HasColumnName("condition_pref");
+            entity.Property(e => e.InstallmentMonths)
+                .HasColumnName("installment_months");
             entity.Property(e => e.UserId)
                 .HasMaxLength(450)
                 .HasColumnName("user_id");
+        });
+
+        modelBuilder.Entity<RecommendedCarViewModel>(entity =>
+        {
+            entity.Property(e => e.ListingPrice).HasPrecision(18, 2);
+            entity.Property(e => e.TrustScore).HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<VwAvailableCarDetail>(entity =>
@@ -434,6 +470,56 @@ public partial class CarFitDbContext : DbContext
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(b => b.CarListing)
+                .WithMany()
+                .HasForeignKey(b => b.CarListingId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(b => b.Mechanic)
+                .WithMany(m => m.InspectionBookings)
+                .HasForeignKey(b => b.MechanicId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Mechanic>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Mechanics");
+
+            entity.HasIndex(e => e.City, "IX_Mechanics_City");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.City)
+                .HasMaxLength(100)
+                .HasColumnName("city");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .HasColumnName("phone");
+        });
+
+        modelBuilder.Entity<SearchLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("SearchLog");
+
+            entity.HasIndex(e => e.CreatedAt, "IX_SearchLog_created_at");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Term)
+                .HasMaxLength(255)
+                .HasColumnName("term");
+            entity.Property(e => e.FiltersJson).HasColumnName("filters_json");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("getutcdate()")
+                .HasColumnName("created_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,94 @@
+@model CarFitProject.ViewModel.CompareViewModel
+@inject IViewLocalizer L
+@{
+    ViewData["Title"] = L["Compare.Page.Title"].Value;
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0"><i class="fa fa-scale-balanced me-2 text-primary"></i>@L["Compare.Page.Title"]</h2>
+        <a asp-area="" asp-controller="Inventory" asp-action="Search" class="text-decoration-none text-primary small fw-bold">
+            <i class="fa fa-arrow-left me-1"></i>@L["Compare.BackToSearch"]
+        </a>
+    </div>
+
+    <div class="bg-white shadow-sm rounded-4 p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4" style="width: 20%;">@L["Compare.Spec"]</th>
+                        @foreach (var r in Model.Cars)
+                        {
+                            <th>
+                                <div class="d-flex flex-column align-items-start">
+                                    @if (!string.IsNullOrEmpty(r.PrimaryImageUrl))
+                                    {
+                                        <img src="@r.PrimaryImageUrl" alt="@r.Listing.Car?.Make @r.Listing.Car?.Model" class="rounded mb-2"
+                                             style="width: 140px; height: 84px; object-fit: cover;" />
+                                    }
+                                    <div class="fw-bold">@r.Listing.Car?.Make @r.Listing.Car?.Model</div>
+                                    <div class="text-muted small">@r.Listing.Car?.Year</div>
+                                    <a asp-area="" asp-controller="Inventory" asp-action="Detail" asp-route-id="@r.Listing.Id"
+                                       class="small text-decoration-none">View listing →</a>
+                                </div>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        void Row(string label, Func<CarFitProject.ViewModel.CompareCarRow, string> getter)
+                        {
+                            <tr>
+                                <td class="ps-4 text-muted fw-bold">@label</td>
+                                @foreach (var r in Model.Cars)
+                                {
+                                    <td>@getter(r)</td>
+                                }
+                            </tr>
+                        }
+                    }
+
+                    @{ Row("Listing price",   r => (r.Listing.ListingPrice?.ToString("N0") ?? "—") + " JD"); }
+                    @{ Row("Type",            r => r.Listing.Car?.Type ?? "—"); }
+                    @{ Row("Transmission",    r => r.Listing.Car?.Transmission ?? "—"); }
+                    @{ Row("Body type",       r => r.Listing.Car?.BodyType ?? "—"); }
+                    @{ Row("Seats",           r => r.Listing.Car?.Seats?.ToString() ?? "—"); }
+                    @{ Row("Engine",          r => r.Listing.Car?.EngineSize ?? "—"); }
+                    @{ Row("Fuel",            r => r.Listing.Car?.FuelType ?? "—"); }
+                    @{ Row("Mileage",         r => r.Listing.Car?.Kilometers ?? "—"); }
+                    @{ Row("Exterior color",  r => r.Listing.Car?.ExteriorColor ?? "—"); }
+                    @{ Row("Interior color",  r => r.Listing.Car?.InteriorColor ?? "—"); }
+                    @{ Row("Dealer",          r => r.Listing.Seller?.Name ?? "—"); }
+                    @{ Row("City",            r => r.Listing.Seller?.City ?? "—"); }
+
+                    <tr>
+                        <td class="ps-4 text-muted fw-bold">Inspection</td>
+                        @foreach (var r in Model.Cars)
+                        {
+                            <td>
+                                @if (r.InspectionOverall.HasValue)
+                                {
+                                    <div class="fw-bold">جيد @r.InspectionOverall.Value.ToString("0.0")</div>
+                                    <div class="text-muted small">Trust @(r.InspectionTrust?.ToString("0.00") ?? "—") / 5</div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No report</span>
+                                }
+                                @if (r.IsRisky)
+                                {
+                                    <div class="badge bg-danger mt-1">Risky</div>
+                                }
+                            </td>
+                        }
+                    </tr>
+
+                    @{ Row("Engine status",  r => r.EngineStatus); }
+                    @{ Row("Gearbox",        r => r.GearboxStatus); }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

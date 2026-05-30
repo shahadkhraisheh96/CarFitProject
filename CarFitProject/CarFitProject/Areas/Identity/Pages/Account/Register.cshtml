@@ -16,7 +16,13 @@
 
                 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
-                    
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.FullName" class="form-control border-2" autocomplete="name" aria-required="true" placeholder="Your full name" />
+                        <label asp-for="Input.FullName" class="fw-bold text-secondary">Full Name</label>
+                        <span asp-validation-for="Input.FullName" class="text-danger small mt-1 d-block"></span>
+                    </div>
+
                     <div class="form-floating mb-3">
                         <input asp-for="Input.Email" class="form-control border-2" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                         <label asp-for="Input.Email" class="fw-bold text-secondary">Email Address</label>
