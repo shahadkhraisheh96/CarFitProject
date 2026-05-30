@@ -26,6 +26,8 @@ public partial class CarFitDbContext : DbContext
 
     public virtual DbSet<InspectionTermsGlossary> InspectionTermsGlossaries { get; set; }
 
+    public virtual DbSet<Mechanic> Mechanics { get; set; }
+
     public virtual DbSet<RecommendationLog> RecommendationLogs { get; set; }
 
     public virtual DbSet<SavedResult> SavedResults { get; set; }
@@ -466,6 +468,36 @@ public partial class CarFitDbContext : DbContext
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())");
+
+            entity.HasOne(b => b.CarListing)
+                .WithMany()
+                .HasForeignKey(b => b.CarListingId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(b => b.Mechanic)
+                .WithMany(m => m.InspectionBookings)
+                .HasForeignKey(b => b.MechanicId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Mechanic>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Mechanics");
+
+            entity.HasIndex(e => e.City, "IX_Mechanics_City");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.City)
+                .HasMaxLength(100)
+                .HasColumnName("city");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .HasColumnName("phone");
         });
 
         OnModelCreatingPartial(modelBuilder);

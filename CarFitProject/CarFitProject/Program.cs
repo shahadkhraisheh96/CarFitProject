@@ -211,4 +211,5 @@ static async Task SeedGlossaryAsync(WebApplication app)
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<CarFitDbContext>();
     await InspectionGlossarySeed.SeedAsync(context);
+    await MechanicSeed.SeedAsync(context);
 }

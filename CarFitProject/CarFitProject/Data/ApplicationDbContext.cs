@@ -18,6 +18,9 @@ namespace CarFitProject.Data
             {
                 b.Property(u => u.IsActive).HasDefaultValue(true);
                 b.Property(u => u.CreatedAt).HasDefaultValueSql("getutcdate()");
+                b.Property(u => u.SubscriptionTier)
+                    .HasMaxLength(20)
+                    .HasDefaultValue("Free");
             });
         }
     }
