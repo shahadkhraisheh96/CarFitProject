@@ -63,10 +63,59 @@ namespace CarFitProject.Controllers
             filters.Results = await PaginatedList<CarListing>.CreateAsync(
                 query.OrderByDescending(l => l.Id), filters.Page, PageSize);
 
+            await LogSearchAsync(filters);
+
             ViewBag.SavedCarIds = User.IsInRole("Buyer")
                 ? await _savedCars.GetSavedCarIdsAsync(CurrentUserId!)
                 : new HashSet<int>();
             return View(filters);
+        }
+
+        private async Task LogSearchAsync(ListingSearchViewModel filters)
+        {
+            // Log only the first page of a search, and only when at least one
+            // substantive filter is set — keeps the analytics noise-free when a
+            // visitor lands on the bare /Inventory/Search page or pages through
+            // the same filter set.
+            if (filters.Page > 1) return;
+
+            bool hasFilter =
+                !string.IsNullOrWhiteSpace(filters.Make) ||
+                !string.IsNullOrWhiteSpace(filters.Model) ||
+                filters.YearFrom.HasValue ||
+                filters.YearTo.HasValue ||
+                filters.PriceFrom.HasValue ||
+                filters.PriceTo.HasValue ||
+                !string.IsNullOrWhiteSpace(filters.Type) ||
+                !string.IsNullOrWhiteSpace(filters.Transmission);
+            if (!hasFilter) return;
+
+            var term = string.Join(" ",
+                new[] { filters.Make, filters.Model }
+                    .Where(s => !string.IsNullOrWhiteSpace(s)))
+                .Trim();
+            if (term.Length > 255) term = term[..255];
+
+            var snapshot = new
+            {
+                filters.Make,
+                filters.Model,
+                filters.YearFrom,
+                filters.YearTo,
+                filters.PriceFrom,
+                filters.PriceTo,
+                filters.Type,
+                filters.Transmission
+            };
+
+            _context.SearchLogs.Add(new SearchLog
+            {
+                Term = string.IsNullOrEmpty(term) ? null : term,
+                FiltersJson = System.Text.Json.JsonSerializer.Serialize(snapshot),
+                UserId = CurrentUserId,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
         }
 
         // GET: /Inventory/Detail/42
