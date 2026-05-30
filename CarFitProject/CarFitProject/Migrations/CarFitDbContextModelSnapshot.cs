@@ -181,7 +181,7 @@ namespace CarFitProject.Migrations
 
                     b.HasIndex(new[] { "CarId" }, "IX_CarImages_car_id");
 
-                    b.ToTable("CarImages", (string)null);
+                    b.ToTable("car_images", (string)null);
                 });
 
             modelBuilder.Entity("CarFitProject.Models.CarListing", b =>

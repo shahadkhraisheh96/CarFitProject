@@ -521,6 +521,16 @@ public partial class CarFitDbContext : DbContext
                 .HasDefaultValueSql("getutcdate()")
                 .HasColumnName("created_at");
         });
+        modelBuilder.Entity<CarImage>(entity =>
+        {
+            entity.ToTable("car_images"); // or CarImages
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CarId).HasColumnName("car_id");
+            entity.Property(e => e.Url).HasColumnName("url");
+            entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+            entity.Property(e => e.IsPrimary).HasColumnName("is_primary");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
