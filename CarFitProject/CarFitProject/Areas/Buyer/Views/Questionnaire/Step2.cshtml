@@ -6,35 +6,48 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="bg-white shadow-sm rounded-4 p-5">
-                <partial name="_WizardProgress" />
-
-                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Step2.Title"]</h2>
+        <div class="col-lg-8">
+            <partial name="_WizardProgress" />
+            <div class="form-section-card">
+                <div class="section-heading">
+                    <h2>@L["Wizard.Step2.Title"]</h2>
+                </div>
                 <p class="text-muted mb-4">@L["Wizard.Step2.Subtitle"]</p>
 
                 <form method="post" asp-action="Step2" novalidate>
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
 
-                    <div class="mb-3">
-                        <label class="fw-bold text-secondary d-block mb-2">@L["Field.HasKids"]</label>
-                        <div class="btn-group" role="group" aria-label="@L["Field.HasKids"]">
-                            <input asp-for="HasKids" type="radio" class="btn-check" id="kids-no" value="false" autocomplete="off" />
-                            <label for="kids-no" class="btn btn-outline-primary">@L["Field.No"]</label>
-                            <input asp-for="HasKids" type="radio" class="btn-check" id="kids-yes" value="true" autocomplete="off" />
-                            <label for="kids-yes" class="btn btn-outline-primary">@L["Field.Yes"]</label>
+                    <div class="mb-4">
+                        <label class="cf-field-label d-block mb-2">@L["Field.HasKids"]</label>
+                        <div class="row g-3" role="group" aria-label="@L["Field.HasKids"]">
+                            <div class="col-sm-6">
+                                <input asp-for="HasKids" type="radio" class="option-input" id="kids-no" value="false" autocomplete="off" />
+                                <label for="kids-no" class="option-card">
+                                    <div class="option-icon"><i class="fa-solid fa-xmark"></i></div>
+                                    <div class="option-title">@L["Field.No"]</div>
+                                    <div class="option-sub">No kids yet</div>
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <input asp-for="HasKids" type="radio" class="option-input" id="kids-yes" value="true" autocomplete="off" />
+                                <label for="kids-yes" class="option-card">
+                                    <div class="option-icon"><i class="fa-solid fa-children"></i></div>
+                                    <div class="option-title">@L["Field.Yes"]</div>
+                                    <div class="option-sub">I have children</div>
+                                </label>
+                            </div>
                         </div>
                         <span asp-validation-for="HasKids" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-                    <div class="form-floating mb-4" id="kidsCountWrapper">
-                        <input asp-for="KidsCount" type="number" min="1" max="20" class="form-control border-2" placeholder="Kids count" />
-                        <label asp-for="KidsCount" class="fw-bold text-secondary"></label>
+                    <div class="form-floating mb-4 cf-floating" id="kidsCountWrapper">
+                        <input asp-for="KidsCount" type="number" min="1" max="20" class="form-control" placeholder=" " />
+                        <label asp-for="KidsCount"></label>
                         <span asp-validation-for="KidsCount" class="text-danger small mt-1 d-block"></span>
                     </div>
 
-                    <div class="d-flex justify-content-between gap-2">
+                    <div class="sticky-cta mt-4 justify-content-between">
                         <button type="submit" name="action" value="back" formnovalidate class="btn btn-outline-secondary fw-bold">
                             <i class="fa fa-arrow-left me-2"></i>@L["Action.Back"]
                         </button>

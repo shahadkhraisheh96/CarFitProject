@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\shaha\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj": {}
+    "C:\\Users\\user\\Desktop\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\shaha\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj": {
+    "C:\\Users\\user\\Desktop\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\shaha\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Desktop\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj",
         "projectName": "CarFitProject",
-        "projectPath": "C:\\Users\\shaha\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj",
-        "packagesPath": "C:\\Users\\shaha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\shaha\\CarFitProject\\CarFitProject\\CarFitProject\\obj\\",
+        "projectPath": "C:\\Users\\user\\Desktop\\CarFitProject\\CarFitProject\\CarFitProject\\CarFitProject.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Desktop\\CarFitProject\\CarFitProject\\CarFitProject\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\shaha\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -45,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
@@ -112,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

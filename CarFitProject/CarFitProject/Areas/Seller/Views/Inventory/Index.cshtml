@@ -3,16 +3,19 @@
     ViewData["Title"] = SharedLocalizer["Seller.Inventory.Title"].Value;
 }
 
-<div class="container py-5">
-    <div class="row align-items-center mb-4 g-3">
-        <div class="col">
-            <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-car me-2 text-primary"></i>@SharedLocalizer["Seller.Inventory.Title"]</h2>
-            <p class="text-muted mb-0">@SharedLocalizer["Seller.Inventory.Subtitle"]</p>
-        </div>
-        <div class="col-auto">
-            <a asp-action="AddCar" class="btn btn-primary fw-bold">
-                <i class="fa fa-plus me-1"></i>@SharedLocalizer["Seller.Inventory.Add"]
-            </a>
+<div class="container py-4">
+    <div class="page-hero mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-md-8">
+                <span class="eyebrow"><i class="fa-solid fa-warehouse me-1"></i> My Lot</span>
+                <h1 class="mb-2">@SharedLocalizer["Seller.Inventory.Title"]</h1>
+                <p class="lead mb-0">@SharedLocalizer["Seller.Inventory.Subtitle"]</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a asp-action="AddCar" class="btn btn-primary fw-bold">
+                    <i class="fa fa-plus me-2"></i>@SharedLocalizer["Seller.Inventory.Add"]
+                </a>
+            </div>
         </div>
     </div>
 
@@ -27,47 +30,49 @@
 
     @if (!Model.Any())
     {
-        <div class="bg-white shadow-sm rounded-4 p-5 text-center">
-            <i class="fa fa-car-side fs-1 text-muted opacity-25 mb-3 d-block"></i>
-            <p class="text-muted mb-3">You haven't listed any vehicles yet.</p>
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fa fa-car-side"></i></div>
+            <h3>No vehicles listed yet</h3>
+            <p>Add your first vehicle to start showing up in buyer searches.</p>
             <a asp-action="AddCar" class="btn btn-primary fw-bold">Add your first listing</a>
         </div>
     }
     else
     {
-        <div class="bg-white shadow-sm rounded-4 p-0 overflow-hidden">
+        <div class="dash-shell p-0 overflow-hidden">
             <div class="table-responsive">
-                <table class="table align-middle mb-0">
-                    <thead class="table-light">
+                <table class="compare-table mb-0">
+                    <thead>
                         <tr>
-                            <th class="ps-4">Vehicle</th>
+                            <th>Vehicle</th>
                             <th>Year</th>
                             <th>Price</th>
                             <th>Status</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="ps-4 fw-semibold">
-                                    @(item.Car?.Make) @(item.Car?.Model) <span class="text-muted small">@(item.Car?.Trim)</span>
+                                <td>
+                                    <div class="fw-bold text-dark">@(item.Car?.Make) @(item.Car?.Model)</div>
+                                    <div class="text-muted small">@(item.Car?.Trim)</div>
                                 </td>
                                 <td>@(item.Car?.Year)</td>
-                                <td class="font-monospace">@(item.ListingPrice?.ToString("N0")) JD</td>
+                                <td class="fw-bold">@(item.ListingPrice?.ToString("N0")) <small class="text-muted">JD</small></td>
                                 <td>
                                     @if (item.Status == "Active")
                                     {
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Active</span>
+                                        <span class="chip chip-success"><i class="fa fa-circle-check"></i>Active</span>
                                     }
                                     else if (item.Status == "Pending")
                                     {
-                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending Review</span>
+                                        <span class="chip chip-warning"><i class="fa fa-clock"></i>Pending</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">@item.Status</span>
+                                        <span class="chip">@item.Status</span>
                                     }
                                 </td>
                                 <td class="text-end pe-4">

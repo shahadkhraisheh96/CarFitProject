@@ -6,11 +6,12 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-7">
-            <div class="bg-white shadow-sm rounded-4 p-5">
-                <partial name="_WizardProgress" />
-
-                <h2 class="fw-bold text-dark mb-1">@L["Wizard.Review.Title"]</h2>
+        <div class="col-lg-8">
+            <partial name="_WizardProgress" />
+            <div class="form-section-card">
+                <div class="section-heading">
+                    <h2>@L["Wizard.Review.Title"]</h2>
+                </div>
                 <p class="text-muted mb-4">@L["Wizard.Review.Subtitle"]</p>
 
                 <dl class="row mb-4">
@@ -65,7 +66,7 @@
 
                 <form method="post" asp-action="Submit">
                     @Html.AntiForgeryToken()
-                    <div class="d-flex justify-content-between gap-2">
+                    <div class="sticky-cta mt-4 justify-content-between">
                         <a asp-action="Step5" class="btn btn-outline-secondary fw-bold">
                             <i class="fa fa-arrow-left me-2"></i>@L["Action.Back"]
                         </a>

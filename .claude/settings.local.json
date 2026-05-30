@@ -27,7 +27,24 @@
       "Bash(tasklist //FI \"IMAGENAME eq CarFitProject.exe\")",
       "Bash(taskkill *)",
       "Bash(powershell -File /tmp/dumpres.ps1)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(tasklist /FI \"IMAGENAME eq CarFitProject.exe\")",
+      "PowerShell(Get-Process *)",
+      "PowerShell(dotnet build *)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(dotnet run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5113/)",
+      "Bash(tasklist *)",
+      "Bash(curl -s -o response.html -w \"HTTP %{http_code}\\\\nSize %{size_download}\\\\n\" http://localhost:5113/Buyer/Questionnaire/Step1)",
+      "Bash(curl -s -L -o response.html -w \"HTTP %{http_code}\\\\n\" http://localhost:5113/Buyer/Questionnaire/Step1)",
+      "Bash(curl -s http://localhost:5113/css/style.03bz52bius.css)",
+      "Bash(awk *)",
+      "Bash(curl -s -c cookies.txt -b cookies.txt -L http://localhost:5113/Identity/Account/Login -o login_page.html)",
+      "Bash(curl -s http://localhost:5113/)",
+      "Bash(curl -s \"http://localhost:5113/css/style.css?v=3L-iBm2UaoIyaavSNo3wV_FDWdqc1rrvf_PiV4tbsp8\" -w \"\\\\n[HTTP %{http_code}, size=%{size_download}]\\\\n\")",
+      "Bash(curl -s -w \"[HTTP %{http_code}]\\\\n\" \"http://localhost:5113/css/style.css\" -o /tmp/served.css)",
+      "Read(//tmp/**)",
+      "PowerShell($r = Invoke-WebRequest \"http://localhost:5113/css/style.css\" -UseBasicParsing; \"Status=$\\($r.StatusCode\\), Size=$\\($r.RawContentLength\\)\"; \"form-section-card matches: $\\(\\([regex]::Matches\\($r.Content,'form-section-card'\\)\\).Count\\)\")"
     ]
   }
 }
