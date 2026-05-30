@@ -30,7 +30,7 @@
                     else
                     {
                         <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-pill fw-bold">
-                            <i class="fa fa-clock me-1"></i>Pending admin approval
+                            <i class="fa fa-clock me-1"></i>@SharedLocalizer["Seller.Dashboard.PendingApproval"]
                         </span>
                     }
                 </div>
@@ -42,28 +42,28 @@
     {
         <div class="alert alert-info">
             <i class="fa fa-info-circle me-2"></i>
-            Your dealership profile is awaiting review. You'll be able to list vehicles once an administrator approves your account.
+            @SharedLocalizer["Seller.Dashboard.PendingAlert"]
         </div>
     }
 
     <div class="row g-3">
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-4 h-100">
-                <h6 class="text-muted text-uppercase small fw-bold mb-2">Contact phone</h6>
+                <h6 class="text-muted text-uppercase small fw-bold mb-2">@SharedLocalizer["Seller.Dashboard.Phone"]</h6>
                 <div class="fw-semibold">@Model.Phone</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-4 h-100">
-                <h6 class="text-muted text-uppercase small fw-bold mb-2">Contact email</h6>
+                <h6 class="text-muted text-uppercase small fw-bold mb-2">@SharedLocalizer["Seller.Dashboard.Email"]</h6>
                 <div class="fw-semibold">@Model.Email</div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="bg-white shadow-sm rounded-4 p-4 h-100 d-flex flex-column">
-                <h6 class="text-muted text-uppercase small fw-bold mb-2">Inventory</h6>
+                <h6 class="text-muted text-uppercase small fw-bold mb-2">@SharedLocalizer["Seller.Dashboard.Inventory"]</h6>
                 <a asp-area="Seller" asp-controller="Inventory" asp-action="Index" class="btn btn-outline-primary mt-auto">
-                    <i class="fa fa-car me-2"></i>Manage listings
+                    <i class="fa fa-car me-2"></i>@SharedLocalizer["Seller.Dashboard.ManageListings"]
                 </a>
             </div>
         </div>

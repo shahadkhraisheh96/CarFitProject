@@ -1,24 +1,22 @@
 @model CarFitProject.ViewModel.InspectionBookingViewModel
 @{
-    ViewData["Title"] = "Book Inspection Report";
+    ViewData["Title"] = Localizer["Book.Title"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Page Header Start -->
 <div class="container-fluid page-header mb-5 p-0" style="background-image: url('/img/carousel-bg-2.jpg');">
     <div class="container-fluid page-header-inner py-5">
         <div class="container text-center">
-            <h1 class="display-3 text-white mb-3 animated slideInDown">Schedule Appraisals</h1>
+            <h1 class="display-3 text-white mb-3 animated slideInDown">@Localizer["Book.Header"]</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center text-uppercase">
-                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li class="breadcrumb-item text-white active" aria-current="page">Booking Gateway</li>
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">@Localizer["About.Crumb.Home"]</a></li>
+                    <li class="breadcrumb-item text-white active" aria-current="page">@Localizer["Book.Crumb"]</li>
                 </ol>
             </nav>
         </div>
     </div>
 </div>
-<!-- Page Header End -->
 
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -29,7 +27,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fa-solid fa-circle-check text-success fs-3 me-3"></i>
                         <div>
-                            <h5 class="alert-heading fw-bold text-success mb-1">Success!</h5>
+                            <h5 class="alert-heading fw-bold text-success mb-1">@Localizer["Book.Success"]</h5>
                             <p class="mb-0 text-secondary">@TempData["SuccessMessage"]</p>
                         </div>
                     </div>
@@ -39,9 +37,9 @@
 
             <div class="glass-card shadow-lg border-0 bg-white rounded-4 overflow-hidden p-5">
                 <div class="text-center mb-5">
-                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-3">FR-6 BOOKING ENGINE</span>
-                    <h2 class="fw-bold text-dark mb-1">Verify Your Next Vehicle Purchase</h2>
-                    <p class="text-muted">Schedule a detailed mobile inspection at the dealer's lot in Jordan.</p>
+                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-3">@Localizer["Book.Badge"]</span>
+                    <h2 class="fw-bold text-dark mb-1">@Localizer["Book.Heading"]</h2>
+                    <p class="text-muted">@Localizer["Book.Subtitle"]</p>
                 </div>
 
                 <form asp-controller="Inspection" asp-action="Book" method="post">
@@ -51,10 +49,10 @@
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="CustomerName" class="form-label fw-bold text-secondary">Your Name</label>
+                                <label asp-for="CustomerName" class="form-label fw-bold text-secondary">@Localizer["Book.Name"]</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-2 border-end-0"><i class="fa-solid fa-user text-muted"></i></span>
-                                    <input asp-for="CustomerName" class="form-control border-2 border-start-0" placeholder="e.g. Ahmad Al-Saeed" />
+                                    <input asp-for="CustomerName" class="form-control border-2 border-start-0" placeholder="@Localizer["Book.NamePlaceholder"]" />
                                 </div>
                                 <span class="text-danger small mt-1 d-block" asp-validation-for="CustomerName"></span>
                             </div>
@@ -62,7 +60,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="CustomerEmail" class="form-label fw-bold text-secondary">Email Address</label>
+                                <label asp-for="CustomerEmail" class="form-label fw-bold text-secondary">@Localizer["Book.Email"]</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-2 border-end-0"><i class="fa-solid fa-envelope text-muted"></i></span>
                                     <input asp-for="CustomerEmail" type="email" class="form-control border-2 border-start-0" placeholder="name@example.com" />
@@ -73,14 +71,14 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="PackageType" class="form-label fw-bold text-secondary">Inspection Package</label>
+                                <label asp-for="PackageType" class="form-label fw-bold text-secondary">@Localizer["Book.Package"]</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-2 border-end-0"><i class="fa-solid fa-gears text-muted"></i></span>
                                     <select asp-for="PackageType" class="form-select border-2 border-start-0">
-                                        <option value="">Select Package Tier</option>
-                                        <option value="Powertrain Scan">01. Powertrain & ECU Scanner (JD 35)</option>
-                                        <option value="Chassis Sound Integrity">02. Undercarriage & Chassis Alignment (JD 50)</option>
-                                        <option value="Complete Baseline">03. All-Inclusive Ultimate Verification (JD 75)</option>
+                                        <option value="">@Localizer["Book.PackagePlaceholder"]</option>
+                                        <option value="Powertrain Scan">@Localizer["Book.Package1"]</option>
+                                        <option value="Chassis Sound Integrity">@Localizer["Book.Package2"]</option>
+                                        <option value="Complete Baseline">@Localizer["Book.Package3"]</option>
                                     </select>
                                 </div>
                                 <span class="text-danger small mt-1 d-block" asp-validation-for="PackageType"></span>
@@ -89,7 +87,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="PreferredDate" class="form-label fw-bold text-secondary">Preferred Inspection Date</label>
+                                <label asp-for="PreferredDate" class="form-label fw-bold text-secondary">@Localizer["Book.Date"]</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-2 border-end-0"><i class="fa-solid fa-calendar-days text-muted"></i></span>
                                     <input asp-for="PreferredDate" type="date" class="form-control border-2 border-start-0" />
@@ -100,14 +98,14 @@
 
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="VehicleNotes" class="form-label fw-bold text-secondary">Vehicle Details & Location Notes</label>
-                                <textarea asp-for="VehicleNotes" class="form-control border-2" rows="4" placeholder="Mention Make, Model, Year, Seller Location, or specific areas of concern..."></textarea>
+                                <label asp-for="VehicleNotes" class="form-label fw-bold text-secondary">@Localizer["Book.Notes"]</label>
+                                <textarea asp-for="VehicleNotes" class="form-control border-2" rows="4" placeholder="@Localizer["Book.NotesPlaceholder"]"></textarea>
                                 <span class="text-danger small mt-1 d-block" asp-validation-for="VehicleNotes"></span>
                             </div>
                         </div>
 
                         <div class="col-12 text-center pt-3">
-                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold"><i class="fa-solid fa-check-double me-2"></i>Schedule Verification Session</button>
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold"><i class="fa-solid fa-check-double me-2"></i>@Localizer["Book.Submit"]</button>
                         </div>
                     </div>
                 </form>

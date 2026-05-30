@@ -285,5 +285,130 @@
   <data name="Seller.Inventory.Form.Title" xml:space="preserve"><value>إضافة سيارة</value></data>
   <data name="Seller.Approved" xml:space="preserve"><value>معتمد</value></data>
   <data name="Seller.PendingReview" xml:space="preserve"><value>قيد المراجعة</value></data>
+  <data name="Seller.Dashboard.PendingApproval" xml:space="preserve"><value>بانتظار موافقة المدير</value></data>
+  <data name="Seller.Dashboard.PendingAlert" xml:space="preserve"><value>ملفّ وكالتك قيد المراجعة. ستتمكّن من إدراج المركبات بعد موافقة المدير على حسابك.</value></data>
+  <data name="Seller.Dashboard.Phone" xml:space="preserve"><value>هاتف التواصل</value></data>
+  <data name="Seller.Dashboard.Email" xml:space="preserve"><value>البريد الإلكتروني للتواصل</value></data>
+  <data name="Seller.Dashboard.Inventory" xml:space="preserve"><value>المخزون</value></data>
+  <data name="Seller.Dashboard.ManageListings" xml:space="preserve"><value>إدارة القوائم</value></data>
+
+  <!-- About -->
+  <data name="About.Title" xml:space="preserve"><value>حول مستشارنا</value></data>
+  <data name="About.Crumb.Home" xml:space="preserve"><value>الرئيسية</value></data>
+  <data name="About.Crumb.About" xml:space="preserve"><value>حول</value></data>
+  <data name="About.Badge" xml:space="preserve"><value>تقنية CARFIT</value></data>
+  <data name="About.Heading" xml:space="preserve"><value>الطريقة الذكية لتقييم السيارات المستعملة</value></data>
+  <data name="About.Lead" xml:space="preserve"><value>نربط بيانات الفحص التقني العميقة بمؤشرات تشخيصية واضحة وسهلة الفهم. مهمتنا أن نُزيل العشوائية عن شراء السيارات المستعملة عبر معايير تحقّق صارمة وملفّات مطابقة مدعومة بالذكاء الاصطناعي.</value></data>
+  <data name="About.F1.Title" xml:space="preserve"><value>توافق مبني على البيانات</value></data>
+  <data name="About.F1.Body" xml:space="preserve"><value>نطابق المركبات مع أنماط حياتك بدقّة عبر متغيّرات تقييم متعددة.</value></data>
+  <data name="About.F2.Title" xml:space="preserve"><value>تحقّق لا هوادة فيه</value></data>
+  <data name="About.F2.Body" xml:space="preserve"><value>كل تقرير مدعوم بفحوص ميدانية وسجلات تشخيصية حيّة.</value></data>
+  <data name="About.Stat.Checkpoints" xml:space="preserve"><value>نقطة فحص</value></data>
+  <data name="About.Stat.Vehicles" xml:space="preserve"><value>مركبة تم تقييمها</value></data>
+  <data name="About.Stat.Specialists" xml:space="preserve"><value>اختصاصي خبير</value></data>
+  <data name="About.Stat.Success" xml:space="preserve"><value>نسبة نجاح المطابقة</value></data>
+
+  <!-- Contact -->
+  <data name="Contact.Title" xml:space="preserve"><value>تواصل معنا</value></data>
+  <data name="Contact.Crumb" xml:space="preserve"><value>تواصل</value></data>
+  <data name="Contact.Badge" xml:space="preserve"><value>قناة التواصل</value></data>
+  <data name="Contact.Heading" xml:space="preserve"><value>للاستفسارات حول تقارير التحقّق</value></data>
+  <data name="Contact.Tagline" xml:space="preserve"><value>تواصل مع منسّقي تقييم المركبات للحصول على دعم مباشر.</value></data>
+  <data name="Contact.Body" xml:space="preserve"><value>هل لديك أسئلة حول تقرير فحص حديث أو تحتاج مساعدة في ضبط فلاتر المطابقة؟ أرسل رسالة مباشرة إلى مكتب التقييم التقني لدينا.</value></data>
+  <data name="Contact.Field.Name" xml:space="preserve"><value>اسمك</value></data>
+  <data name="Contact.Field.Email" xml:space="preserve"><value>بريدك الإلكتروني</value></data>
+  <data name="Contact.Field.Subject" xml:space="preserve"><value>الموضوع</value></data>
+  <data name="Contact.Field.Message" xml:space="preserve"><value>الرسالة</value></data>
+  <data name="Contact.Send" xml:space="preserve"><value>إرسال الرسالة</value></data>
+
+  <!-- Privacy -->
+  <data name="Privacy.Badge" xml:space="preserve"><value>حماية البيانات القانونية</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>سياسة الخصوصية</value></data>
+  <data name="Privacy.Body1" xml:space="preserve"><value>في CarFit، نولي حماية بياناتك الشخصية وأمنها الأولوية. توضّح هذه السياسة كيفية جمع معلوماتك ومعالجتها وحمايتها عند استخدام استبيان التوصيات الذكي أو إدراج مخزون الوكالة.</value></data>
+  <data name="Privacy.Body2" xml:space="preserve"><value>نخزّن ملفّات المستخدم ومعايير البحث محليًا في الأردن. لا نبيع بياناتك ولا نشاركها مع جهات غير مصرّح لها. وتُشفَّر جميع سجلات الفحص أثناء النقل.</value></data>
+
+  <!-- Inspection Index -->
+  <data name="Inspection.Title" xml:space="preserve"><value>وحدات الفحص</value></data>
+  <data name="Inspection.Crumb" xml:space="preserve"><value>الوحدات</value></data>
+  <data name="Inspection.Badge" xml:space="preserve"><value>البنية التشخيصية الأساسية</value></data>
+  <data name="Inspection.Heading" xml:space="preserve"><value>استكشف إطار الفحص التشخيصي لدينا</value></data>
+  <data name="Inspection.Tagline" xml:space="preserve"><value>نقدّم معايير تقييم شفّافة مصمّمة لسوق المركبات المستعملة.</value></data>
+  <data name="Inspection.Tab1" xml:space="preserve"><value>01. ماسح نظام الحركة</value></data>
+  <data name="Inspection.Tab2" xml:space="preserve"><value>02. سلامة الشاسيه</value></data>
+  <data name="Inspection.Tab3" xml:space="preserve"><value>03. التاريخ والتقييم</value></data>
+  <data name="Inspection.Tab1.Heading" xml:space="preserve"><value>فحص نظام الحركة ووحدة التحكم الإلكترونية</value></data>
+  <data name="Inspection.Tab1.Body" xml:space="preserve"><value>نربط أجهزة استشعار مباشرة بمنفذ السيارة لمراقبة توازن ضغط الأسطوانات وتأخيرات نقل الحركة ورموز الأعطال الفعّالة.</value></data>
+  <data name="Inspection.Tab1.B1" xml:space="preserve"><value>قراءة بيانات الاستشعار الحيّة</value></data>
+  <data name="Inspection.Tab1.B2" xml:space="preserve"><value>تحليل رموز الأعطال السابقة</value></data>
+  <data name="Inspection.Tab1.B3" xml:space="preserve"><value>تقييم حالة السوائل</value></data>
+  <data name="Inspection.Tab2.Heading" xml:space="preserve"><value>التحقّق من محاذاة بنية الشاسيه</value></data>
+  <data name="Inspection.Tab2.Body" xml:space="preserve"><value>يفحص اختصاصيونا الهيكل السفلي بأدوات قياس دقيقة لاكتشاف الإصلاحات المخفية أو آثار الحوادث أو الصدأ.</value></data>
+  <data name="Inspection.Tab2.B1" xml:space="preserve"><value>قياس سُمك إطار الشاسيه</value></data>
+  <data name="Inspection.Tab2.B2" xml:space="preserve"><value>تتبّع الحوادث الهيكلية السابقة</value></data>
+  <data name="Inspection.Tab2.B3" xml:space="preserve"><value>فحص هندسة نظام التعليق</value></data>
+  <data name="Inspection.Tab3.Heading" xml:space="preserve"><value>تتبّع تاريخ السوق ومصفوفة التقييم</value></data>
+  <data name="Inspection.Tab3.Body" xml:space="preserve"><value>نمزج النتائج التقنية الميدانية بسجلات الملكية لتأسيس مرجع حقيقي لحالة المركبة وقيمتها العادلة.</value></data>
+  <data name="Inspection.Tab3.B1" xml:space="preserve"><value>تتبّع تسلسل الملكية</value></data>
+  <data name="Inspection.Tab3.B2" xml:space="preserve"><value>التحقّق من قراءة العدّاد</value></data>
+  <data name="Inspection.Tab3.B3" xml:space="preserve"><value>احتساب القيمة السوقية العادلة</value></data>
+  <data name="Inspection.BookBtn" xml:space="preserve"><value>احجز هذه الباقة</value></data>
+
+  <!-- Book -->
+  <data name="Book.Title" xml:space="preserve"><value>حجز تقرير الفحص</value></data>
+  <data name="Book.Header" xml:space="preserve"><value>جدولة التقييم</value></data>
+  <data name="Book.Crumb" xml:space="preserve"><value>بوّابة الحجز</value></data>
+  <data name="Book.Success" xml:space="preserve"><value>تم بنجاح!</value></data>
+  <data name="Book.Badge" xml:space="preserve"><value>محرّك الحجز FR-6</value></data>
+  <data name="Book.Heading" xml:space="preserve"><value>تحقّق من مركبتك القادمة</value></data>
+  <data name="Book.Subtitle" xml:space="preserve"><value>احجز فحصًا متنقّلًا مفصّلًا في موقع المعرض داخل الأردن.</value></data>
+  <data name="Book.Name" xml:space="preserve"><value>اسمك</value></data>
+  <data name="Book.NamePlaceholder" xml:space="preserve"><value>مثال: أحمد السعيد</value></data>
+  <data name="Book.Email" xml:space="preserve"><value>البريد الإلكتروني</value></data>
+  <data name="Book.Package" xml:space="preserve"><value>باقة الفحص</value></data>
+  <data name="Book.PackagePlaceholder" xml:space="preserve"><value>اختر مستوى الباقة</value></data>
+  <data name="Book.Package1" xml:space="preserve"><value>01. فحص نظام الحركة ووحدة التحكم (35 د.أ)</value></data>
+  <data name="Book.Package2" xml:space="preserve"><value>02. الهيكل السفلي ومحاذاة الشاسيه (50 د.أ)</value></data>
+  <data name="Book.Package3" xml:space="preserve"><value>03. التحقّق الشامل الكامل (75 د.أ)</value></data>
+  <data name="Book.Date" xml:space="preserve"><value>تاريخ الفحص المفضّل</value></data>
+  <data name="Book.Notes" xml:space="preserve"><value>تفاصيل المركبة وملاحظات الموقع</value></data>
+  <data name="Book.NotesPlaceholder" xml:space="preserve"><value>أذكر الصانع، الطراز، السنة، موقع البائع، أو أي نقاط محدّدة...</value></data>
+  <data name="Book.Submit" xml:space="preserve"><value>جدولة جلسة التحقّق</value></data>
+
+  <!-- Error -->
+  <data name="Error.Title" xml:space="preserve"><value>خطأ.</value></data>
+  <data name="Error.Subtitle" xml:space="preserve"><value>حدث خطأ أثناء معالجة طلبك.</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>معرّف الطلب:</value></data>
+
+  <!-- Compare bar -->
+  <data name="Compare.Bar.Label" xml:space="preserve"><value>مقارنة</value></data>
+  <data name="Compare.Bar.Clear" xml:space="preserve"><value>مسح</value></data>
+
+  <!-- Login partial -->
+  <data name="LoginPartial.Hello" xml:space="preserve"><value>مرحبًا {0}!</value></data>
+
+  <!-- Admin Dashboard extra -->
+  <data name="Admin.Dashboard.Badge" xml:space="preserve"><value>الجذر الإداري FR-7</value></data>
+  <data name="Admin.Dashboard.Heading" xml:space="preserve"><value>محرّك التحكم المركزي CarFit</value></data>
+  <data name="Admin.Dashboard.BulkLoader" xml:space="preserve"><value>مصفوفة تحميل CSV الجماعي</value></data>
+  <data name="Admin.Dashboard.Welcome" xml:space="preserve"><value>مرحبًا بك في مساحة عمل المدير الرئيسية.</value></data>
+  <data name="Admin.Dashboard.KPI.Users" xml:space="preserve"><value>مستخدمو المنصّة</value></data>
+  <data name="Admin.Dashboard.KPI.Listings" xml:space="preserve"><value>القوائم النشطة</value></data>
+  <data name="Admin.Dashboard.KPI.Glossary" xml:space="preserve"><value>مصطلحات المعجم</value></data>
+  <data name="Admin.Dashboard.Monthly" xml:space="preserve"><value>التسجيلات الشهرية الجديدة</value></data>
+  <data name="Admin.Dashboard.TopRecommended" xml:space="preserve"><value>أكثر 5 سيارات يُوصى بها</value></data>
+  <data name="Admin.Dashboard.TopSearch" xml:space="preserve"><value>أكثر 10 كلمات بحث</value></data>
+  <data name="Admin.Dashboard.RecentListings" xml:space="preserve"><value>أحدث الإضافات للمخزون</value></data>
+  <data name="Admin.Dashboard.Vehicle" xml:space="preserve"><value>المركبة</value></data>
+  <data name="Admin.Dashboard.Recommendations" xml:space="preserve"><value>التوصيات</value></data>
+  <data name="Admin.Dashboard.Term" xml:space="preserve"><value>المصطلح</value></data>
+  <data name="Admin.Dashboard.Searches" xml:space="preserve"><value>عمليات البحث</value></data>
+  <data name="Admin.Dashboard.ListingId" xml:space="preserve"><value>رقم القائمة</value></data>
+  <data name="Admin.Dashboard.Price" xml:space="preserve"><value>سعر القائمة</value></data>
+  <data name="Admin.Dashboard.Status" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Admin.Dashboard.NoRecs" xml:space="preserve"><value>لا يوجد سجلّ توصيات بعد.</value></data>
+  <data name="Admin.Dashboard.NoSearches" xml:space="preserve"><value>لم يُسجَّل نشاط بحث بعد.</value></data>
+  <data name="Admin.Dashboard.NoListings" xml:space="preserve"><value>لا توجد قوائم بعد.</value></data>
+  <data name="Admin.Dashboard.Active" xml:space="preserve"><value>نشطة</value></data>
+  <data name="Admin.Dashboard.Pending" xml:space="preserve"><value>قيد الانتظار</value></data>
 
 </root>

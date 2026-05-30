@@ -1,5 +1,4 @@
 @model CarFitProject.ViewModel.ListingSearchViewModel
-@inject IViewLocalizer L
 @{
     ViewData["Title"] = L["Search.Page.Title"].Value;
     var savedIds = ViewBag.SavedCarIds as HashSet<int> ?? new HashSet<int>();

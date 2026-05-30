@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = Localizer["Privacy.Title"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -7,14 +7,14 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="glass-card shadow-sm bg-white rounded-4 p-5">
-                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-3">LEGAL DATA PROTECTION</span>
-                <h1 class="fw-bold text-dark mb-4"><i class="fa-solid fa-user-shield me-2 text-primary"></i>Privacy Policy</h1>
+                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill fw-bold mb-3">@Localizer["Privacy.Badge"]</span>
+                <h1 class="fw-bold text-dark mb-4"><i class="fa-solid fa-user-shield me-2 text-primary"></i>@Localizer["Privacy.Title"]</h1>
                 <hr class="mb-4">
                 <p class="text-secondary leading-relaxed">
-                    At CarFit, we prioritize the protection and security of your personal data. This privacy policy describes how we collect, process, and protect your information when using our smart recommendation questionnaire or listing dealership inventory.
+                    @Localizer["Privacy.Body1"]
                 </p>
                 <p class="text-secondary leading-relaxed mb-0">
-                    We securely store user profiles and vehicle search constraints locally in Jordan. We do not sell or share user data with unauthorized third parties. All inspection logs are fully encrypted during transit.
+                    @Localizer["Privacy.Body2"]
                 </p>
             </div>
         </div>

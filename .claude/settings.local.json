@@ -20,7 +20,14 @@
       "Bash(taskkill //F //PID 16704)",
       "Bash(tasklist)",
       "Bash(taskkill //F //PID 17132)",
-      "Bash(taskkill //F //PID 16784)"
+      "Bash(taskkill //F //PID 16784)",
+      "Read(//c/tmp/**)",
+      "Bash(powershell -File /tmp/checkresx.ps1)",
+      "Bash(tasklist //FI \"PID eq 20396\")",
+      "Bash(tasklist //FI \"IMAGENAME eq CarFitProject.exe\")",
+      "Bash(taskkill *)",
+      "Bash(powershell -File /tmp/dumpres.ps1)",
+      "Bash(powershell *)"
     ]
   }
 }
